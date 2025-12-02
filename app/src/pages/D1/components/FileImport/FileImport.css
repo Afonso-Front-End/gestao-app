@@ -1,0 +1,183 @@
+/* Container principal */
+.d1-file-import {
+  max-width: max-content;
+  position: relative;
+  text-align: center;
+}
+
+.d1-file-import h2 {
+  text-transform: uppercase;
+  font-size: 10px;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+
+.d1-import-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Container dos botões */
+.d1-import-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Botão de seleção de arquivo */
+.d1-import-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background-color: #ecfdf5;
+  color: #10b981;
+  border: 2px solid #10b981;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-import-button:hover:not(.disabled) {
+  background-color: #10b981;
+  color: #fff;
+  border-color: #10b981;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.d1-import-button:active:not(.disabled) {
+  background-color: #059669;
+  border-color: #059669;
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.d1-import-button:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+.d1-import-button.disabled {
+  background-color: #9ca3af;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Botão de upload */
+.d1-upload-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #10b981;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  user-select: none;
+  position: relative;
+}
+
+.d1-upload-button:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.d1-upload-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.d1-upload-button:disabled {
+  background: #9ca3af;
+  border-color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Animação de loading */
+.d1-spinning {
+  animation: d1-spin 1s linear infinite;
+}
+
+@keyframes d1-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Texto informativo */
+.d1-import-text {
+  font-size: 9px;
+  color: #718096;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Estados disabled */
+.d1-file-import.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.d1-file-import.disabled .d1-import-button {
+  background: #a0aec0;
+  color: #fff;
+  border-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.d1-file-import.disabled .d1-import-button:hover {
+  background: #a0aec0;
+  border-color: #a0aec0;
+  box-shadow: none;
+  transform: none;
+}
+
+.d1-file-import.disabled .d1-import-text {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .d1-import-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .d1-import-button,
+  .d1-upload-button {
+    width: 100%;
+    justify-content: center;
+    font-size: 9px;
+    padding: 5px 14px;
+  }
+}
+

@@ -1,0 +1,233 @@
+/* Container principal */
+.sla-file-import {
+  width: 100%;
+  position: relative;
+}
+
+.sla-import-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Wrapper do input de arquivo */
+.sla-file-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Input de arquivo nativo (escondido) */
+.sla-file-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.sla-file-input:disabled {
+  cursor: not-allowed;
+}
+
+/* Display do input (área clicável) */
+.sla-file-input-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 64px;
+  padding: 16px 20px;
+  background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sla-file-input-display:hover {
+  border-color: #10b981;
+  border-style: solid;
+  background: linear-gradient(to bottom, #f0fdf4 0%, #ecfdf5 100%);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  transform: translateY(-1px);
+}
+
+.sla-file-input-display:has(.sla-file-input:focus) {
+  border-color: #10b981;
+  border-style: solid;
+  outline: 3px solid rgba(16, 185, 129, 0.1);
+  outline-offset: 2px;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+}
+
+.sla-file-input-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sla-file-icon {
+  color: #10b981;
+  font-size: 32px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.2));
+  transition: transform 0.2s ease;
+}
+
+.sla-file-input-display:hover .sla-file-icon {
+  transform: scale(1.05);
+}
+
+.sla-file-input-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sla-file-placeholder {
+  font-size: 15px;
+  color: #475569;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+.sla-file-name {
+  font-size: 15px;
+  color: #0f172a;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+.sla-file-size {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Botão de upload */
+.sla-upload-button {
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+.sla-upload-button span {
+  display: inline;
+}
+
+.sla-upload-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+
+.sla-upload-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+}
+
+.sla-upload-button:disabled {
+  background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Animação de loading */
+.sla-spinning {
+  animation: sla-spin 1s linear infinite;
+}
+
+@keyframes sla-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Texto informativo */
+.sla-import-text {
+  font-size: 9px;
+  color: #718096;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Estados disabled */
+.sla-file-import.disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.sla-file-import.disabled .sla-file-input-display {
+  background: linear-gradient(to bottom, #f8fafc 0%, #f1f5f9 100%);
+  border-color: #cbd5e0;
+  border-style: dashed;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.sla-file-import.disabled .sla-file-icon {
+  color: #94a3b8;
+  filter: none;
+}
+
+.sla-file-import.disabled .sla-file-placeholder {
+  color: #94a3b8;
+}
+
+.sla-file-import.disabled .sla-import-text {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .sla-file-input-display {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .sla-upload-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

@@ -1,0 +1,907 @@
+/* Backdrop do Overlay */
+.d1-overlay-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1; /* Overlay de tabela - acima de tudo (Sidebar: 1000, FilterDropdown: 10001) */
+  /* padding: 1rem; */
+  overflow: hidden;
+  touch-action: none;
+}
+
+.d1-overlay-backdrop.fade-in {
+  animation: d1-fadeInBackdrop 0.3s ease-out;
+}
+
+.d1-overlay-backdrop.fade-out {
+  animation: d1-fadeOutBackdrop 0.3s ease-in;
+}
+
+@keyframes d1-fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes d1-fadeOutBackdrop {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Container do Overlay */
+.d1-overlay-container {
+  width: 100%;
+  height: 95%;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.d1-overlay-container.slide-up {
+  animation: d1-slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.d1-overlay-container.slide-down {
+  animation: d1-slideDown 0.3s ease-in;
+}
+
+@keyframes d1-slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes d1-slideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+}
+
+/* Header do Overlay - Animação Surpreendente */
+.d1-overlay-header {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+  background: #0f766e;
+  border-bottom: none;
+  position: relative;
+  overflow: visible;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.2);
+}
+
+.d1-overlay-header-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.d1-overlay-header > .d1-overlay-title-section,
+.d1-overlay-header > .d1-phone-input-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.d1-overlay-header > .d1-overlay-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.d1-overlay-filter-section {
+  width: 100%;
+}
+
+.d1-overlay-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes d1-headerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes d1-headerShine {
+  0%, 100% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+}
+
+.d1-overlay-title-section {
+  flex: 1;
+}
+
+.d1-overlay-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.d1-overlay-copy-all-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #667eea;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-overlay-copy-all-button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.d1-overlay-copy-all-button:hover {
+  background: #5568d3;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.d1-overlay-copy-all-button:active {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.d1-overlay-copy-all-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.d1-overlay-whatsapp-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #25D366;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-overlay-whatsapp-button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.d1-overlay-whatsapp-button:hover {
+  background: #128C7E;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.d1-overlay-whatsapp-button:active {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.d1-overlay-whatsapp-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.d1-overlay-excel-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #10b981;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-overlay-excel-button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.d1-overlay-excel-button:hover:not(:disabled) {
+  background: #059669;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.d1-overlay-excel-button:active:not(:disabled) {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.d1-overlay-excel-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.d1-overlay-excel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.d1-overlay-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+
+.d1-overlay-subtitle {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  line-height: 1.4;
+}
+
+.d1-overlay-close-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #ef4444;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-overlay-close-btn:hover {
+  background: #dc2626;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.d1-overlay-close-btn:active {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.d1-overlay-close-btn:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Wrapper da Tabela - Animação Surpreendente */
+.d1-overlay-table-wrapper {
+  flex: 1;
+  overflow: auto;
+  background: #ffffff;
+  position: relative;
+  animation: d1-tableFadeIn 0.4s ease-out 0.2s both;
+  border: 2px solid #e2e8f0;
+  border-top: none;
+}
+
+@keyframes d1-tableFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.d1-overlay-table-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.d1-overlay-table-wrapper::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 5px;
+}
+
+.d1-overlay-table-wrapper::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  transition: background 0.2s ease;
+}
+
+.d1-overlay-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Tabela do Overlay */
+.d1-overlay-table {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.d1-overlay-table.d1-table-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.d1-overlay-table thead {
+  position: sticky;
+  top: 0;
+  /* background: #f1f1f1; */
+  background: #FFFFFF;
+  z-index: 10;
+}
+
+.d1-overlay-table th {
+  padding: 30px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #2d3748;
+  border-right: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.d1-overlay-table th:last-child {
+  border-right: none;
+}
+
+.d1-overlay-table td:last-child {
+  border-right: none;
+}
+
+.d1-overlay-table td {
+  border-right: 2px solid #e2e8f0;
+  color: #4a5568;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+  width: max-content;
+  padding: 5px;
+  font-weight: bolder;
+}
+
+.d1-overlay-table tbody tr {
+  transition: all 0.2s ease-out;
+  border-top: 1px solid rgba(16, 185, 129, 0.1);
+  animation: d1-rowSlideIn 0.3s ease-out both;
+  animation-delay: calc(var(--row-index, 0) * 0.02s);
+  background-color: #ffffff;
+}
+
+@keyframes d1-rowSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.d1-overlay-table tbody tr:hover {
+  background: linear-gradient(90deg, #92929227 0%, #f7fafc 100%);
+  transform: translateX(4px) scale(1.01);
+  /* box-shadow: -4px 0 0 #10b981, 0 2px 8px rgba(16, 185, 129, 0.15); */
+  /* border-color: rgba(16, 185, 129, 0.3); */
+}
+
+
+.d1-overlay-table td {
+  width: max-content;
+}
+
+.d1-overlay-table td span {
+  width: 100%;
+}
+
+.d1-overlay-table td > div {
+  display: block;
+  width: 100%;
+  min-height: 20px;
+  white-space: nowrap;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+/* Classe para estilos dinâmicos - permite que estilos inline tenham prioridade */
+.d1-overlay-table td > div.d1-dynamic-styled {
+  /* Esta classe aumenta a especificidade para permitir que estilos inline funcionem */
+  /* Os estilos inline aplicados via React terão prioridade sobre classes CSS */
+  display: block;
+}
+
+.d1-overlay-table td .status-nao-entregue {
+  background-color: #fca1a1 !important;
+  color: #a72424 !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.d1-overlay-table td .status-entregue {
+  background-color: #f0fff4 !important;
+  color: #22543d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.d1-overlay-table td.base-ccm {
+  color: #1a365d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td.base-itj {
+  color: #22543d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td.base-itp {
+  color: #742a2a !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td.base-rds {
+  color: #553c9a !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td.base-bnu {
+  color: #744210 !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td.base-joi {
+  color: #1e40af !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td .data-expedicao {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #2d3748 !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td .numero-pedido {
+  font-family: 'Courier New', monospace;
+  font-weight: bolder !important;
+  background-color: #cccccc !important;
+  color: #1a202c !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td span .destinatario {
+  font-weight: 600;
+  color: #2d3748 !important;
+  background-color: #f8fafc !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.d1-overlay-table td .cidade-destino {
+  font-style: italic;
+  color: #ffffff !important;
+  background-color: #82aad1 !important;
+  border-radius: 4px; 
+  padding: 6px 8px;
+}
+
+.d1-overlay-empty-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #718096;
+}
+
+.d1-overlay-empty-message p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.d1-overlay-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  gap: 20px;
+}
+
+.d1-overlay-loading p {
+  color: #4a5568;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.d1-overlay-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #10b981;
+  border-radius: 50%;
+  animation: d1-spin-loading 0.8s linear infinite;
+}
+
+@keyframes d1-spin-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.d1-copy-cell span {
+  text-align: center;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d1-overlay-copy-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #64748b;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  margin: 0 auto;
+  position: relative;
+  overflow: visible;
+}
+
+.d1-overlay-copy-button:hover {
+  background: #475569;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.d1-overlay-copy-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.d1-phone-input-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: max-content;
+  overflow: hidden;
+  padding: 0px 10px;
+  margin-right: 10px;
+}
+
+.d1-phone-input-container button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-phone-input-container button:nth-child(3) {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.d1-phone-input-container button:nth-child(2) {
+  background: #25D366;
+  color: #ffffff;
+}
+
+.d1-phone-input-container button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.d1-phone-input-container button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.d1-overlay-add-phone-button {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  background: #10b981;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-overlay-add-phone-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: #ffffff !important;
+  fill: currentColor !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.d1-overlay-add-phone-button:hover:not(:disabled) {
+  background: #10b981;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.d1-overlay-add-phone-button:active:not(:disabled) {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.d1-overlay-add-phone-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.d1-overlay-add-phone-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.d1-overlay-clear-phone-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #ef4444;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.d1-overlay-clear-phone-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: #ffffff !important;
+  fill: currentColor !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.d1-overlay-clear-phone-button:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.d1-overlay-clear-phone-button:active:not(:disabled) {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.d1-overlay-clear-phone-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.d1-overlay-clear-phone-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.d1-phone-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: d1-spin 0.8s linear infinite;
+}
+
+@keyframes d1-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.d1-phone-message-overlay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 100000; /* Close button do overlay - acima do backdrop */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: d1-slideInMessage 0.3s ease-out;
+}
+
+.d1-phone-message-overlay.success {
+  background: #10b981;
+  color: white;
+}
+
+.d1-phone-message-overlay.error {
+  background: #ef4444;
+  color: white;
+}
+
+@keyframes d1-slideInMessage {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .d1-overlay-backdrop {
+    padding: 1rem;
+  }
+
+  .d1-overlay-container {
+    width: 98%;
+    height: 98%;
+  }
+
+  .d1-overlay-header {
+    padding: 16px;
+  }
+
+  .d1-overlay-table-wrapper {
+    padding: 16px;
+  }
+
+  .d1-overlay-table {
+    font-size: 12px;
+  }
+
+  .d1-overlay-table th,
+  .d1-overlay-table td {
+    padding: 8px;
+  }
+
+  .d1-overlay-copy-button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}

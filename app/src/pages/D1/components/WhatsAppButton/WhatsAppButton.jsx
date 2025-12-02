@@ -1,0 +1,181 @@
+import React from 'react'
+import './WhatsAppButton.css'
+import { FaWhatsapp } from "react-icons/fa";
+import { useNotification } from '../../../../contexts/NotificationContext';
+
+const WhatsAppButton = ({ 
+  phoneNumber, 
+  motorista, 
+  quantidade,
+  className = '',
+  onError = null // Função para mostrar erro (opcional)
+}) => {
+  const { showError, showSuccess } = useNotification()
+  
+  // Função para formatar número de telefone (remove caracteres especiais)
+  const formatPhoneNumber = (phone) => {
+    if (!phone) return ''
+    // Remove todos os caracteres não numéricos
+    return phone.replace(/\D/g, '')
+  }
+
+  // Obter nome do usuário (com fallback para "Funcionário")
+  const getUserName = () => {
+    const userName = localStorage.getItem('userName') || 
+                     localStorage.getItem('user_name') || 
+                     localStorage.getItem('nome') ||
+                     null
+    
+    return userName && userName.trim() !== '' ? userName.trim() : 'Funcionário'
+  }
+
+  // Função para gerar mensagem personalizada simplificada
+  const getMessage = () => {
+    // Buscar mensagem personalizada do localStorage
+    const customMessageTemplate = localStorage.getItem('d1-custom-message-template')
+    
+    console.log('🔍 WhatsAppButton - getMessage - Template original:', {
+      customMessageTemplate,
+      temQuantidade: customMessageTemplate?.includes('${quantidade}'),
+      quantidadeRecebida: quantidade
+    })
+    
+    if (!customMessageTemplate) {
+      // Se não houver mensagem personalizada, retornar mensagem vazia ou erro
+      if (onError) {
+        onError('Mensagem personalizada não configurada. Configure uma mensagem primeiro.')
+      } else {
+        showError('Mensagem personalizada não configurada. Configure uma mensagem primeiro.')
+      }
+      return ''
+    }
+    
+    // Se existe mensagem personalizada, substituir variáveis
+    let motoristaName = motorista ? motorista.toUpperCase() : 'MOTORISTA'
+    
+    // Remover "TAC" do início do nome do motorista se existir
+    motoristaName = motoristaName.replace(/^TAC\s+/i, '').trim()
+    
+    let finalMessage = customMessageTemplate
+    
+    // Substituir "TAC MOTORISTA!" pelo nome real do motorista (sem TAC) e remover as aspas
+    // Primeiro, substituir "TAC MOTORISTA!" (com aspas) pelo nome do motorista
+    finalMessage = finalMessage.replace(/"TAC\s+MOTORISTA!"/g, `${motoristaName}!`)
+    
+    // Também substituir TAC MOTORISTA! sem aspas (caso o usuário tenha removido manualmente)
+    finalMessage = finalMessage.replace(/TAC\s+MOTORISTA!/g, `${motoristaName}!`)
+    
+    // Substituir outras ocorrências de "MOTORISTA" pelo nome real (se não estiver dentro de "TAC MOTORISTA!")
+    finalMessage = finalMessage.replace(/\bMOTORISTA\b/g, motoristaName)
+    
+    console.log('🔍 WhatsAppButton - getMessage - Após substituir MOTORISTA:', {
+      finalMessage,
+      aindaTemQuantidade: finalMessage.includes('${quantidade}')
+    })
+    
+    // Substituir variáveis dinamicamente ${quantidade}
+    // Garantir que quantidade seja um número válido
+    const quantidadeNum = typeof quantidade === 'number' ? quantidade : (typeof quantidade === 'string' ? parseInt(quantidade, 10) : 0)
+    const quantidadeStr = String(isNaN(quantidadeNum) || quantidadeNum < 0 ? 0 : quantidadeNum)
+    
+    console.log('🔍 WhatsAppButton - getMessage - Antes de substituir quantidade:', {
+      quantidadeNum,
+      quantidadeStr,
+      mensagemAntes: finalMessage
+    })
+    
+    finalMessage = finalMessage.replace(/\$\{quantidade\}/g, quantidadeStr)
+    
+    console.log('🔍 WhatsAppButton - getMessage - Após substituir quantidade:', {
+      finalMessage,
+      aindaTemQuantidade: finalMessage.includes('${quantidade}')
+    })
+    
+    return finalMessage
+  }
+
+  // Função para abrir WhatsApp
+  const handleWhatsAppClick = async () => {
+    console.log('🔍 WhatsAppButton - Debug:', {
+      quantidade,
+      quantidadeType: typeof quantidade,
+      motorista,
+      phoneNumber,
+      formattedPhone: formatPhoneNumber(phoneNumber)
+    })
+    
+    const formattedPhone = formatPhoneNumber(phoneNumber)
+    const finalMessage = getMessage()
+    
+    console.log('🔍 WhatsAppButton - Mensagem gerada:', {
+      finalMessage,
+      quantidadeNaMensagem: finalMessage.match(/\$\{quantidade\}/) ? 'AINDA TEM ${quantidade}' : 'SUBSTITUÍDO',
+      quantidadeSubstituida: finalMessage.match(/\d+/)
+    })
+    
+    if (!formattedPhone) {
+      if (onError) {
+        onError('Número de telefone não informado!')
+      } else {
+        showError('Número de telefone não informado!')
+      }
+      return
+    }
+
+    // Primeiro, copia a mensagem para a área de transferência
+    try {
+      await navigator.clipboard.writeText(finalMessage)
+      showSuccess('📋 Mensagem copiada! Cole no WhatsApp quando abrir.')
+    } catch (err) {
+      if (onError) {
+        onError('Erro ao copiar mensagem. Tente novamente.')
+      } else {
+        showError('Erro ao copiar mensagem. Tente novamente.')
+      }
+      return
+    }
+
+    // URL para abrir diretamente no aplicativo WhatsApp Desktop
+    const whatsappAppUrl = `whatsapp://send?phone=55${formattedPhone}&text=${encodeURIComponent(finalMessage)}`
+    
+    // Criar link temporário para abrir WhatsApp Desktop (mais confiável que window.location)
+    const link = document.createElement('a')
+    link.href = whatsappAppUrl
+    link.style.display = 'none'
+    document.body.appendChild(link)
+    
+    // Tentar abrir WhatsApp Desktop (apenas Desktop, sem fallback para Web)
+    try {
+      link.click()
+      
+      // Remover o link após um tempo
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link)
+        }
+      }, 100)
+    } catch (err) {
+      // Se houver erro, apenas remover o link (não abre Web)
+      if (document.body.contains(link)) {
+        document.body.removeChild(link)
+      }
+      if (onError) {
+        onError('Erro ao abrir WhatsApp Desktop. Verifique se o aplicativo está instalado.')
+      } else {
+        showError('Erro ao abrir WhatsApp Desktop. Verifique se o aplicativo está instalado.')
+      }
+    }
+  }
+
+  return (
+    <button
+      className={`whatsapp-button-sla`}
+      onClick={handleWhatsAppClick}
+      title={`Enviar mensagem para ${motorista || 'motorista'} via WhatsApp`}
+    >
+      <span><FaWhatsapp size={23} /></span>
+    </button>
+  )
+}
+
+export default WhatsAppButton

@@ -1,0 +1,95 @@
+.d1-phone-input {
+  width: max-content;
+  padding: 8px 25px;
+  /* border: 1px solid #e2e8f0; */
+  border: none;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #10b981;
+  color: #2d3748;
+  box-sizing: border-box;
+  color: #ffffff;
+  border-radius: 50px;
+  font-weight: 700;
+  /* border-bottom: 2px solid transparent; */
+}
+
+/* Estilo quando usado no TableOverlay (phone input container) */
+.d1-phone-input-container .d1-phone-input,
+.d1-overlay-phone-input {
+  height: 44px;
+  min-height: 44px;
+  width: 200px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+  background: #ffffff;
+  border: 2px solid rgba(15, 118, 110, 0.3);
+  border-radius: 10px;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.d1-phone-input-container .d1-phone-input::placeholder,
+.d1-overlay-phone-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.d1-phone-input-container .d1-phone-input:focus,
+.d1-overlay-phone-input:focus {
+  border-color: rgba(15, 118, 110, 0.5);
+  box-shadow: 
+    0 4px 8px rgba(15, 118, 110, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  outline: none;
+}
+
+.d1-phone-input:focus {
+  outline: none;
+  border-color: #25D366;
+}
+
+.d1-phone-input:disabled {
+  background-color: #f7fafc;
+  color: #a0aec0;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+.d1-phone-input::placeholder {
+  color: #ffffff;
+  /* font-style: italic; */
+}
+
+/* Tamanhos */
+.d1-phone-input.small {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.d1-phone-input.large {
+  padding: 10px 14px;
+  font-size: 16px;
+}
+
+/* Variantes */
+.d1-phone-input.error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.d1-phone-input.success {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .d1-phone-input {
+    font-size: 16px; /* Previne zoom no iOS */
+    padding: 10px 12px;
+  }
+}

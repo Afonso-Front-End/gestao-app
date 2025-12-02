@@ -1,0 +1,303 @@
+/* Container de Uploads */
+.upload-progress-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+/* Item Individual de Upload */
+.upload-progress-item {
+  background: #ffffff;
+  border-radius: 10px;
+  border: 2px solid rgba(15, 118, 110, 0.2);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  min-width: 350px;
+  pointer-events: all;
+  animation: upload-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s ease;
+}
+
+.upload-progress-item:hover {
+  box-shadow: 
+    0 8px 30px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  transform: translateY(-2px);
+}
+
+@keyframes upload-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Estados de Upload */
+.upload-progress-uploading {
+  border-color: rgba(15, 118, 110, 0.3);
+}
+
+.upload-progress-success {
+  border-color: rgba(16, 185, 129, 0.3);
+  animation: upload-success-pulse 0.6s ease;
+}
+
+.upload-progress-error {
+  border-color: rgba(239, 68, 68, 0.3);
+  animation: upload-error-shake 0.5s ease;
+}
+
+@keyframes upload-success-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes upload-error-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+/* Ícone de Status */
+.upload-progress-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.upload-icon-spin {
+  color: #0f766e;
+  animation: upload-spin 1.5s linear infinite;
+}
+
+@keyframes upload-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.upload-icon-success {
+  color: #10b981;
+  animation: upload-icon-appear 0.5s ease;
+}
+
+.upload-icon-error {
+  color: #ef4444;
+  animation: upload-icon-appear 0.5s ease;
+}
+
+@keyframes upload-icon-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Conteúdo */
+.upload-progress-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.upload-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-progress-filename {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.upload-progress-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* Barra de Progresso */
+.upload-progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0f766e, #14b8a6);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: upload-progress-shine 2s ease-in-out infinite;
+}
+
+@keyframes upload-progress-shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.upload-progress-percentage {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+/* Mensagens */
+.upload-progress-message {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.upload-progress-success-msg {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.upload-progress-error-msg {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Botão de Fechar */
+.upload-progress-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.upload-progress-close:hover {
+  background: #f1f5f9;
+  color: #475569;
+  transform: scale(1.1);
+}
+
+.upload-progress-close:active {
+  transform: scale(0.95);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .upload-progress-container {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  .upload-progress-item {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .upload-progress-item,
+  .upload-icon-spin,
+  .upload-progress-bar,
+  .upload-progress-close {
+    animation: none;
+    transition: none;
+  }
+  
+  .upload-icon-spin {
+    animation: upload-spin 3s linear infinite;
+  }
+}
+

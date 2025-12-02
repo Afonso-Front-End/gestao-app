@@ -1,0 +1,757 @@
+/* Backdrop do Overlay */
+.lista-telefones-overlay-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200; /* Overlay de tabela */
+  padding: 1rem;
+}
+
+.lista-telefones-overlay-backdrop.fade-in {
+  animation: lista-telefones-fadeInBackdrop 0.3s ease-out;
+}
+
+.lista-telefones-overlay-backdrop.fade-out {
+  animation: lista-telefones-fadeOutBackdrop 0.3s ease-in;
+}
+
+@keyframes lista-telefones-fadeInBackdrop {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+@keyframes lista-telefones-fadeOutBackdrop {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+/* Container do Overlay */
+.lista-telefones-overlay-container {
+  width: 100%;
+  height: 95%;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.lista-telefones-overlay-container.slide-up {
+  animation: lista-telefones-slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.lista-telefones-overlay-container.slide-down {
+  animation: lista-telefones-slideDown 0.3s ease-in;
+}
+
+@keyframes lista-telefones-slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes lista-telefones-slideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+}
+
+/* Header do Overlay */
+.lista-telefones-overlay-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+  /* border-bottom: 1px solid #e2e8f0; */
+}
+
+.lista-telefones-overlay-title-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lista-telefones-overlay-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lista-telefones-overlay-copy-all-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lista-telefones-overlay-copy-all-button:hover {
+  /* transform: translateY(-2px); */
+  transform: scale(1.04);
+  /* box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); */
+}
+
+.lista-telefones-overlay-whatsapp-button {
+  background: #097640;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lista-telefones-overlay-whatsapp-button:hover {
+  background: #0A592B;
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(9, 118, 64, 0.4);
+}
+
+/* Copy Formatted Button styles are now in CopyFormattedButton.css */
+
+.lista-telefones-overlay-header h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #2d3748;
+}
+
+.lista-telefones-overlay-subtitle {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  color: #718096;
+}
+
+
+.lista-telefones-overlay-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #718096;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.lista-telefones-overlay-close-btn:hover {
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+/* Wrapper da Tabela */
+.lista-telefones-overlay-table-wrapper {
+  flex: 1;
+  overflow: auto;
+  /* padding: 20px; */
+  border-top: 2px solid #e2e8f0;
+  border-left: 2px solid #e2e8f0;
+  border-bottom: 2px solid #e2e8f0;
+  border-right: 2px solid #e2e8f0;
+  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.05);
+}
+
+/* Tabela do Overlay */
+.lista-telefones-overlay-table {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto;
+}
+
+.lista-telefones-overlay-table thead {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+  /* border-bottom: 2px solid #e2e8f0; */
+}
+
+.lista-telefones-overlay-table th {
+  padding: 30px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #2d3748;
+  border-right: 2px solid #e2e8f0;
+  white-space: nowrap;
+
+}
+
+.lista-telefones-overlay-table th:last-child {
+  border-right: none;
+}
+
+.lista-telefones-overlay-table td:last-child {
+  border-right: none;
+}
+
+.lista-telefones-overlay-table td {
+  padding: 7px 5px;
+  border-right: 2px solid #e2e8f0;
+  color: #4a5568;
+  word-wrap: break-word;
+  text-wrap: nowrap;
+  font-size: 12px;
+  text-align: left;
+}
+
+
+.lista-telefones-overlay-table tbody tr {
+  transition: all 0.2s ease;
+  border-top: 2px solid #e2e8f0;
+  /* border-top: 2px solid #e2e8f0; */
+}
+
+.lista-telefones-overlay-table tbody tr:hover {
+  opacity: 0.9;
+  background-color: #f7fafc;
+}
+
+/* Cores baseadas no conteúdo das células - Classes específicas */
+
+/* Status de Entrega - Verde para entregues, Vermelho para não entregues */
+
+.lista-telefones-overlay-table td {
+  width: max-content;
+}
+.lista-telefones-overlay-table td span {
+  width: 100%;
+}
+
+
+.lista-telefones-overlay-table td .status-nao-entregue {
+  background-color: #fff5f5 !important;
+  color: #742a2a !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.lista-telefones-overlay-table td .status-entregue {
+  background-color: #f0fff4 !important;
+  color: #22543d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+
+
+/* Cores para BASE - diferentes cores para cada base */
+.lista-telefones-overlay-table td.base-ccm {
+  /* background-color: #e6f3ff !important; */
+  color: #1a365d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.lista-telefones-overlay-table td.base-itj {
+  /* background-color: #f0fff4 !important; */
+  color: #22543d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.lista-telefones-overlay-table td.base-itp {
+  /* background-color: #fff5f5 !important; */
+  color: #742a2a !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.lista-telefones-overlay-table td.base-rds {
+  /* background-color: #faf5ff !important; */
+  color: #553c9a !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.lista-telefones-overlay-table td.base-bnu {
+  /* background-color: #fffbf0 !important; */
+  color: #744210 !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.lista-telefones-overlay-table td.base-joi {
+  /* background-color: #f0f9ff !important; */
+  color: #1e40af !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* DATA DE EXPEDIÇÃO - cor especial para datas */
+.lista-telefones-overlay-table td .data-expedicao {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  /* background-color: #f7fafc !important; */
+  color: #2d3748 !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* Nº DO PEDIDO - destaque especial */
+.lista-telefones-overlay-table td .numero-pedido {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  background-color: #edf2f7 !important;
+  color: #1a202c !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-height: 20px;
+}
+
+/* DESTINATÁRIO - destaque */
+.lista-telefones-overlay-table td span .destinatario {
+  font-weight: 600;
+  color: #2d3748 !important;
+  background-color: #f8fafc !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* Cidade Destino - estilo especial */
+.lista-telefones-overlay-table td .cidade-destino {
+  font-style: italic;
+  color: #4a5568 !important;
+  background-color: #f8fafc !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* Mensagem de vazio */
+.lista-telefones-overlay-empty-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #718096;
+}
+
+.lista-telefones-overlay-empty-message p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Loading State */
+.lista-telefones-overlay-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  gap: 20px;
+}
+
+.lista-telefones-overlay-loading p {
+  color: #4a5568;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.lista-telefones-overlay-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #10b981;
+  border-radius: 50%;
+  animation: lista-telefones-spin-loading 0.8s linear infinite;
+}
+
+@keyframes lista-telefones-spin-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Botão de Copiar no Overlay */
+
+.lista-telefones-copy-cell span {
+  text-align: center;
+  /* width: 60px; */
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lista-telefones-overlay-copy-button {
+  background: #667EEA;
+  border: 1px solid #e2e8f0;
+
+
+  border-radius: 4px;
+  /* padding: 6px 6px; */
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 40px;
+  height: 30px;
+  /* min-width: 24px; */
+  /* height: 24px; */
+  margin: 0 auto;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.lista-telefones-overlay-copy-button:hover {
+  background: #10B981;
+  /* border-color: #cbd5e0; */
+  transform: scale(1.05);
+}
+
+.lista-telefones-overlay-copy-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(59, 130, 246, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lista-telefones-overlay-backdrop {
+    padding: 1rem;
+  }
+
+  .lista-telefones-overlay-container {
+    width: 98%;
+    height: 98%;
+  }
+
+  .lista-telefones-overlay-header {
+    padding: 16px;
+  }
+
+  .lista-telefones-overlay-table-wrapper {
+    padding: 16px;
+  }
+
+  .lista-telefones-overlay-table {
+    font-size: 12px;
+  }
+
+  .lista-telefones-overlay-table th,
+  .lista-telefones-overlay-table td {
+    padding: 8px;
+  }
+
+  .lista-telefones-overlay-copy-button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+/* Phone Input Container */
+
+.lista-telefones-phone-input-container {
+  display: flex;
+  align-items: center;
+  gap:5px;
+  width: max-content;
+  border-bottom: 1px solid #cacaca;
+  /* border-radius: 30px; */
+  overflow: hidden;
+  padding: 0px 10px;
+  margin-right: 10px;
+}
+.lista-telefones-phone-input-container button {
+  padding: 8px 12px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.lista-telefones-phone-input-container button:nth-child(3) {
+  background: #ef4444;
+  color: #ffffff;
+}
+.lista-telefones-phone-input-container button:nth-child(2) {
+  background: #25D366;
+  color: #ffffff;
+}
+
+.lista-telefones-phone-input-container button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Base Search Container */
+.lista-telefones-overlay-base-search-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
+  padding: 12px;
+  background: #f7fafc;
+  flex-wrap: wrap;
+}
+
+.lista-telefones-overlay-base-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lista-telefones-overlay-base-label {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.lista-telefones-overlay-base-select {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+  color: #2d3748;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.lista-telefones-overlay-base-select:disabled {
+  background: #edf2f7;
+  cursor: not-allowed;
+  color: #a0aec0;
+}
+
+.lista-telefones-overlay-base-select:hover:not(:disabled) {
+  border-color: #667eea;
+}
+
+.lista-telefones-overlay-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.lista-telefones-overlay-search-label {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.lista-telefones-overlay-search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+  color: #2d3748;
+}
+
+.lista-telefones-overlay-search-input:disabled {
+  background: #edf2f7;
+  cursor: not-allowed;
+  color: #a0aec0;
+}
+
+.lista-telefones-overlay-search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.lista-telefones-overlay-export-button {
+  background: #10B981;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lista-telefones-overlay-export-button:hover:not(:disabled) {
+  background: #059669;
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.lista-telefones-overlay-export-button:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Phone Input Styles */
+/* Estilos do PhoneInput são gerenciados pelo próprio componente */
+
+.lista-telefones-overlay-add-phone-button {
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.lista-telefones-overlay-add-phone-button:hover:not(:disabled) {
+  background: #128C7E;
+  transform: scale(1.04);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.lista-telefones-overlay-add-phone-button:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.lista-telefones-overlay-clear-phone-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.lista-telefones-overlay-clear-phone-button:hover {
+  background: #dc2626;
+  transform: scale(1.04);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.lista-telefones-phone-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: lista-telefones-spin-phone 0.8s linear infinite;
+}
+
+@keyframes lista-telefones-spin-phone {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.lista-telefones-phone-message-overlay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1300; /* Close button do overlay */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: lista-telefones-slideInMessage 0.3s ease-out;
+}
+
+@keyframes lista-telefones-slideInMessage {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.lista-telefones-phone-message-overlay.success {
+  background: #10b981;
+  color: white;
+}
+
+.lista-telefones-phone-message-overlay.error {
+  background: #ef4444;
+  color: white;
+}

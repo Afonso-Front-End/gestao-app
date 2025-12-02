@@ -1,0 +1,84 @@
+.d1-motorista-search-container {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.d1-motorista-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.d1-motorista-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.d1-motorista-search-input {
+  width: 100%;
+  padding: 10px 40px 10px 40px;
+  border: 2px solid transparent;
+  font-size: 14px;
+  background: #ffffff;
+  color: #2d3748;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.d1-motorista-search-input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.d1-motorista-search-input::placeholder {
+  color: #a0aec0;
+}
+
+.d1-motorista-search-clear {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  color: #718096;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.d1-motorista-search-clear:hover {
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+.d1-motorista-search-results {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #718096;
+}
+
+.d1-motorista-search-count {
+  color: #10b981;
+  font-weight: 600;
+  background-color: #f7fafc;
+  padding: 4px 15px;
+  border-radius: 4px;
+}
+
+.d1-motorista-search-no-results {
+  color: #e53e3e;
+  font-weight: 500;
+  background-color: #f7fafc;
+  padding: 4px 15px;
+  border-radius: 4px;
+}
+

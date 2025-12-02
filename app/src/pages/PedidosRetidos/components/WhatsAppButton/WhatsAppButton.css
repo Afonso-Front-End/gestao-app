@@ -1,0 +1,23 @@
+.whatsapp-button-retidos {
+  background: #25D366;
+  color: white;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 4px;
+  font-size: 14px;
+  /* font-weight: 500; */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.whatsapp-button-retidos span {
+  margin-top: 3px;
+}
+.whatsapp-button-retidos:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 12px rgba(37, 204, 70, 0.4);
+}

@@ -1,0 +1,13 @@
+# Ícones da Aplicação
+
+Adicione os seguintes ícones neste diretório:
+- 32x32.png
+- 128x128.png
+- 128x128@2x.png
+- icon.icns (para macOS)
+- icon.ico (para Windows)
+
+Você pode gerar esses ícones usando:
+- https://tauri.app/v1/guides/features/icons/
+- Ou use o comando: npx @tauri-apps/cli icon [seu-icone.png]
+

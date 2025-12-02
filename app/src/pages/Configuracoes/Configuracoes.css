@@ -1,0 +1,275 @@
+.configuracoes-page {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fafbfc;
+  min-height: calc(100vh - 80px);
+}
+
+.configuracoes-header {
+  margin-bottom: 32px;
+}
+
+.configuracoes-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 8px 0;
+}
+
+.configuracoes-header p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.configuracoes-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.config-section {
+  background: #FFFFFF;
+  border-radius: 4px;
+  padding: 0;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 2px solid #f1f5f9;
+  overflow: hidden;
+  animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px 24px;
+  background: #059669;
+  color: white;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.section-header-text {
+  flex: 1;
+}
+
+.section-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.section-description {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.section-icon {
+  color: #ffffff;
+  font-size: 20px;
+  margin-top: 2px;
+}
+
+.section-fields {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d3748;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-description {
+  font-size: 12px;
+  font-weight: 400;
+  color: #64748b;
+  font-style: italic;
+}
+
+.field-input {
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  transition: border-color 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: #27272765;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.field-input:disabled {
+  background: #f7fafc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.config-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #059669;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Seção de Perigo/Danger */
+.danger-section {
+  border-color: #ef4444;
+}
+
+.danger-section .section-header {
+  background: #dc2626;
+}
+
+.danger-icon {
+  color: #ffffff !important;
+}
+
+.danger-warning {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.warning-text {
+  color: #991b1b;
+  font-size: 14px;
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+}
+
+.warning-details {
+  color: #7f1d1d;
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.warning-details ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.warning-details li {
+  margin: 4px 0;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn-danger:disabled {
+  background: #fca5a5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-danger:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .configuracoes-page {
+    padding: 16px;
+  }
+
+  .config-section {
+    padding: 0;
+  }
+  
+  .section-header {
+    padding: 16px 20px;
+  }
+
+  .section-fields {
+    padding: 20px;
+  }
+  
+  .config-actions {
+    justify-content: stretch;
+  }
+  
+  .btn-primary,
+  .btn-danger {
+    width: 100%;
+    justify-content: center;
+  }
+}

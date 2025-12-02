@@ -1,0 +1,103 @@
+.tauri-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.tauri-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 6px;
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.tauri-icon {
+  font-size: 1rem;
+}
+
+.backend-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.25rem;
+}
+
+.status-online .status-dot {
+  background-color: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  animation: pulse-online 2s infinite;
+}
+
+.status-offline .status-dot {
+  background-color: #ef4444;
+}
+
+.status-checking .status-dot {
+  background-color: #f59e0b;
+  animation: pulse-checking 1s infinite;
+}
+
+.status-online {
+  color: #10b981;
+  font-weight: 500;
+}
+
+.status-offline {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.status-checking {
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+@keyframes pulse-online {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse-checking {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .tauri-status {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    gap: 0.75rem;
+  }
+
+  .tauri-status-badge {
+    padding: 0.2rem 0.6rem;
+  }
+}
+

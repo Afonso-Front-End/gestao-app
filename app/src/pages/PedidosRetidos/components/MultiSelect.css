@@ -1,0 +1,421 @@
+/* Container principal do filtro */
+.filter-controls {
+    position: relative;
+    width: 100%;
+}
+
+/* Container do MultiSelect */
+.pedidos-retidos .multi-select-container,
+.multi-select-container {
+    position: relative;
+    color: #475569;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    z-index: 1; /* Base z-index */
+}
+
+.multi-select-container:hover {
+    background-color: #f8fafc;
+    border-color: #0f766e;
+    box-shadow: 0 3px 8px rgba(15, 118, 110, 0.15);
+    transform: translateY(-1px);
+}
+
+.multi-select-container.open {
+    background: #ecfdf5;
+    border-color: #0f766e;
+    box-shadow: 0 2px 8px rgba(15, 118, 110, 0.15);
+    z-index: 9999; /* Eleva o container inteiro quando aberto */
+}
+
+.multi-select-container:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.multi-select-container.disabled {
+    background-color: #f7fafc;
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+}
+
+.multi-select-container.disabled:hover {
+    background-color: #f7fafc;
+    border-color: #e2e8f0;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Cor padrão para todos os selects - sem variação por tema */
+
+/* Dropdown interno */
+.multi-select-dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    width: 100%;
+    user-select: none;
+}
+
+.multi-select-dropdown.open {
+    color: #0f766e;
+}
+
+.multi-select-text {
+    font-size: 13px;
+    color: #1e293b;
+    font-weight: 500;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    height: 100%;
+    padding: 12px 16px;
+    user-select: none;
+    letter-spacing: -0.2px;
+}
+
+.multi-select-arrow {
+    font-size: 12px;
+    color: #64748b;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.multi-select-arrow.rotated {
+    transform: rotate(180deg);
+}
+
+/* Arrow usa cor padrão - sem variação por tema */
+
+/* Opções do dropdown */
+.pedidos-retidos .multi-select-options,
+.multi-select-options {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0;
+    z-index: 10000; /* Dropdown do MultiSelect (sempre no topo quando aberto, acima do FilterDropdown) */
+    max-height: 320px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    user-select: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        /* transform: translateY(-8px) scale(0.98); */
+    }
+    to {
+        opacity: 1;
+        /* transform: translateY(0) scale(1); */
+    }
+}
+
+/* Ações (botões selecionar todas/limpar) */
+.multi-select-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1; /* Relativo ao dropdown */
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-radius: 12px 12px 0 0;
+    width: 100%;
+ 
+}
+
+.multi-select-actions button {
+    font-size: 9px;
+    font-weight: 500;
+    color: #64748b;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    position: relative;
+    flex: 0 1 auto;
+    text-align: center;
+}
+
+.multi-select-actions button:hover:not(:disabled) {
+    /* transform: translateY(-1px); */
+}
+
+.multi-select-actions button:active:not(:disabled) {
+    /* transform: translateY(0); */
+}
+
+.multi-select-actions button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Botão Selecionar Todos - Verde */
+.select-all-btn {
+    color: #0f766e;
+    background-color: #d1fae5;
+    border: 1px solid #0f766e;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.select-all-btn:hover:not(:disabled) {
+    color: #ffffff;
+    background: #0f766e;
+    border-color: #0f766e;
+    box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);
+}
+
+.select-all-btn:active:not(:disabled) {
+    background: #0d6560;
+    border-color: #0d6560;
+    transform: translateY(0);
+}
+
+/* Botão Limpar Todos - Vermelho */
+.clear-all-btn {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border: 1px solid #dc2626;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.clear-all-btn:hover:not(:disabled) {
+    color: #ffffff;
+    background: #dc2626;
+    border-color: #dc2626;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+}
+
+.clear-all-btn:active:not(:disabled) {
+    background: #b91c1c;
+    border-color: #b91c1c;
+    transform: translateY(0);
+}
+
+/* Lista de opções */
+.multi-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    min-height: 0;
+    padding: 8px;
+}
+
+/* Scrollbar personalizada */
+.multi-select-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.multi-select-list::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+.multi-select-list::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.multi-select-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Opção individual */
+.multi-select-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #2d3748;
+    position: relative;
+}
+
+.multi-select-option:hover {
+    background-color: #f7fafc;
+    /* transform: translateX(4px); */
+}
+
+.multi-select-option.selected {
+    color: #ffffff;
+    background: #0f766e;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);
+}
+
+.multi-select-option.selected:hover {
+    background: #0d6560;
+    box-shadow: 0 2px 8px rgba(15, 118, 110, 0.3);
+    transform: translateX(3px);
+}
+
+.multi-select-option:active {
+    /* transform: translateX(2px) scale(0.98); */
+}
+
+/* Opções usam cor padrão - sem variação por tema */
+
+/* Checkbox da opção */
+.option-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #cbd5e0;
+    background-color: #fff;
+    flex-shrink: 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.multi-select-option:hover .option-checkbox:not(.selected) {
+    border-color: #94a3b8;
+    background-color: #f1f5f9;
+}
+
+.multi-select-option.selected .option-checkbox {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #0f766e;
+    transform: scale(1.05);
+}
+
+.multi-select-option .option-checkbox svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 3;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Checkbox usa cor padrão - sem variação por tema */
+
+/* Texto da opção */
+.option-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .multi-select-container {
+        font-size: 9px;
+        padding: 5px 15px;
+        border-radius: 25px;
+    }
+
+    .multi-select-text {
+        font-size: 9px;
+    }
+
+    .multi-select-arrow {
+        font-size: 11px;
+    }
+
+    .multi-select-options {
+        max-height: 250px;
+        border-radius: 10px;
+    }
+
+    .multi-select-actions {
+        padding: 10px;
+        padding-bottom: 8px;
+    }
+
+    .multi-select-list {
+        padding: 6px 10px 10px 10px;
+    }
+
+    .multi-select-option {
+        font-size: 11px;
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .option-checkbox {
+        width: 18px;
+        height: 18px;
+    }
+
+    .multi-select-actions button {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .multi-select-list {
+        max-height: 200px;
+    }
+}
+
+/* Melhorias de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+    .multi-select-container,
+    .multi-select-option,
+    .multi-select-arrow,
+    .option-checkbox,
+    .multi-select-actions button {
+        transition: none;
+        animation: none;
+    }
+
+    .multi-select-option:hover,
+    .multi-select-container:hover {
+        transform: none;
+    }
+}
+
+/* Estados de foco para teclado */
+.multi-select-container:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+}
+
+.multi-select-option:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: -2px;
+}
+
+.multi-select-actions button:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+}

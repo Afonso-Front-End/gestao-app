@@ -1,0 +1,312 @@
+/* Container Principal */
+.loading-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 30px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(15, 118, 110, 0.15);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 300px);
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.loading-state-container:hover {
+  border-color: rgba(15, 118, 110, 0.25);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Círculos de fundo animados */
+.loading-state-circle-1,
+.loading-state-circle-2 {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.loading-state-circle-1 {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  top: -150px;
+  left: -150px;
+  animation: loading-state-float 8s ease-in-out infinite;
+}
+
+.loading-state-circle-2 {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  bottom: -200px;
+  right: -200px;
+  animation: loading-state-float 10s ease-in-out infinite reverse;
+}
+
+@keyframes loading-state-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, 20px) scale(1.1);
+  }
+}
+
+/* Conteúdo */
+.loading-state-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Spinner Container */
+.loading-state-spinner {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #0f766e, #0d9488);
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 10px 40px rgba(15, 118, 110, 0.25),
+    0 0 0 16px rgba(15, 118, 110, 0.08),
+    0 0 0 32px rgba(15, 118, 110, 0.04),
+    inset 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  animation: loading-state-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.loading-state-spinner::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  opacity: 0.5;
+  filter: blur(8px);
+  animation: loading-state-rotate 3s linear infinite;
+}
+
+@keyframes loading-state-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 10px 40px rgba(15, 118, 110, 0.25),
+      0 0 0 16px rgba(15, 118, 110, 0.08),
+      0 0 0 32px rgba(15, 118, 110, 0.04),
+      inset 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow:
+      0 15px 50px rgba(15, 118, 110, 0.35),
+      0 0 0 20px rgba(15, 118, 110, 0.12),
+      0 0 0 40px rgba(15, 118, 110, 0.06),
+      inset 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Ícone do Spinner */
+.loading-state-icon {
+  width: 60px;
+  height: 60px;
+  color: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  animation: loading-state-spin 1.2s linear infinite;
+}
+
+@keyframes loading-state-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loading-state-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Título */
+.loading-state-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f766e;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  letter-spacing: -0.5px;
+  animation: loading-state-fade 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-state-fade {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Subtítulo */
+.loading-state-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 0;
+  max-width: 400px;
+}
+
+/* Dots animados */
+.loading-state-dots {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.loading-state-dot {
+  width: 12px;
+  height: 12px;
+  background: #0f766e;
+  border-radius: 50%;
+  animation: loading-state-bounce 1.4s ease-in-out infinite;
+  box-shadow: 0 2px 4px rgba(15, 118, 110, 0.3);
+}
+
+.loading-state-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.loading-state-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-state-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes loading-state-bounce {
+  0%, 80%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(-15px) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* Variações de tamanho */
+.loading-state-small {
+  min-height: 300px;
+  padding: 40px 20px;
+}
+
+.loading-state-small .loading-state-spinner {
+  width: 80px;
+  height: 80px;
+}
+
+.loading-state-small .loading-state-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.loading-state-small .loading-state-title {
+  font-size: 20px;
+}
+
+.loading-state-small .loading-state-subtitle {
+  font-size: 14px;
+}
+
+.loading-state-large {
+  min-height: calc(100vh - 200px);
+  padding: 80px 40px;
+}
+
+.loading-state-large .loading-state-spinner {
+  width: 150px;
+  height: 150px;
+}
+
+.loading-state-large .loading-state-icon {
+  width: 75px;
+  height: 75px;
+}
+
+.loading-state-large .loading-state-title {
+  font-size: 28px;
+}
+
+.loading-state-large .loading-state-subtitle {
+  font-size: 18px;
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .loading-state-spinner,
+  .loading-state-icon,
+  .loading-state-dot,
+  .loading-state-circle-1,
+  .loading-state-circle-2,
+  .loading-state-title {
+    animation: none;
+  }
+  
+  .loading-state-icon {
+    animation: loading-state-spin 3s linear infinite;
+  }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .loading-state-container {
+    padding: 40px 20px;
+    min-height: calc(100vh - 250px);
+  }
+  
+  .loading-state-spinner {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .loading-state-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .loading-state-title {
+    font-size: 20px;  
+  }
+  
+  .loading-state-subtitle {
+    font-size: 14px;
+  }
+  
+  .loading-state-circle-1,
+  .loading-state-circle-2 {
+    display: none;
+  }
+}
+

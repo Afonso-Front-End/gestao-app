@@ -1,0 +1,273 @@
+/* Container principal */
+.pedidos-retidos-file-import {
+  max-width: max-content;
+  position: relative;
+  text-align: center;
+}
+
+.pedidos-retidos-file-import h2 {
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #1e293b;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.pedidos-retidos-file-import span {
+  font-size: 13px;
+  color: #1e293b;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.2px;
+}
+
+.pedidos-retidos-import-button:hover span {
+  color: #ffffff;
+}
+
+.pedidos-retidos-import-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Container dos botões */
+.pedidos-retidos-import-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Botão de seleção de arquivo */
+.pedidos-retidos-import-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #d1fae5;
+  color: #0f766e;
+  border: 1px solid #0f766e;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.15);
+  white-space: nowrap;
+  min-width: 160px;
+}
+
+.pedidos-retidos-import-button:hover:not(.disabled) {
+  background: #0f766e;
+  color: #ffffff;
+  border-color: #0f766e;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.3);
+}
+
+.pedidos-retidos-import-button:active:not(.disabled) {
+  background: #0d6560;
+  border-color: #0d6560;
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.25);
+}
+
+.pedidos-retidos-import-button:focus-visible {
+  outline: 2px solid #0f766e;
+  outline-offset: 2px;
+}
+
+.pedidos-retidos-import-button.disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  border-color: #cbd5e1;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Botão de upload */
+.pedidos-retidos-upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f766e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  user-select: none;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);
+  position: relative;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.pedidos-retidos-upload-button:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.4);
+}
+
+.pedidos-retidos-upload-button:active:not(:disabled) {
+  transform: translateY(0) scale(1);
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.3);
+}
+
+.pedidos-retidos-upload-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Animação de loading */
+.pedidos-retidos-spinning {
+  animation: pedidos-retidos-spin 1s linear infinite;
+}
+
+@keyframes pedidos-retidos-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Texto informativo */
+.pedidos-retidos-import-text {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Estados disabled */
+.pedidos-retidos-file-import.disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.pedidos-retidos-file-import.disabled .pedidos-retidos-import-button {
+  background: #e2e8f0;
+  color: #94a3b8;
+  border-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.pedidos-retidos-file-import.disabled .pedidos-retidos-import-button:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  box-shadow: none;
+  transform: none;
+}
+
+.pedidos-retidos-file-import.disabled .pedidos-retidos-import-text {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Ícone Excel */
+.pedidos-retidos-import-button svg {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.pedidos-retidos-import-button:hover:not(.disabled) svg {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+/* Ícone Send */
+.pedidos-retidos-upload-button svg {
+  transition: transform 0.3s ease;
+}
+
+.pedidos-retidos-upload-button:hover:not(:disabled) svg:not(.pedidos-retidos-spinning) {
+  transform: translateX(2px);
+}
+
+/* Efeito de pulso no botão de upload quando arquivo selecionado */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(15, 118, 110, 0.3);
+  }
+  50% {
+    box-shadow: 0 2px 16px rgba(15, 118, 110, 0.5);
+  }
+}
+
+.pedidos-retidos-upload-button {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Badge para arquivo selecionado */
+.pedidos-retidos-import-button.has-file {
+  background: #a7f3d0;
+  border-color: #0f766e;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .pedidos-retidos-import-buttons {
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pedidos-retidos-import-button,
+  .pedidos-retidos-upload-button {
+    font-size: 12px;
+  }
+
+  .pedidos-retidos-import-button {
+    padding: 10px 16px;
+    min-width: 140px;
+  }
+
+  .pedidos-retidos-upload-button {
+    padding: 10px;
+    min-width: 42px;
+    min-height: 42px;
+  }
+
+  .pedidos-retidos-file-import span {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pedidos-retidos-import-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pedidos-retidos-import-button,
+  .pedidos-retidos-upload-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Melhorias de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  .pedidos-retidos-import-button,
+  .pedidos-retidos-upload-button,
+  .pedidos-retidos-spinning,
+  .pedidos-retidos-import-button svg,
+  .pedidos-retidos-upload-button svg {
+    transition: none;
+    animation: none;
+  }
+
+  .pedidos-retidos-import-button:hover,
+  .pedidos-retidos-upload-button:hover {
+    transform: none;
+  }
+}

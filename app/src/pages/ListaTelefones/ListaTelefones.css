@@ -1,0 +1,177 @@
+.lista-telefones-page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+}
+
+.lista-telefones-header-container {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    background: #ffffff;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.lista-telefones-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 59px;
+    gap: 4px;
+    padding: 0 5px;
+}
+
+.lista-telefones-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0 5px;
+}
+
+.lista-telefones-upload-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.lista-telefones-buscar-base-button {
+    background: #10B981;
+    color: #fff;
+    border: none;
+    padding: 9px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.lista-telefones-buscar-base-button:hover {
+    background: #059669;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+.lista-telefones-buscar-base-button:active {
+    background: #059669;
+    transform: scale(0.95);
+}
+
+.lista-telefones-buscar-base-button:focus {
+    outline: none;
+}
+
+.lista-telefones-cadastrar-button {
+    background: #667eea;
+    color: #fff;
+    border: none;
+    padding: 9px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.lista-telefones-cadastrar-button:hover {
+    background: #5568d3;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+.lista-telefones-cadastrar-button:active {
+    background: #5568d3;
+    transform: scale(0.95);
+}
+
+.lista-telefones-cadastrar-button:focus {
+    outline: none;
+}
+
+/* Paginação */
+.lista-telefones-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-top: none;
+    border-bottom: none;
+}
+
+.lista-telefones-pagination-button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lista-telefones-pagination-button:hover:not(:disabled) {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.lista-telefones-pagination-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+.lista-telefones-pagination-button:disabled {
+    background: #cbd5e0;
+    color: #a0aec0;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+}
+
+.lista-telefones-pagination-info {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2d3748;
+    padding: 8px 16px;
+    background: #f7fafc;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Estatísticas */
+.lista-telefones-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    font-size: 14px;
+    color: #4a5568;
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-top: none;
+    margin-bottom: 5px;
+}
+
+.lista-telefones-stats-highlight {
+    font-weight: 600;
+    color: #667eea;
+    margin: 0 4px;
+}

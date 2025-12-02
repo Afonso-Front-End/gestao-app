@@ -1,0 +1,41 @@
+.sla-table-config-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #8b5cf6;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.sla-table-config-button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.sla-table-config-button:hover {
+  background: #7c3aed;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.sla-table-config-button:active {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sla-table-config-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+

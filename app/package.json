@@ -1,0 +1,50 @@
+{
+  "name": "torre-de-controle",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "//": "NOTA DE SEGURANÇA:",
+  "//xlsx-note": "xlsx tem vulnerabilidades conhecidas (GHSA-4r6h-8v6p-xvw6, GHSA-5pgg-2g8v-p4x9)",
+  "//xlsx-uso": "USO ATUAL: APENAS export de dados já validados do backend",
+  "//xlsx-risco": "RISCO: BAIXO (dados controlados, sem processamento de uploads não confiáveis)",
+  "//xlsx-plano": "PLANO: Migrar para exceljs (ver MIGRACAO_EXCELJS.md) ou backend",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.1.0",
+    "@fortawesome/free-regular-svg-icons": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.0",
+    "@tauri-apps/api": "^1.6.0",
+    "axios": "^1.12.2",
+    "dom-to-image": "^2.6.0",
+    "exceljs": "^4.4.0",
+    "html2canvas": "^1.4.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.9.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@tauri-apps/cli": "^1.6.3",
+    "@tauri-apps/tauricon": "^1.0.3",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "eslint": "^9.36.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.22",
+    "globals": "^16.4.0",
+    "sharp": "^0.34.5",
+    "to-ico": "^1.1.5",
+    "vite": "^7.1.7"
+  }
+}

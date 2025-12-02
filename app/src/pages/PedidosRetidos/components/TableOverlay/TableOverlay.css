@@ -1,0 +1,896 @@
+/* Backdrop do Overlay */
+.table-overlay-pr-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200; /* Overlay de tabela */
+  padding: 1rem;
+}
+
+.table-overlay-pr-backdrop.fade-in {
+  animation: table-overlay-pr-fadeInBackdrop 0.3s ease-out;
+}
+
+.table-overlay-pr-backdrop.fade-out {
+  animation: table-overlay-pr-fadeOutBackdrop 0.3s ease-in;
+}
+
+@keyframes table-overlay-pr-fadeInBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes table-overlay-pr-fadeOutBackdrop {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Container do Overlay */
+.table-overlay-pr-overlay-container {
+  width: 100%;
+  height: 95%;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 5px;
+}
+
+.table-overlay-pr-overlay-container.slide-up {
+  animation: table-overlay-pr-slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.table-overlay-pr-overlay-container.slide-down {
+  animation: table-overlay-pr-slideDown 0.3s ease-in;
+}
+
+@keyframes table-overlay-pr-slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes table-overlay-pr-slideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+}
+
+/* Header do Overlay - PROFISSIONAL */
+.table-overlay-pr-overlay-header {
+  padding: 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
+  background: #0f766e;
+  border-bottom: none;
+  position: relative;
+  overflow: visible;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.2);
+}
+
+@keyframes table-overlay-pr-headerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes table-overlay-pr-headerShine {
+  0%, 100% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+}
+
+.table-overlay-pr-overlay-title-section {
+  flex: 1;
+}
+
+.table-overlay-pr-overlay-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.table-overlay-pr-overlay-copy-all-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #667eea;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.table-overlay-pr-overlay-copy-all-button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.table-overlay-pr-overlay-copy-all-button:hover {
+  background: #5568d3;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.table-overlay-pr-overlay-copy-all-button:active {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table-overlay-pr-overlay-copy-all-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.table-overlay-pr-overlay-whatsapp-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #25D366;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.table-overlay-pr-overlay-whatsapp-button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.table-overlay-pr-overlay-whatsapp-button:hover {
+  background: #128C7E;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.table-overlay-pr-overlay-whatsapp-button:active {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table-overlay-pr-overlay-whatsapp-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+/* Copy Formatted Button styles are now in CopyFormattedButton.css */
+
+.table-overlay-pr-overlay-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+
+.table-overlay-pr-overlay-subtitle {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  line-height: 1.4;
+}
+
+
+.table-overlay-pr-overlay-excel-button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #10b981;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.table-overlay-pr-overlay-excel-button svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.table-overlay-pr-overlay-excel-button:hover:not(:disabled) {
+  background: #059669;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.table-overlay-pr-overlay-excel-button:active:not(:disabled) {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table-overlay-pr-overlay-excel-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.table-overlay-pr-overlay-excel-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.table-overlay-pr-overlay-close-btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: #dc2626;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.table-overlay-pr-overlay-close-btn:hover {
+  background: #b91c1c;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.table-overlay-pr-overlay-close-btn:active {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Wrapper da Tabela - Animação Surpreendente */
+.table-overlay-pr-overlay-table-wrapper {
+  flex: 1;
+  overflow: auto;
+  background: #ffffff;
+  position: relative;
+  animation: table-overlay-pr-tableFadeIn 0.4s ease-out 0.2s both;
+  border: 2px solid #e2e8f0;
+  border-top: none;
+  padding: 0;
+  margin: 0;
+}
+
+@keyframes table-overlay-pr-tableFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.table-overlay-pr-overlay-table-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.table-overlay-pr-overlay-table-wrapper::-webkit-scrollbar-track {
+  background: #f7fafc;
+  border-radius: 5px;
+}
+
+.table-overlay-pr-overlay-table-wrapper::-webkit-scrollbar-thumb {
+  /* background: linear-gradient(180deg, #10b981, #34d399); */
+  background: #cccccc;
+  transition: background 0.2s ease;
+}
+
+.table-overlay-pr-overlay-table-wrapper::-webkit-scrollbar-thumb:hover {
+  /* background: linear-gradient(180deg, #059669, #10b981); */
+  background: #a1a1a1;
+}
+
+/* Tabela do Overlay */
+.table-overlay-pr-overlay-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  table-layout: auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  margin: 0;
+  padding: 0;
+}
+
+.table-overlay-pr-overlay-table.table-overlay-pr-table-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.table-overlay-pr-overlay-table thead {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+  /* border-bottom: 2px solid #e2e8f0; */
+}
+
+.table-overlay-pr-overlay-table th {
+  padding: 30px 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #2d3748;
+  border-right: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.table-overlay-pr-overlay-table th:last-child {
+  border-right: none;
+}
+
+.table-overlay-pr-overlay-table td:last-child {
+  border-right: none;
+}
+
+.table-overlay-pr-overlay-table td {
+  border-right: 2px solid #e2e8f0;
+  color: #4a5568;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+  width: max-content;
+  padding: 5px;
+  font-weight: bolder;
+}
+
+
+.table-overlay-pr-overlay-table tbody tr {
+  transition: all 0.2s ease-out;
+  border-top: 1px solid rgba(16, 185, 129, 0.1);
+  animation: table-overlay-pr-rowSlideIn 0.3s ease-out both;
+  animation-delay: calc(var(--row-index, 0) * 0.02s);
+  background-color: #ffffff;
+}
+
+@keyframes table-overlay-pr-rowSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.table-overlay-pr-overlay-table tbody tr:hover {
+  background: #ecfdf5;
+  transform: translateX(4px) scale(1.01);
+  box-shadow: -4px 0 0 #10b981, 0 2px 8px rgba(16, 185, 129, 0.15);
+  border-top-color: rgba(16, 185, 129, 0.3);
+}
+
+.table-overlay-pr-overlay-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.table-overlay-pr-overlay-table tbody tr:nth-child(even):hover {
+  background: #ecfdf5;
+}
+
+/* Cores baseadas no conteúdo das células - Classes específicas */
+
+/* Status de Entrega - Verde para entregues, Vermelho para não entregues */
+
+.table-overlay-pr-overlay-table td {
+  width: max-content;
+}
+
+.table-overlay-pr-overlay-table td span {
+  width: 100%;
+}
+
+.table-overlay-pr-overlay-table td > div {
+  display: block;
+  width: 100%;
+  min-height: 20px;
+  white-space: nowrap;
+}
+
+
+.table-overlay-pr-overlay-table td .status-nao-entregue {
+  background-color: #fca1a1 !important;
+  color: #a72424 !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.table-overlay-pr-overlay-table td .status-entregue {
+  background-color: #f0fff4 !important;
+  color: #22543d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+
+
+/* Cores para BASE - diferentes cores para cada base */
+.table-overlay-pr-overlay-table td.base-ccm {
+  /* background-color: #e6f3ff !important; */
+  color: #1a365d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.table-overlay-pr-overlay-table td.base-itj {
+  /* background-color: #f0fff4 !important; */
+  color: #22543d !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.table-overlay-pr-overlay-table td.base-itp {
+  /* background-color: #fff5f5 !important; */
+  color: #742a2a !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.table-overlay-pr-overlay-table td.base-rds {
+  /* background-color: #faf5ff !important; */
+  color: #553c9a !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.table-overlay-pr-overlay-table td.base-bnu {
+  /* background-color: #fffbf0 !important; */
+  color: #744210 !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.table-overlay-pr-overlay-table td.base-joi {
+  /* background-color: #f0f9ff !important; */
+  color: #1e40af !important;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* DATA DE EXPEDIÇÃO - cor especial para datas */
+.table-overlay-pr-overlay-table td .data-expedicao {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  /* background-color: #f7fafc !important; */
+  color: #2d3748 !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* Nº DO PEDIDO - destaque especial */
+.table-overlay-pr-overlay-table td .numero-pedido {
+  font-family: 'Courier New', monospace;
+  font-weight: bolder !important;
+  background-color: #cccccc !important;
+  color: #1a202c !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* DESTINATÁRIO - destaque */
+.table-overlay-pr-overlay-table td span .destinatario {
+  font-weight: 600;
+  color: #2d3748 !important;
+  background-color: #f8fafc !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+/* Cidade Destino - estilo especial */
+.table-overlay-pr-overlay-table td .cidade-destino {
+  font-style: italic;
+  color: #ffffff !important;
+  background-color: #82aad1 !important;
+  border-radius: 4px; 
+  padding: 6px 8px;
+}
+
+/* Aging - estilo especial */
+.table-overlay-pr-overlay-table td .aging {
+  font-weight: 600;
+  color: #000000 !important;
+  background-color: #f59e0b !important;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+
+
+/* Mensagem de vazio */
+.table-overlay-pr-overlay-empty-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #718096;
+}
+
+.table-overlay-pr-overlay-empty-message p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Loading State */
+.table-overlay-pr-overlay-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+  gap: 20px;
+}
+
+.table-overlay-pr-overlay-loading p {
+  color: #4a5568;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.table-overlay-pr-overlay-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #10b981;
+  border-radius: 50%;
+  animation: table-overlay-pr-spin-loading 0.8s linear infinite;
+}
+
+@keyframes table-overlay-pr-spin-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Botão de Copiar no Overlay */
+.table-overlay-pr-copy-cell span {
+  text-align: center;
+  /* width: 60px; */
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-overlay-pr-overlay-copy-button {
+  background: #000;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 40px;
+  height: 30px;
+  margin: 0 auto;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.table-overlay-pr-overlay-copy-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.table-overlay-pr-overlay-copy-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.table-overlay-pr-overlay-copy-button:hover {
+  background: #10B981;
+  /* transform: scale(1.15) translateY(-2px) rotate(5deg); */
+  box-shadow: 0 3px 12px rgba(16, 185, 129, 0.3);
+}
+
+.table-overlay-pr-overlay-copy-button:active {
+  transform: scale(1.05) translateY(0) rotate(0deg);
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table-overlay-pr-backdrop {
+    padding: 1rem;
+  }
+
+  .table-overlay-pr-overlay-container {
+    width: 98%;
+    height: 98%;
+  }
+
+  .table-overlay-pr-overlay-header {
+    padding: 16px;
+  }
+
+  .table-overlay-pr-overlay-table-wrapper {
+    padding: 0;
+  }
+
+  .table-overlay-pr-overlay-table {
+    font-size: 12px;
+  }
+
+  .table-overlay-pr-overlay-table th,
+  .table-overlay-pr-overlay-table td {
+    padding: 8px;
+  }
+
+  .table-overlay-pr-overlay-copy-button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+/* Phone Input Container */
+
+.table-overlay-pr-phone-input-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  padding: 0px 10px;
+  margin-right: 10px;
+}
+
+/* Estilos do input estão definidos em PhoneInput.css com especificidade maior */
+
+/* Botões de Confirmar e Cancelar */
+/* Container dos botões de telefone */
+.table-overlay-pr-phone-input-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Botão Confirmar (Verde - Padrão Excel) */
+.table-overlay-pr-overlay-add-phone-button {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  background: #10b981;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.table-overlay-pr-overlay-add-phone-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: #ffffff !important;
+  fill: currentColor !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.table-overlay-pr-overlay-add-phone-button:hover:not(:disabled) {
+  background: #059669;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.table-overlay-pr-overlay-add-phone-button:active:not(:disabled) {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table-overlay-pr-overlay-add-phone-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.table-overlay-pr-overlay-add-phone-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Botão Cancelar (Vermelho - Padrão Close) */
+.table-overlay-pr-overlay-clear-phone-button {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  background: #dc2626;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.table-overlay-pr-overlay-clear-phone-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  color: #ffffff !important;
+  fill: currentColor !important;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.table-overlay-pr-overlay-clear-phone-button:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px) scale(1.05) rotate(-3deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.table-overlay-pr-overlay-clear-phone-button:active:not(:disabled) {
+  transform: translateY(0) scale(1) rotate(0deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.table-overlay-pr-overlay-clear-phone-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.table-overlay-pr-phone-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: table-overlay-pr-spin 0.8s linear infinite;
+}
+
+@keyframes table-overlay-pr-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.table-overlay-pr-phone-message-overlay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1300; /* Close button do overlay */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: table-overlay-pr-slideInMessage 0.3s ease-out;
+}
+
+.table-overlay-pr-phone-message-overlay.success {
+  background: #10b981;
+  color: white;
+}
+
+.table-overlay-pr-phone-message-overlay.error {
+  background: #ef4444;
+  color: white;
+}
+
+@keyframes table-overlay-pr-slideInMessage {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Estilos do CopyFormattedButton são gerenciados pelo próprio componente */
