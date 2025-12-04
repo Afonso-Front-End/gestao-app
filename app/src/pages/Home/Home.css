@@ -62,7 +62,7 @@
 
 /* Hero Section */
 .home-hero {
-  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+  background: #0f766e;
   border-radius: 5px;
   padding: 48px 40px;
   margin-bottom: 40px;

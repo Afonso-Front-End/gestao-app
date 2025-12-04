@@ -8,7 +8,6 @@
 .lista-telefones-header-container {
     position: sticky;
     top: 0;
-    z-index: 1000;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
@@ -42,60 +41,92 @@
     gap: 5px;
 }
 
-.lista-telefones-buscar-base-button {
-    background: #10B981;
-    color: #fff;
+/* Botões padronizados */
+.lista-telefones-buscar-base-button,
+.lista-telefones-cadastrar-button {
+    width: var(--header-element-height);
+    height: var(--header-element-height);
+    padding: 0;
     border: none;
-    padding: 9px 10px;
-    border-radius: 5px;
+    border-radius: var(--header-element-radius);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: var(--header-element-transition);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
 }
 
-.lista-telefones-buscar-base-button:hover {
-    background: #059669;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transform: scale(1.05);
-}
-
-.lista-telefones-buscar-base-button:active {
-    background: #059669;
-    transform: scale(0.95);
-}
-
-.lista-telefones-buscar-base-button:focus {
-    outline: none;
+.lista-telefones-buscar-base-button {
+    background: #10b981;
 }
 
 .lista-telefones-cadastrar-button {
     background: #667eea;
-    color: #fff;
-    border: none;
-    padding: 9px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
+}
+
+.lista-telefones-buscar-base-button::before,
+.lista-telefones-cadastrar-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.lista-telefones-buscar-base-button:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .lista-telefones-cadastrar-button:hover {
     background: #5568d3;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
+.lista-telefones-buscar-base-button:hover::before,
+.lista-telefones-cadastrar-button:hover::before {
+    width: 100px;
+    height: 100px;
+}
+
+.lista-telefones-buscar-base-button:active,
 .lista-telefones-cadastrar-button:active {
-    background: #5568d3;
-    transform: scale(0.95);
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.lista-telefones-cadastrar-button:focus {
-    outline: none;
+.lista-telefones-buscar-base-button:focus-visible,
+.lista-telefones-cadastrar-button:focus-visible {
+    outline: 3px solid rgba(16, 185, 129, 0.5);
+    outline-offset: 2px;
+}
+
+.lista-telefones-cadastrar-button:focus-visible {
+    outline-color: rgba(102, 126, 234, 0.5);
+}
+
+.lista-telefones-buscar-base-button svg,
+.lista-telefones-cadastrar-button svg {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.lista-telefones-buscar-base-button:hover svg,
+.lista-telefones-cadastrar-button:hover svg {
+    transform: rotate(90deg);
 }
 
 /* Paginação */
@@ -103,57 +134,87 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    padding: 16px;
-    background: #ffffff;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border: 2px solid #e2e8f0;
     border-top: none;
     border-bottom: none;
 }
 
 .lista-telefones-pagination-button {
-    background: #667eea;
+    background: #10b981;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.lista-telefones-pagination-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.lista-telefones-pagination-button:hover:not(:disabled)::before {
+    width: 300px;
+    height: 300px;
 }
 
 .lista-telefones-pagination-button:hover:not(:disabled) {
-    background: #5568d3;
+    background: #059669;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
 }
 
 .lista-telefones-pagination-button:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .lista-telefones-pagination-button:disabled {
-    background: #cbd5e0;
-    color: #a0aec0;
+    background: #e2e8f0;
+    color: #94a3b8;
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.7;
     transform: none;
     box-shadow: none;
 }
 
+.lista-telefones-pagination-button:focus-visible {
+    outline: 3px solid rgba(16, 185, 129, 0.5);
+    outline-offset: 2px;
+}
+
 .lista-telefones-pagination-info {
-    font-size: 14px;
-    font-weight: 600;
-    color: #2d3748;
-    padding: 8px 16px;
-    background: #f7fafc;
-    border-radius: 6px;
-    border: 1px solid #e2e8f0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a202c;
+    padding: 12px 24px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-width: 140px;
+    text-align: center;
+    letter-spacing: 0.3px;
 }
 
 /* Estatísticas */
@@ -161,17 +222,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px;
-    font-size: 14px;
-    color: #4a5568;
-    background: #f7fafc;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #1a202c;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     border: 2px solid #e2e8f0;
     border-top: none;
     margin-bottom: 5px;
+    gap: 8px;
 }
 
 .lista-telefones-stats-highlight {
-    font-weight: 600;
+    font-weight: 700;
     color: #667eea;
-    margin: 0 4px;
+    margin: 0 6px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 6px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    font-size: 16px;
+    letter-spacing: 0.5px;
 }

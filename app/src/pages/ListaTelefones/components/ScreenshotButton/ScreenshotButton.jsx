@@ -56,9 +56,12 @@ const ScreenshotButton = ({
     }
   }
 
+  const sizeClass = size ? `screenshot-button--${size}` : 'screenshot-button--medium'
+  const finalClassName = className ? `${className} screenshot-button ${sizeClass}` : `screenshot-button ${sizeClass}`
+
   return (
     <button
-      className="screenshot-button"
+      className={finalClassName}
       onClick={handleScreenshot}
       title={title}
     >

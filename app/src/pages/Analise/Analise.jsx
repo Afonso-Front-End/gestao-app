@@ -15,7 +15,7 @@ import {
 } from 'react-icons/io5'
 import { useNotification } from '../../contexts/NotificationContext'
 import api from '../../services/api'
-import { buildApiUrl } from '../../utils/tauri-utils'
+import { buildApiUrl } from '../../utils/api-utils'
 import { getApiHeaders } from '../../utils/api-headers'
 import './Analise.css'
 

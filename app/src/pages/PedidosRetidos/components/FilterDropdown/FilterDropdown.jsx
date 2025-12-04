@@ -11,6 +11,20 @@ const FilterDropdown = ({ children, label = "Filtros", badgeCount = 0, closeOnOu
     if (isOpen && containerRef.current && contentRef.current) {
       const container = containerRef.current
       const content = contentRef.current
+      
+      // Verificar se o container é o último filho
+      const isLastChild = !container.nextElementSibling
+      
+      // Se for o último filho, deixar o CSS fazer o trabalho (não aplicar estilos inline)
+      if (isLastChild) {
+        // Limpar estilos inline para permitir que o CSS controle
+        content.style.left = ''
+        content.style.right = ''
+        content.style.transform = ''
+        return
+      }
+      
+      // Para outros casos, aplicar lógica de posicionamento dinâmico
       const rect = container.getBoundingClientRect()
       const contentWidth = content.offsetWidth || 400
       const viewportWidth = window.innerWidth

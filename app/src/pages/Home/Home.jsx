@@ -99,7 +99,7 @@ const Home = () => {
 
   const quickActions = [
     {
-      title: 'Pedidos Parados',
+      title: 'Sem movimentação',
       description: 'Gerencie pedidos que estão parados',
       icon: IoCube,
       color: '#0f766e',
@@ -132,8 +132,8 @@ const Home = () => {
       loading: stats.sla.loading
     },
     {
-      title: 'Retidos +1 Mês',
-      description: 'Pedidos parados há mais de 1 mês',
+      title: 'Sem movimentação',
+      description: 'relatorio robusto 1 mes +',
       icon: IoCalendar,
       color: '#dc2626',
       gradient: 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)',
@@ -175,7 +175,7 @@ const Home = () => {
           </p>
         </div>
         <div className="hero-decoration">
-          <span className="hero-icon">🗼</span>
+          {/* <span className="hero-icon">🗼</span> */}
         </div>
       </div>
 

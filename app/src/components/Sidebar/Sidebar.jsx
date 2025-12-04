@@ -74,7 +74,15 @@ const Sidebar = () => {
                   >
                     <item.icon className="sidebar-icon" />
                   </div>
-                  <span className="sidebar-label">{item.label}</span>
+                  {Array.isArray(item.label) ? (
+                    <div className="sidebar-label-multiline">
+                      {item.label.map((line, idx) => (
+                        <p key={idx} className="sidebar-label-line">{line}</p>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="sidebar-label">{item.label}</span>
+                  )}
                 </div>
                 <div className="sidebar-link-indicator"></div>
               </NavLink>

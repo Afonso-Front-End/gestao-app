@@ -166,16 +166,37 @@ const TableOverlay = ({
     e.preventDefault()
 
     // Extrair valor numérico do input (sem formatação)
+    // Primeiro tenta pegar do atributo data-numeric-value do DOM
     const inputElement = document.querySelector('.table-overlay-pr-overlay-phone-input')
-    const numericValue = inputElement?.getAttribute('data-numeric-value') || phoneNumber
+    let numericValue = inputElement?.getAttribute('data-numeric-value') || ''
     
-    if (!numericValue.trim()) {
+    // Se não encontrou no DOM, extrai números do phoneNumber (estado)
+    if (!numericValue || numericValue.trim() === '') {
+      // Remove todos os caracteres não numéricos do phoneNumber
+      numericValue = phoneNumber.replace(/\D/g, '')
+    }
+    
+    // Validação: verifica se há números
+    if (!numericValue || numericValue.trim() === '' || numericValue.length === 0) {
       showError('Por favor, digite um número de telefone')
       return
     }
 
+    // Validação: verifica tamanho mínimo
     if (numericValue.length < 10) {
       showError('Telefone deve ter pelo menos 10 dígitos')
+      return
+    }
+
+    // Validação: verifica se motorista está definido
+    if (!motorista || motorista.trim() === '') {
+      showError('Nome do motorista não foi informado. Não é possível adicionar telefone.')
+      return
+    }
+
+    // Validação: verifica se baseName está definido
+    if (!baseName || baseName.trim() === '') {
+      showError('Base não foi informada. Não é possível adicionar telefone.')
       return
     }
 
@@ -188,10 +209,50 @@ const TableOverlay = ({
         ...getApiHeaders()
       }
       
-      const response = await fetch(`/api/lista-telefones/motorista/${encodeURIComponent(motorista)}/telefone?base_name=${encodeURIComponent(baseName)}&telefone=${encodeURIComponent(numericValue)}`, {
+      // Construir URL com validação
+      const motoristaEncoded = encodeURIComponent(motorista.trim())
+      const baseNameEncoded = encodeURIComponent(baseName.trim())
+      const telefoneEncoded = encodeURIComponent(numericValue)
+      
+      const url = `/api/lista-telefones/motorista/${motoristaEncoded}/telefone?base_name=${baseNameEncoded}&telefone=${telefoneEncoded}`
+      
+      // Debug em desenvolvimento
+      if (import.meta.env.DEV) {
+        console.log('🔍 Adicionando telefone:', {
+          motorista: motorista.trim(),
+          baseName: baseName.trim(),
+          telefone: numericValue,
+          url
+        })
+      }
+      
+      const response = await fetch(url, {
         method: 'POST',
         headers
       })
+
+      // Verificar se a resposta foi bem-sucedida
+      if (!response.ok) {
+        let errorMessage = `Erro HTTP ${response.status}`
+        
+        // Tentar obter mensagem de erro do backend
+        try {
+          const errorData = await response.json()
+          errorMessage = errorData.detail || errorData.message || errorMessage
+        } catch {
+          // Se não conseguir parsear JSON, usar statusText
+          errorMessage = response.statusText || errorMessage
+        }
+        
+        if (response.status === 404) {
+          showError(`Endpoint não encontrado (404). URL: ${url}\nVerifique se o backend está rodando e a rota está configurada corretamente.`)
+        } else if (response.status === 400) {
+          showError('Dados inválidos: ' + errorMessage)
+        } else {
+          showError('Erro ao adicionar telefone: ' + errorMessage)
+        }
+        return
+      }
 
       const data = await response.json()
 
@@ -207,7 +268,14 @@ const TableOverlay = ({
         showError('Erro ao adicionar telefone: ' + (data.detail || 'Erro desconhecido'))
       }
     } catch (error) {
-      showError('Erro de conexão: ' + error.message)
+      console.error('Erro ao adicionar telefone:', error)
+      if (error.message.includes('404')) {
+        showError('Endpoint não encontrado. Verifique se o backend está rodando.')
+      } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        showError('Erro de conexão. Verifique se o backend está acessível.')
+      } else {
+        showError('Erro ao adicionar telefone: ' + error.message)
+      }
     } finally {
       setIsLoadingPhone(false)
     }
@@ -378,14 +446,27 @@ const TableOverlay = ({
         >
           <div className="table-overlay-pr-overlay-header">
             <div className="table-overlay-pr-overlay-title-section">
-              <h2>{subtitle && subtitle.props.children[0]}</h2>
+              <h2>
+                {title && title.trim() !== '' 
+                  ? title 
+                  : motorista && motorista.trim() !== ''
+                    ? `Pedidos do Motorista: ${motorista}`
+                    : 'Pedidos'}
+              </h2>
               {subtitle && <div className="table-overlay-pr-overlay-subtitle">{subtitle}</div>}
             </div>
             {showAddPhone && (
               <div className="table-overlay-pr-phone-input-container">
                 <PhoneInput
                   value={phoneNumber}
-                  onChange={() => {}} // Não faz nada em tempo real
+                  onChange={(e) => {
+                    // Atualizar o estado phoneNumber quando o usuário digitar
+                    const inputValue = e.target.value
+                    // Extrair apenas números para armazenar no estado
+                    const numericOnly = inputValue.replace(/\D/g, '')
+                    // Atualizar com o valor formatado (o PhoneInput já formata)
+                    setPhoneNumber(inputValue)
+                  }}
                   placeholder="Digite o telefone"
                   disabled={isLoadingPhone}
                   maxLength={11}

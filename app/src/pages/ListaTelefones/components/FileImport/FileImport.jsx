@@ -30,8 +30,16 @@ const FileImport = ({
       const formData = new FormData()
       formData.append('file', selectedFile)
 
+      // Obter headers de autenticação
+      const { getApiHeaders } = await import('../../../../utils/api-headers')
+      const headers = getApiHeaders()
+      
+      // Remover Content-Type para FormData (browser define automaticamente)
+      delete headers['Content-Type']
+
       const response = await fetch(endpoint, {
         method: 'POST',
+        headers,
         body: formData
       })
 
@@ -43,7 +51,14 @@ const FileImport = ({
         document.getElementById(fileInputId).value = ''
       } else {
         const errorText = await response.text()
-        throw new Error(`Erro no upload: ${response.status} - ${errorText}`)
+        let errorMessage = `Erro no upload: ${response.status}`
+        try {
+          const errorData = JSON.parse(errorText)
+          errorMessage = errorData.detail || errorData.message || errorMessage
+        } catch {
+          errorMessage = errorText || errorMessage
+        }
+        throw new Error(errorMessage)
       }
     } catch (error) {
       onError?.(error)

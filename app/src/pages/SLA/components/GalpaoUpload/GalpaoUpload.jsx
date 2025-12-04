@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { buildApiUrl } from '../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../utils/api-utils'
 import './GalpaoUpload.css'
 
 const GalpaoUpload = ({ baseName, onUploadSuccess, compact = false }) => {

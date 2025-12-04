@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { IoCopySharp } from "react-icons/io5"
 import { BsCopy } from "react-icons/bs"
-import { FaPlus, FaCheck, FaTimes } from 'react-icons/fa'
+import { FaPlus, FaCheck, FaTimes, FaDownload, FaSpinner } from 'react-icons/fa'
 import ScreenshotButton from '../ScreenshotButton/ScreenshotButton'
 import WhatsAppButton from '../../../SLA/components/WhatsAppButton/WhatsAppButton'
 import CopyFormattedButton from '../../../SLA/components/CopyFormattedButton/CopyFormattedButton'
@@ -47,6 +47,7 @@ const TableOverlay = ({
   const [phoneMessage, setPhoneMessage] = useState('')
   const [exportando, setExportando] = useState(false)
   const tableRef = useRef(null)
+  const buscaInputRef = useRef(null)
   const { showSuccess, showError, showInfo } = useNotification()
 
   const handleExportar = async () => {
@@ -70,6 +71,31 @@ const TableOverlay = ({
       setPhoneNumber(telefoneInicial)
     }
   }, [telefoneInicial])
+
+  // Manter foco no input de busca durante digitação
+  useEffect(() => {
+    if (buscaInputRef.current && baseSelecionada) {
+      const input = buscaInputRef.current
+      const wasFocused = document.activeElement === input
+      
+      if (wasFocused) {
+        // Se estava focado, restaurar o foco após re-render
+        const timeoutId = setTimeout(() => {
+          if (input && document.activeElement !== input) {
+            input.focus()
+            // Restaurar posição do cursor se possível
+            const savedPosition = input.dataset.cursorPos
+            if (savedPosition) {
+              const pos = parseInt(savedPosition, 10)
+              input.setSelectionRange(pos, pos)
+            }
+          }
+        }, 0)
+        
+        return () => clearTimeout(timeoutId)
+      }
+    }
+  }, [busca, baseSelecionada, loadingMotoristas])
 
   const handleClose = () => {
     if (isClosing) return // Previne múltiplas execuções
@@ -214,8 +240,8 @@ const TableOverlay = ({
 
 
   return (
-    <div className={`lista-telefones-overlay-backdrop ${isClosing ? 'fade-out' : 'fade-in'}`} onClick={handleClose}>
-      <div className={`lista-telefones-overlay-container ${isClosing ? 'slide-down' : 'slide-up'}`} onClick={(e) => e.stopPropagation()}>
+    <div className={`lista-telefones-overlay-backdrop ${isClosing ? 'fade-out' : 'fade-in'}`}>
+      <div className={`lista-telefones-overlay-container ${isClosing ? 'slide-down' : 'slide-up'}`}>
         <div className="lista-telefones-overlay-header">
           <div className="lista-telefones-overlay-title-section">
             <h2>{title}</h2>
@@ -248,13 +274,34 @@ const TableOverlay = ({
                   <div className="lista-telefones-overlay-search-input-wrapper">
                     <label htmlFor="busca-input" className="lista-telefones-overlay-search-label">Buscar:</label>
                     <input
+                      ref={buscaInputRef}
                       id="busca-input"
                       type="text"
                       className="lista-telefones-overlay-search-input"
                       placeholder="Nome do motorista ou telefone..."
                       value={busca}
-                      onChange={(e) => onBuscaChange && onBuscaChange(e.target.value)}
+                      onChange={(e) => {
+                        const input = e.target
+                        const value = input.value
+                        const cursorPosition = input.selectionStart
+                        
+                        // Salvar posição do cursor
+                        if (buscaInputRef.current) {
+                          buscaInputRef.current.dataset.cursorPos = cursorPosition.toString()
+                        }
+                        
+                        if (onBuscaChange) {
+                          onBuscaChange(value)
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        // Salvar posição do cursor antes de qualquer mudança
+                        if (buscaInputRef.current) {
+                          buscaInputRef.current.dataset.cursorPos = e.target.selectionStart.toString()
+                        }
+                      }}
                       disabled={loadingMotoristas}
+                      autoComplete="off"
                     />
                   </div>
                 )}
@@ -347,7 +394,7 @@ const TableOverlay = ({
                 disabled={exportando || loadingMotoristas}
                 title="Exportar tabela para Excel"
               >
-                {exportando ? '⏳ Exportando...' : '📥 Exportar Excel'}
+                {exportando ? <FaSpinner className="spinning" /> : <FaDownload />}
               </button>
             )}
             <ScreenshotButton

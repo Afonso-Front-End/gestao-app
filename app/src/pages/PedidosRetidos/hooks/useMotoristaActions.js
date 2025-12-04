@@ -51,23 +51,29 @@ const useMotoristaActions = (overlay) => {
     // Prevenir múltiplas execuções
     if (overlay.isLoadingPedidos || overlay.isClosingOverlay) return []
 
-    // Resetar estados primeiro
-    overlay.resetOverlay()
-
-    // Configurar dados básicos
+    // Resetar estados primeiro (exceto título/subtítulo que serão definidos depois)
+    overlay.setOverlayData([])
+    overlay.setOverlayStats({})
+    overlay.setMotoristaNome('')
+    overlay.setBaseMotorista('')
+    overlay.setTelefoneMotorista('')
+    overlay.setTelefoneCarregado(false)
+    overlay.setShowWhatsApp(false)
     overlay.setIsLoadingPedidos(true)
     
+    // Configurar dados básicos
     const titulo = statusFiltro === 'nao_entregues' 
       ? `Pedidos NÃO ENTREGUES - ${motorista.responsavel}`
       : `Pedidos do Motorista: ${motorista.responsavel}`
     
+    // Definir título, subtítulo e dados do motorista
     overlay.setOverlayTitle(titulo)
     overlay.setOverlaySubtitle(`Base: ${motorista.base_entrega} | Cidade: ${motorista.cidade_destino}`)
     overlay.setMotoristaNome(motorista.responsavel)
     overlay.setBaseMotorista(motorista.base_entrega)
 
-    // Abrir overlay após um pequeno delay para evitar conflitos
-    overlay.abrirOverlay()
+    // Abrir overlay sem resetar (já resetamos manualmente antes)
+    overlay.abrirOverlay(false)
 
     try {
       const params = new URLSearchParams()

@@ -52,8 +52,18 @@ const PhoneInput = ({
       const formattedValue = formatPhoneNumber(numbersOnly)
       setInputValue(formattedValue)
       
-      // NÃO chama onChange em tempo real (será chamado apenas pelo botão Confirmar)
-      // Comentado para melhor performance quando há botões de confirmar/cancelar
+      // Chama onChange se fornecido, passando o evento com o valor formatado
+      if (onChange) {
+        // Criar um novo evento sintético com o valor formatado
+        const syntheticEvent = {
+          ...e,
+          target: {
+            ...e.target,
+            value: formattedValue
+          }
+        }
+        onChange(syntheticEvent)
+      }
     }
   }
 
@@ -89,8 +99,15 @@ const PhoneInput = ({
       const formattedValue = formatPhoneNumber(numbersOnly)
       setInputValue(formattedValue)
       
-      // NÃO chama onChange em tempo real (será chamado apenas pelo botão Confirmar)
-      // Comentado para melhor performance quando há botões de confirmar/cancelar
+      // Chama onChange se fornecido, passando o evento com o valor formatado
+      if (onChange) {
+        const syntheticEvent = {
+          target: {
+            value: formattedValue
+          }
+        }
+        onChange(syntheticEvent)
+      }
     }
   }
 

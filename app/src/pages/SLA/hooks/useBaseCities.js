@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { buildApiUrl } from '../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../utils/api-utils'
 import { getApiHeaders } from '../../../utils/api-headers'
 
 const useBaseCities = (baseName) => {

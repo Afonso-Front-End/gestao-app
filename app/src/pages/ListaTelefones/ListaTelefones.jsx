@@ -12,7 +12,7 @@ import { useListaTelefones } from './hooks/useListaTelefones'
 import { usePagination } from './hooks/usePagination'
 import { useBasesMotoristas } from './hooks/useBasesMotoristas'
 import { useNotification } from '../../contexts/NotificationContext'
-import { buildApiUrl } from '../../utils/tauri-utils'
+import { buildApiUrl } from '../../utils/api-utils'
 import './ListaTelefones.css'
 
 const ListaTelefones = () => {

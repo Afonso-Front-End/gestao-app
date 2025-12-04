@@ -12,6 +12,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid #e2e8f0;
   overflow: visible;
+  position: relative;
 }
 
 /* Container com position relative para conter os lotes absolutos */
@@ -25,6 +26,20 @@
   gap: 12px;
   height: 70px;
   padding: 0 10px;
+}
+
+/* Ajuste do FilterDropdown dentro do header */
+.pedidos-retidos-header-container .filter-dropdown-container {
+  position: relative;
+}
+
+.pedidos-retidos-header-container .filter-dropdown-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 400px;
+  max-width: 90vw;
+  z-index: 10001;
 }
 
 /* Área Principal - Busca de Pedidos */
@@ -345,6 +360,7 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   backdrop-filter: blur(10px);
+  margin-bottom: 12px;
 }
 
 .status-legend-title {
@@ -440,8 +456,8 @@
   /* Abaixo do header */
   left: 16px;
   right: 16px;
-  z-index: 950;
-  /* Acima do header, mas abaixo dos dropdowns */
+  z-index: 100;
+  /* Abaixo do modal de configuração (z-index: 1100) */
   padding: 16px;
   padding-top: 48px;
   /* Espaço para o botão de fechar */
@@ -450,6 +466,11 @@
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   animation: slideDown 0.3s ease-out;
+}
+
+/* Ocultar lotes quando o modal de configuração estiver aberto */
+body:has(.config-modal-overlay:not(.fade-out)) .lotes-section {
+  display: none;
 }
 
 /* Botão Fechar Lotes */
@@ -661,10 +682,6 @@
   box-shadow: 0 2px 8px rgba(15, 118, 110, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.2);
   overflow: visible;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
   animation: fadeInSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.2s ease;
   margin-top: 10px;

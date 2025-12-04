@@ -2,20 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { useNotification } from '../../contexts/NotificationContext'
 import { useAuth } from '../../contexts/AuthContext'
 import api from '../../services/api'
-import { isTauri } from '../../utils/tauri-utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSave, faServer, faKey, faDatabase, faTrashAlt, faEraser } from '@fortawesome/free-solid-svg-icons'
+import { faSave, faServer, faKey, faDatabase, faTrashAlt, faEraser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal'
 import ConfirmModalWithPassword from '../../components/ConfirmModalWithPassword/ConfirmModalWithPassword'
 import './Configuracoes.css'
 
 const Configuracoes = () => {
   const { showSuccess, showError } = useNotification()
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [isDeleting, setIsDeleting] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showClearStorageModal, setShowClearStorageModal] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
   
   // Configurações do sistema
   const [config, setConfig] = useState({
@@ -28,13 +28,12 @@ const Configuracoes = () => {
   // Carregar configurações do localStorage e variáveis de ambiente
   useEffect(() => {
     const loadConfig = () => {
-      const apiPort = localStorage.getItem('api_port') || (isTauri() ? '8001' : '')
       const apiKey = import.meta.env.VITE_API_KEY || localStorage.getItem('api_key') || ''
       const apiSecret = import.meta.env.VITE_API_SECRET || localStorage.getItem('api_secret') || ''
       const apiBaseUrl = localStorage.getItem('api_base_url') || ''
 
       setConfig({
-        apiPort,
+        apiPort: '',
         apiKey,
         apiSecret,
         apiBaseUrl
@@ -55,14 +54,6 @@ const Configuracoes = () => {
     setIsSaving(true)
     try {
       // Salvar no localStorage (apenas se não estiver em variáveis de ambiente)
-      if (isTauri()) {
-        if (config.apiPort) {
-          localStorage.setItem('api_port', config.apiPort)
-        } else {
-          localStorage.removeItem('api_port')
-        }
-      }
-
       if (config.apiBaseUrl) {
         localStorage.setItem('api_base_url', config.apiBaseUrl)
       } else {
@@ -175,6 +166,15 @@ const Configuracoes = () => {
     }
   }
 
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
+  }
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false)
+    logout()
+  }
+
   const sections = [
     {
       id: 'api',
@@ -182,19 +182,12 @@ const Configuracoes = () => {
       icon: faServer,
       description: 'Configure a conexão com o servidor backend',
       fields: [
-        ...(isTauri() ? [{
-          key: 'apiPort',
-          label: 'Porta da API',
-          type: 'number',
-          placeholder: '8001',
-          description: 'Porta onde o servidor backend está rodando'
-        }] : []),
         {
           key: 'apiBaseUrl',
           label: 'URL Base da API (Opcional)',
           type: 'text',
           placeholder: 'http://localhost:8001/api',
-          description: 'URL completa da API (sobrescreve a porta)'
+          description: 'URL completa da API. Se não especificado, usa o proxy do Vite (/api)'
         }
       ]
     },
@@ -280,6 +273,14 @@ const Configuracoes = () => {
           >
             <FontAwesomeIcon icon={faSave} />
             {isSaving ? 'Salvando...' : 'Salvar Configurações'}
+          </button>
+          <button 
+            className="btn-logout" 
+            onClick={handleLogoutClick}
+            title="Sair do sistema"
+          >
+            <FontAwesomeIcon icon={faSignOutAlt} />
+            Sair do Sistema
           </button>
         </div>
 
@@ -378,6 +379,18 @@ const Configuracoes = () => {
         cancelText="Cancelar"
         type="warning"
         loading={false}
+      />
+
+      {/* Modal de confirmação para sair */}
+      <ConfirmModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+        title="Sair do Sistema"
+        message="Tem certeza que deseja sair?"
+        confirmText="Sair"
+        cancelText="Cancelar"
+        type="warning"
       />
     </div>
   )

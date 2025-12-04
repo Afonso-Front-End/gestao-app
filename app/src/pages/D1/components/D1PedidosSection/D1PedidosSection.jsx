@@ -47,25 +47,8 @@ const D1PedidosSection = ({
     return botoes
   }
 
-  // Não renderizar nada se não houver pedidos ou estiver carregando
-  if (loadingPedidos || numerosPedidos.length === 0 || !showLotes) {
-    return null
-  }
-
-  return (
-    <div className="d1-lotes-section">
-      <button
-        className="d1-btn-close-lotes"
-        onClick={() => setShowLotes(false)}
-        title="Fechar lotes"
-      >
-        ✕
-      </button>
-      <div className="d1-lotes-grid">
-        {generateLotes()}
-      </div>
-    </div>
-  )
+  // Não renderizar nada - lotes agora são exibidos no ConfigModal
+  return null
 }
 
 export default D1PedidosSection

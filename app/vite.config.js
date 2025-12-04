@@ -16,6 +16,14 @@ export default defineConfig({
         target: `http://localhost:${process.env.VITE_API_PORT || '8001'}`,
         changeOrigin: true,
         secure: false,
+        // O backend já espera /api no prefixo das rotas, então não precisamos reescrever
+        // Se houver duplicação /api/api, o proxy vai redirecionar corretamente
+        configure: (proxy, options) => {
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            // Log para debug (pode remover depois)
+            // console.log('Proxying:', req.url, 'to', options.target + req.url)
+          })
+        }
       }
     }
   },
@@ -29,14 +37,14 @@ export default defineConfig({
     // holdUntilCrawlEnd: false,
   },
   
-  // Configurações de build para Tauri
+  // Configurações de build
   build: {
-    // Tauri usa Chromium, então podemos usar recursos modernos
-    target: process.env.TAURI_PLATFORM == 'windows' ? 'chrome105' : 'safari13',
-    // Não usar relative base para Tauri em produção
-    minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
-    // Produzir sourcemaps para debug
-    sourcemap: !!process.env.TAURI_DEBUG,
+    // Usar recursos modernos
+    target: 'esnext',
+    // Minificar em produção
+    minify: 'esbuild',
+    // Produzir sourcemaps em desenvolvimento
+    sourcemap: process.env.NODE_ENV === 'development',
     // Limpar diretório de saída antes de construir
     emptyOutDir: true,
   },

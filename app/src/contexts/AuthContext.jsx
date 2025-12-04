@@ -20,11 +20,6 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate()
   const { showSuccess, showError } = useNotification()
 
-  // Verificar autenticação ao carregar
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
   const checkAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem('authToken')
@@ -48,6 +43,11 @@ export const AuthProvider = ({ children }) => {
       setLoading(false)
     }
   }, [])
+
+  // Verificar autenticação ao carregar
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
 
   const login = useCallback(async (nome, senha, lembrar = false) => {
     try {

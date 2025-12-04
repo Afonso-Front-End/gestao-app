@@ -4,15 +4,23 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1100; /* Modal de cadastro */
-  animation: fadeIn 0.3s ease;
+  justify-content: center;
+  z-index: 1100;
+  padding: 1rem;
 }
 
-@keyframes fadeIn {
+.cadastro-motorista-modal-overlay.fade-in {
+  animation: cadastroFadeInBackdrop 0.3s ease-out;
+}
+
+.cadastro-motorista-modal-overlay.fade-out {
+  animation: cadastroFadeOutBackdrop 0.3s ease-in;
+}
+
+@keyframes cadastroFadeInBackdrop {
   from {
     opacity: 0;
   }
@@ -21,59 +29,88 @@
   }
 }
 
-.cadastro-motorista-modal-content {
-  background: #ffffff;
+@keyframes cadastroFadeOutBackdrop {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.cadastro-motorista-modal {
+  background: #FFFFFF;
   border-radius: 4px;
-  padding: 0;
-  max-width: 500px;
   width: 90%;
+  max-width: 600px;
   max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  border: 2px solid #f1f5f9;
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(20px);
+.cadastro-motorista-modal.slide-up {
+  animation: cadastroSlideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cadastro-motorista-modal.slide-down {
+  animation: cadastroSlideDown 0.3s ease-in;
+}
+
+@keyframes cadastroSlideUp {
+  0% {
     opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cadastroSlideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
   to {
-    transform: translateY(0);
-    opacity: 1;
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
   }
 }
 
 .cadastro-motorista-modal-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 2px solid #e2e8f0;
-  background: #667eea;
-  border-radius: 4px 4px 0 0;
+  background: #059669;
+  color: white;
 }
 
 .cadastro-motorista-modal-header h2 {
   margin: 0;
-  color: white;
   font-size: 20px;
   font-weight: 600;
+  color: white;
 }
 
 .cadastro-motorista-modal-close {
   background: rgba(255, 255, 255, 0.2);
   border: none;
+  font-size: 20px;
   color: white;
-  font-size: 24px;
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
   cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
 }
 
 .cadastro-motorista-modal-close:hover:not(:disabled) {
@@ -85,8 +122,14 @@
   cursor: not-allowed;
 }
 
-.cadastro-motorista-form {
+.cadastro-motorista-modal-content {
+  flex: 1;
+  overflow-y: auto;
   padding: 24px;
+}
+
+.cadastro-motorista-form {
+  width: 100%;
 }
 
 .cadastro-motorista-form-group {
@@ -115,7 +158,7 @@
 .cadastro-motorista-form-group input:focus,
 .cadastro-motorista-form-group select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #27272765;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -150,48 +193,89 @@
   font-weight: 500;
 }
 
-.cadastro-motorista-form-actions {
+.cadastro-motorista-modal-actions {
   display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 2px solid #e2e8f0;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.cadastro-motorista-btn-cancel,
-.cadastro-motorista-btn-submit {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cadastro-motorista-btn-cancel {
-  background-color: #e2e8f0;
-  color: #374151;
-}
-
-.cadastro-motorista-btn-cancel:hover:not(:disabled) {
-  background-color: #cbd5e0;
-}
-
-.cadastro-motorista-btn-submit {
-  background: #667eea;
+.cadastro-motorista-modal-btn {
+  padding: 8px 16px;
+  background: #f59e0b;
   color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.cadastro-motorista-btn-submit:hover:not(:disabled) {
-  background: #5568d3;
+.cadastro-motorista-modal-btn-save {
+  background: #10b981;
 }
 
-.cadastro-motorista-btn-cancel:disabled,
-.cadastro-motorista-btn-submit:disabled {
+.cadastro-motorista-modal-btn:hover {
+  transform: translateY(-1px);
+}
+
+.cadastro-motorista-modal-btn-save:hover {
+  background: #059669;
+}
+
+.cadastro-motorista-modal-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+
+.cadastro-motorista-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  border-top: 2px solid #e2e8f0;
+  gap: 12px;
+}
+
+.cadastro-motorista-modal-cancel-btn {
+  padding: 10px 20px;
+  background: #e2e8f0;
+  color: #475569;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.cadastro-motorista-modal-cancel-btn:hover:not(:disabled) {
+  background: #cbd5e0;
+}
+
+.cadastro-motorista-modal-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cadastro-motorista-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cadastro-motorista-modal-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.cadastro-motorista-modal-content::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+.cadastro-motorista-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 

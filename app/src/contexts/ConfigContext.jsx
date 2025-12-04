@@ -14,13 +14,19 @@ export const ConfigProvider = ({ children }) => {
   const registerSlaConfig = useCallback((config) => {
     slaConfigRef.current = config
     setSlaConfig(prev => {
-      if (!prev || 
-          prev.selectedBases !== config.selectedBases ||
-          prev.selectedProcessedBase !== config.selectedProcessedBase ||
-          prev.refreshTrigger !== config.refreshTrigger) {
+      if (!prev) {
         return config
       }
-      return config
+      // Comparar arrays por conteúdo (JSON.stringify para arrays simples)
+      const basesChanged = JSON.stringify(prev.selectedBases) !== JSON.stringify(config.selectedBases)
+      const processedBaseChanged = prev.selectedProcessedBase !== config.selectedProcessedBase
+      const refreshTriggerChanged = prev.refreshTrigger !== config.refreshTrigger
+      
+      if (basesChanged || processedBaseChanged || refreshTriggerChanged) {
+        return config
+      }
+      // Retornar prev para evitar re-render desnecessário
+      return prev
     })
   }, [])
 
@@ -32,12 +38,18 @@ export const ConfigProvider = ({ children }) => {
   const registerD1Config = useCallback((config) => {
     d1ConfigRef.current = config
     setD1Config(prev => {
-      if (!prev || 
-          prev.selectedBases !== config.selectedBases ||
-          prev.refreshTrigger !== config.refreshTrigger) {
+      if (!prev) {
         return config
       }
-      return config
+      // Comparar arrays por conteúdo
+      const basesChanged = JSON.stringify(prev.selectedBases) !== JSON.stringify(config.selectedBases)
+      const refreshTriggerChanged = prev.refreshTrigger !== config.refreshTrigger
+      
+      if (basesChanged || refreshTriggerChanged) {
+        return config
+      }
+      // Retornar prev para evitar re-render desnecessário
+      return prev
     })
   }, [])
 
@@ -49,14 +61,20 @@ export const ConfigProvider = ({ children }) => {
   const registerPedidosRetidosConfig = useCallback((config) => {
     pedidosRetidosConfigRef.current = config
     setPedidosRetidosConfig(prev => {
-      if (!prev || 
-          prev.selectedBases !== config.selectedBases ||
-          prev.selectedTipos !== config.selectedTipos ||
-          prev.selectedAging !== config.selectedAging ||
-          prev.refreshTrigger !== config.refreshTrigger) {
+      if (!prev) {
         return config
       }
-      return config
+      // Comparar arrays por conteúdo
+      const basesChanged = JSON.stringify(prev.selectedBases) !== JSON.stringify(config.selectedBases)
+      const tiposChanged = JSON.stringify(prev.selectedTipos) !== JSON.stringify(config.selectedTipos)
+      const agingChanged = JSON.stringify(prev.selectedAging) !== JSON.stringify(config.selectedAging)
+      const refreshTriggerChanged = prev.refreshTrigger !== config.refreshTrigger
+      
+      if (basesChanged || tiposChanged || agingChanged || refreshTriggerChanged) {
+        return config
+      }
+      // Retornar prev para evitar re-render desnecessário
+      return prev
     })
   }, [])
 

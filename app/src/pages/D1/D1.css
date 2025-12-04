@@ -38,7 +38,6 @@
   width: 100%;
   gap: 12px;
   height: 70px;
-  padding: 0 10px;
 }
 
 .d1-header-actions {
@@ -364,7 +363,6 @@
   flex-direction: column;
   min-height: 200px;
   position: relative;
-  margin-top: 10px;
 }
 
 .d1-bipagens-header {
@@ -472,17 +470,13 @@
   background-color: #0f766e;
   border-radius: 4px;
   padding: 24px 28px;
-  margin-bottom: 16px;
+
   box-shadow: 0 2px 8px rgba(15, 118, 110, 0.2);
   border: 2px solid rgba(255, 255, 255, 0.2);
   overflow: visible;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   gap: 20px;
   animation: d1-fadeInSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transition: all 0.2s ease;
-  margin-top: 10px;
 }
 
 .d1-table-header:hover {
@@ -553,6 +547,9 @@
   margin-top: 8px;
   padding-top: 14px;
   border-top: 2px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  flex-basis: 100%;
+  align-self: stretch;
 }
 
 .d1-info-item {
@@ -628,7 +625,6 @@
 
 /* Actions Container */
 .d1-table-header>div:last-child {
-  display: flex;
   flex-direction: column;
   gap: 12px;
   align-items: flex-end;
@@ -636,7 +632,6 @@
   position: relative;
   z-index: 1;
   width: auto;
-  margin-left: auto;
 }
 
 /* Ajustes responsivos para d1-table-header */
@@ -916,11 +911,12 @@
 
 .d1-bipagens-content {
   margin-top: 15px;
+  height: calc(100vh - 590px);
 }
 
 .d1-bipagens-table-wrapper {
   overflow-x: auto;
-  max-height: 600px;
+  height: 100%;
   overflow-y: auto;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
@@ -978,6 +974,85 @@
   font-weight: 600;
 }
 
+/* ===================================
+   NÚMEROS ESTATÍSTICOS - MELHORADOS
+   =================================== */
+
+.d1-bipagens-table .stat-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 6px;
+  width: 100%;
+  height: 40px;
+  letter-spacing: -0.2px;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Números Clicáveis */
+.d1-bipagens-table .clickable-stat {
+  cursor: pointer;
+}
+
+.d1-bipagens-table .clickable-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Total (Cinza Azulado) */
+.d1-bipagens-table .stat-number.total {
+  background: #f1f5f9;
+  color: #1e293b;
+  border: 2px solid #cbd5e1;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.d1-bipagens-table .stat-number.total.clickable-stat:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Entregues (Verde Muito Forte) */
+.d1-bipagens-table .stat-number.entregues {
+  background: #86efac;
+  color: #022c22;
+  border: 2px solid #16a34a;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(34, 197, 94, 0.4);
+}
+
+.d1-bipagens-table .stat-number.entregues.clickable-stat:hover {
+  background: #4ade80;
+  border-color: #15803d;
+  color: #14532d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.5);
+}
+
+/* Não Entregues (Vermelho Muito Forte) */
+.d1-bipagens-table .stat-number.nao_entregues {
+  background: #fca5a5;
+  color: #7f1d1d;
+  border: 2px solid #b91c1c;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.4);
+}
+
+.d1-bipagens-table .stat-number.nao_entregues.clickable-stat:hover {
+  background: #f87171;
+  border-color: #991b1b;
+  color: #7f1d1d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.5);
+}
+
 /* Filtros de Bipagens */
 /* Wrapper para filtros e botão de lotes */
 .d1-header-filters-lotes {
@@ -988,7 +1063,6 @@
   margin-top: 0;
   flex-wrap: wrap;
   position: relative;
-  z-index: 1000;
   /* Garantir contexto de empilhamento */
   width: 100%;
   margin-left: auto;

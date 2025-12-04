@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getApiBaseUrl, isTauri } from '../utils/tauri-utils'
+import { getApiBaseUrl } from '../utils/api-utils'
 
 // Configuração base do Axios
 const api = axios.create({

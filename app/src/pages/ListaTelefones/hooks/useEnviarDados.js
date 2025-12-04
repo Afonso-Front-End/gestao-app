@@ -1,6 +1,6 @@
 import { useNotification } from '../../../contexts/NotificationContext'
 import { API_ENDPOINTS, API_CONFIG } from '../constants/api'
-import { buildApiUrl } from '../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../utils/api-utils'
 import { getApiHeaders } from '../../../utils/api-headers'
 
 const useEnviarDados = () => {

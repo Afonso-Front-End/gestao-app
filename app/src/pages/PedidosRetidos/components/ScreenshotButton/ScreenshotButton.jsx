@@ -37,7 +37,9 @@ const ScreenshotButton = ({
         onclone: (clonedDoc, clonedElement) => {
           // Garantir que o elemento clonado está visível e tem dimensões corretas
           clonedElement.style.visibility = 'visible'
-          clonedElement.style.display = 'table'
+          // Preservar o display original do elemento (não forçar 'table')
+          const originalDisplay = window.getComputedStyle(element).display
+          clonedElement.style.display = originalDisplay || 'block'
           clonedElement.style.opacity = '1'
           
           // Remover apenas margin e padding desnecessários (preserva borders e cores)
@@ -84,6 +86,14 @@ const ScreenshotButton = ({
               // Ajustar pr-table-container (preserva tudo)
               if (el.classList && el.classList.contains('pr-table-container')) {
                 el.style.margin = '0'
+                el.style.overflow = 'visible'
+                el.style.width = 'auto'
+              }
+              
+              // Ajustar pedidos-parados-table (container principal)
+              if (el.classList && el.classList.contains('pedidos-parados-table')) {
+                el.style.margin = '0'
+                el.style.padding = '0'
                 el.style.overflow = 'visible'
                 el.style.width = 'auto'
               }
@@ -164,7 +174,9 @@ const ScreenshotButton = ({
             onclone: (clonedDoc, clonedElement) => {
               // Garantir que o elemento clonado está visível e tem dimensões corretas
               clonedElement.style.visibility = 'visible'
-              clonedElement.style.display = 'table'
+              // Preservar o display original do elemento (não forçar 'table')
+              const originalDisplay = window.getComputedStyle(element).display
+              clonedElement.style.display = originalDisplay || 'block'
               clonedElement.style.opacity = '1'
               
               // Remover apenas margin e padding desnecessários (preserva borders e cores)
@@ -211,6 +223,14 @@ const ScreenshotButton = ({
                   // Ajustar pr-table-container (preserva tudo)
                   if (el.classList && el.classList.contains('pr-table-container')) {
                     el.style.margin = '0'
+                    el.style.overflow = 'visible'
+                    el.style.width = 'auto'
+                  }
+                  
+                  // Ajustar pedidos-parados-table (container principal)
+                  if (el.classList && el.classList.contains('pedidos-parados-table')) {
+                    el.style.margin = '0'
+                    el.style.padding = '0'
                     el.style.overflow = 'visible'
                     el.style.width = 'auto'
                   }

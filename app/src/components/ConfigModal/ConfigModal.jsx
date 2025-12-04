@@ -252,6 +252,37 @@ const ConfigModal = ({ isOpen, onClose, triggerRef }) => {
                 </div>
               </div>
             </div>
+
+            {/* Seção de Lotes */}
+            {d1Config.d1PedidosLotes && d1Config.d1PedidosLotes.length > 0 && (
+              <div className="config-modal-section">
+                <div className="config-modal-section-title">Lotes de Pedidos</div>
+                <div className="config-modal-lotes-container">
+                  <div className="config-modal-lotes-grid">
+                    {d1Config.d1PedidosLotes.map((lote) => (
+                      <div key={lote.numero_lote} className="config-modal-lote-card">
+                        <button
+                          className="config-modal-btn-copy-lote"
+                          onClick={() => d1Config.copiarLoteD1?.(lote)}
+                          title={`Copiar ${lote.total_pedidos} números de pedidos do lote ${lote.numero_lote}`}
+                        >
+                          <p>Copiar {lote.total_pedidos.toLocaleString('pt-BR')} pedidos</p>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  {d1Config.setD1PedidosLotes && (
+                    <button
+                      className="config-modal-btn-close-lotes"
+                      onClick={() => d1Config.setD1PedidosLotes?.([])}
+                      title="Fechar lotes"
+                    >
+                      ✕ Fechar Lotes
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
           </>
         ) : isPedidosRetidosPage && pedidosRetidosConfig ? (
           <>
@@ -355,55 +386,39 @@ const ConfigModal = ({ isOpen, onClose, triggerRef }) => {
                     onError={pedidosRetidosConfig.onConsultadosError}
                   />
                 </div>
-                {pedidosRetidosConfig.filtroBases && (
-                  <div className="config-modal-item">
-                    <FilterDropdown
-                      label="Filtros de Tabela"
-                      badgeCount={(pedidosRetidosConfig.filtroBases?.length || 0) + 
-                                   (pedidosRetidosConfig.filtroCidades?.length || 0)}
-                    >
-                      <MultiSelect
-                        selectedValues={pedidosRetidosConfig.filtroBases || []}
-                        setSelectedValues={pedidosRetidosConfig.onFiltroBasesChange}
-                        options={pedidosRetidosConfig.basesDisponiveis || []}
-                        placeholder="Todas as bases"
-                        selectAllText="Selecionar Todas"
-                        clearAllText="Limpar Todas"
-                        allSelectedText="Todas as bases selecionadas"
-                        showCount={true}
-                        className="theme-blue"
-                      />
-                      {pedidosRetidosConfig.filtroCidades && (
-                        <MultiSelect
-                          selectedValues={pedidosRetidosConfig.filtroCidades || []}
-                          setSelectedValues={pedidosRetidosConfig.onFiltroCidadesChange}
-                          options={pedidosRetidosConfig.cidadesDisponiveis || []}
-                          placeholder="Todas as cidades"
-                          selectAllText="Selecionar Todas"
-                          clearAllText="Limpar Todas"
-                          allSelectedText="Todas as cidades selecionadas"
-                          showCount={true}
-                          className="theme-green"
-                        />
-                      )}
-                      {pedidosRetidosConfig.onDeleteTabela && (
-                        <div className="filter-dropdown-actions">
-                          <button
-                            onClick={pedidosRetidosConfig.onDeleteTabela}
-                            className="filter-action-btn filter-action-btn--danger"
-                            disabled={pedidosRetidosConfig.deleteTabelaLoading}
-                            title="Deletar apenas os dados da tabela de consulta"
-                          >
-                            <MdFolderDelete size={20} />
-                            {pedidosRetidosConfig.deleteTabelaLoading ? 'Deletando...' : 'Deletar Dados da Tabela'}
-                          </button>
-                        </div>
-                      )}
-                    </FilterDropdown>
-                  </div>
-                )}
               </div>
             </div>
+
+            {/* Seção de Lotes */}
+            {pedidosRetidosConfig.pedidosLotes && pedidosRetidosConfig.pedidosLotes.length > 0 && (
+              <div className="config-modal-section">
+                <div className="config-modal-section-title">Lotes de Pedidos</div>
+                <div className="config-modal-lotes-container">
+                  <div className="config-modal-lotes-grid">
+                    {pedidosRetidosConfig.pedidosLotes.map((lote) => (
+                      <div key={lote.numero_lote} className="config-modal-lote-card">
+                        <button
+                          className="config-modal-btn-copy-lote"
+                          onClick={() => pedidosRetidosConfig.copiarLote?.(lote)}
+                          title={`Copiar ${lote.total_pedidos} números de pedidos do lote ${lote.numero_lote}`}
+                        >
+                          <p>Copiar {lote.total_pedidos} pedidos</p>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  {pedidosRetidosConfig.setPedidosLotes && (
+                    <button
+                      className="config-modal-btn-close-lotes"
+                      onClick={() => pedidosRetidosConfig.setPedidosLotes?.([])}
+                      title="Fechar lotes"
+                    >
+                      ✕ Fechar Lotes
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <div className="config-modal-default">

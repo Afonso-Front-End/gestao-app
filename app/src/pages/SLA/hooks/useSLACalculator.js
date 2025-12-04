@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import useApiCache from '../../../hooks/useApiCache'
 import useDebounce from '../../../hooks/useDebounce'
 import { useRefresh } from '../contexts/RefreshContext'
-import { buildApiUrl } from '../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../utils/api-utils'
 import { getApiHeaders } from '../../../utils/api-headers'
 
 /**
@@ -79,6 +79,8 @@ const useSLACalculator = (baseName, cities) => {
       try {
         // Construir URL com parâmetros
         let url = buildApiUrl(`sla/calculator/metrics/${encodeURIComponent(baseName)}`)
+        const queryParams = []
+        
         if (citiesArray.length > 0) {
           // Construir query string manualmente para evitar erro com URL relativa
           const queryParams = citiesArray.map(city => `cities=${encodeURIComponent(city)}`).join('&')

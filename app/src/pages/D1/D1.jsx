@@ -26,7 +26,7 @@ import D1Header from './components/D1Header/D1Header'
 import D1PedidosSection from './components/D1PedidosSection/D1PedidosSection'
 import D1BipagensHeader from './components/D1BipagensHeader/D1BipagensHeader'
 import CustomMessageModal from './components/CustomMessageModal/CustomMessageModal'
-import { STORAGE_KEYS, PEDIDOS_MOTORISTA_COLUMNS, MOTORISTAS_COLUMNS, API_ENDPOINTS } from './constants/D1Constants'
+import { STORAGE_KEYS, PEDIDOS_MOTORISTA_COLUMNS, MOTORISTAS_COLUMNS, API_ENDPOINTS, CONFIG } from './constants/D1Constants'
 import { transformPedidosMotoristaData, transformMotoristasData } from './utils/dataTransformers'
 import './D1.css'
 
@@ -65,6 +65,7 @@ const D1Content = () => {
   const [selectedCidades, setSelectedCidades] = useState([])
   const [saveTemposEnabled, setSaveTemposEnabled] = useState(false)
   const [showLotes, setShowLotes] = useState(true)
+  const [d1PedidosLotes, setD1PedidosLotes] = useState([])
 
   // Limpar cidades selecionadas quando bases mudarem
   useEffect(() => {
@@ -444,12 +445,44 @@ const D1Content = () => {
   }, [selectedTemposParados, saveTemposEnabled, basesLoaded])
 
 
+  // Função para copiar lote
+  const copiarLoteD1 = useCallback(async (lote) => {
+    try {
+      const numeros = lote.pedidos || []
+      if (numeros.length === 0) {
+        showError('Nenhum número de pedido válido encontrado neste lote.')
+        return
+      }
+      await navigator.clipboard.writeText(numeros.join('\n'))
+      showSuccess(`📋 Lote ${lote.numero_lote} copiado! ${numeros.length.toLocaleString('pt-BR')} números de pedidos copiados para a área de transferência.`)
+    } catch (error) {
+      showError('Erro ao copiar lote. Tente novamente.')
+      console.error('Erro ao copiar lote:', error)
+    }
+  }, [showSuccess, showError])
+
+  // Gerar lotes a partir de numerosPedidos
+  useEffect(() => {
+    if (numerosPedidos.length > 0 && !loadingPedidos) {
+      const lotes = []
+      const tamanho = CONFIG.LOTES_SIZE
+      for (let i = 0; i < numerosPedidos.length; i += tamanho) {
+        lotes.push({
+          numero_lote: Math.floor(i / tamanho) + 1,
+          total_pedidos: Math.min(tamanho, numerosPedidos.length - i),
+          pedidos: numerosPedidos.slice(i, i + tamanho)
+        })
+      }
+      setD1PedidosLotes(lotes)
+    } else {
+      setD1PedidosLotes([])
+    }
+  }, [numerosPedidos, loadingPedidos])
+
   // Mostrar mensagem quando pedidos forem carregados automaticamente
   useEffect(() => {
     if (numerosPedidos.length > 0 && !loadingPedidos && selectedBases.length > 0) {
       showInfo(`✅ ${numerosPedidos.length.toLocaleString('pt-BR')} números de pedidos encontrados para ${selectedBases.length} base(s)`)
-      // Mostrar lotes automaticamente quando novos pedidos são carregados
-      setShowLotes(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [numerosPedidos.length, loadingPedidos, selectedBases.length])
@@ -498,7 +531,10 @@ const D1Content = () => {
         setCustomMessageQuantidade(pedidosMotorista.length || 0)
         setCustomMessageTelefone(telefoneMotorista || '')
         setShowCustomMessageModal(true)
-      }
+      },
+      d1PedidosLotes,
+      setD1PedidosLotes,
+      copiarLoteD1
     })
     
     return () => {
@@ -513,6 +549,7 @@ const D1Content = () => {
     pedidosMotorista.length,
     telefoneMotorista,
     baseMotorista,
+    d1PedidosLotes,
     registerD1Config,
     unregisterD1Config
   ])

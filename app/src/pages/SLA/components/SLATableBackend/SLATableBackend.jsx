@@ -8,7 +8,7 @@ import ObservacaoModal from '../ObservacaoModal/ObservacaoModal'
 import { useNotification } from '../../../../contexts/NotificationContext'
 import useApiCache from '../../../../hooks/useApiCache'
 import useMotoristaStatusSLA from '../../hooks/useMotoristaStatusSLA'
-import { buildApiUrl } from '../../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../../utils/api-utils'
 import { getApiHeaders } from '../../../../utils/api-headers'
 import './SLATableBackend.css'
 

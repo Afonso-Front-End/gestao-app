@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { isTauri, checkBackendHealth } from '../../utils/tauri-utils'
+import { checkBackendHealth } from '../../utils/api-utils'
 import './TauriStatus.css'
 
 const TauriStatus = () => {
   const [isBackendOnline, setIsBackendOnline] = useState(false)
   const [checking, setChecking] = useState(true)
-  const runningOnTauri = isTauri()
 
   useEffect(() => {
     const checkBackend = async () => {
@@ -22,18 +21,8 @@ const TauriStatus = () => {
     return () => clearInterval(interval)
   }, [])
 
-  // Não mostrar se não estiver no Tauri
-  if (!runningOnTauri) {
-    return null
-  }
-
   return (
     <div className="tauri-status">
-      <div className="tauri-status-badge">
-        <span className="tauri-icon">🖥️</span>
-        <span className="tauri-text">Desktop</span>
-      </div>
-      
       <div className="backend-status">
         {checking ? (
           <span className="status-checking">

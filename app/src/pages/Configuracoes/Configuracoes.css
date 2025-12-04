@@ -138,6 +138,7 @@
 .config-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 12px;
   margin-top: 8px;
 }
 
@@ -167,6 +168,31 @@
 }
 
 .btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.btn-logout:active {
   transform: translateY(0);
 }
 
@@ -268,7 +294,8 @@
   }
   
   .btn-primary,
-  .btn-danger {
+  .btn-danger,
+  .btn-logout {
     width: 100%;
     justify-content: center;
   }

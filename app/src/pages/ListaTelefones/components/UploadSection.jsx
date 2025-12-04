@@ -1,7 +1,7 @@
 import React from 'react'
 import FileImport from '../../../components/FileImport/FileImport'
 import { API_ENDPOINTS } from '../constants/api'
-import { buildApiUrl } from '../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../utils/api-utils'
 
 const UploadSection = ({ onSuccess, onError }) => {
   return (

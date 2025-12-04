@@ -48,7 +48,7 @@ import { useNotification } from '../../contexts/NotificationContext'
 import { PedidosRetidosLoadingProvider } from './contexts/LoadingContext'
 import { useConfig } from '../../contexts/ConfigContext'
 import api from '../../services/api'
-import { getApiBaseUrl } from '../../utils/tauri-utils'
+import { getApiBaseUrl } from '../../utils/api-utils'
 import { limparCachePedidos } from './utils/motoristaUtils'
 import { PEDIDOS_PARADOS_COLUMNS, OVERLAY_PEDIDOS_MOTORISTA_COLUMNS } from './constants/tableColumns'
 
@@ -102,27 +102,27 @@ const PedidosRetidosContent = () => {
 
   // Estado dos modais de confirmação (otimizado com useReducer)
   const [modals, dispatchModal] = useReducer(modalReducer, initialModalState)
-  
+
   // Contexto global de uploads
   const upload = useUpload()
   const { activeUploads } = upload
-  
+
   // Verificar se há uploads ativos APENAS desta página (não de outras páginas)
   // Filtrar apenas uploads relevantes para Pedidos Retidos
-  const relevantUploads = activeUploads.filter(upload => 
+  const relevantUploads = activeUploads.filter(upload =>
     upload.type === 'retidos' || upload.type === 'consultados'
   )
   const uploadingRetidos = relevantUploads.some(upload => upload.type === 'retidos')
   const uploadingConsultados = relevantUploads.some(upload => upload.type === 'consultados')
   const isUploading = uploadingRetidos || uploadingConsultados
-  
+
   // Estado para loading após upload de Consultados
   const [loadingAfterConsultados, setLoadingAfterConsultados] = useState(false)
-  
+
   // Estado para upload de atualização da tabela
   const [isUploadingUpdate, setIsUploadingUpdate] = useState(false)
   const fileInputUpdateRef = useRef(null)
-  
+
   // Estado para salvamento de snapshot
   const [isSavingSnapshot, setIsSavingSnapshot] = useState(false)
 
@@ -219,7 +219,7 @@ const PedidosRetidosContent = () => {
     if (isUploading) {
       return
     }
-    
+
     // Fazer verificação inicial silenciosa
     const checkInitialData = async () => {
       try {
@@ -228,7 +228,7 @@ const PedidosRetidosContent = () => {
         // Erro silencioso na verificação inicial
       }
     }
-    
+
     checkInitialData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Executar apenas uma vez ao montar
@@ -244,12 +244,12 @@ const PedidosRetidosContent = () => {
         }, 500)
         return () => clearTimeout(timer)
       }
-      
+
       // Timeout de segurança: desativar após 15 segundos mesmo sem dados
       const timeoutSafety = setTimeout(() => {
         setLoadingAfterConsultados(false)
       }, 15000)
-      
+
       return () => clearTimeout(timeoutSafety)
     }
   }, [loadingAfterConsultados, pedidosParadosData.length, pedidosParadosLoading])
@@ -261,7 +261,7 @@ const PedidosRetidosContent = () => {
   const { showSuccess, showError, showInfo } = useNotification()
 
   // Handlers otimizados com useCallback
-  
+
   // Handler para abrir modal de confirmação - Lotes
   const handleDeleteLotes = useCallback(() => {
     dispatchModal({ type: MODAL_ACTIONS.OPEN_DELETE_LOTES })
@@ -278,15 +278,15 @@ const PedidosRetidosContent = () => {
       if (response.data.success) {
         // Limpar lotes locais
         setPedidosLotes([])
-        
+
         // Revalidar dados
         revalidatePedidosData()
-        
+
         // Atualizar selects
         refetchBases()
         refetchTipos()
         refetchAging()
-        
+
         const counts = response.data.deleted_counts
         showSuccess(
           `✅ Dados deletados com sucesso!\n` +
@@ -294,7 +294,7 @@ const PedidosRetidosContent = () => {
           `📦 pedidos_retidos_chunks: ${counts.pedidos_retidos_chunks}\n` +
           `🔢 Total: ${counts.total} registros`
         )
-        
+
         dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_LOTES })
       }
     } catch (error) {
@@ -382,23 +382,23 @@ const PedidosRetidosContent = () => {
     if (isSavingSnapshot) {
       return
     }
-    
+
     setIsSavingSnapshot(true)
-    
+
     try {
       showInfo('⏳ Criando snapshot dos dados...')
-      
+
       const payload = {
         module: 'pedidos_parados',
         period_type: 'manual'
       }
-      
+
       const response = await api.post('reports/snapshot', payload)
-      
+
       if (response.data?.success) {
         const isDuplicate = response.data?.is_duplicate
         const metrics = response.data.data?.metrics || response.data.metrics
-        
+
         if (isDuplicate) {
           showInfo(
             `ℹ️ Snapshot recente já existe! ${metrics?.total_pedidos || 0} pedidos, ` +
@@ -427,7 +427,7 @@ const PedidosRetidosContent = () => {
     if (!files || files.length === 0) return
 
     setIsUploadingUpdate(true)
-    
+
     const totalFiles = files.length
     let successCount = 0
     let errorCount = 0
@@ -440,13 +440,13 @@ const PedidosRetidosContent = () => {
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         let uploadId = null
-        
+
         try {
           uploadId = upload.startUpload({
             fileName: file.name,
             type: uploadType
           })
-          
+
           const formData = new FormData()
           formData.append('file', file)
 
@@ -459,7 +459,7 @@ const PedidosRetidosContent = () => {
           const headers = getApiHeaders()
           // Remover Content-Type para FormData (browser define automaticamente)
           delete headers['Content-Type']
-          
+
           const response = await fetch(`${getApiBaseUrl()}/retidos/upload-tabela-dados`, {
             method: 'POST',
             headers,
@@ -475,16 +475,16 @@ const PedidosRetidosContent = () => {
           }
 
           const result = await response.json()
-          
+
           upload.completeUpload(uploadId, `Upload ${i + 1}/${totalFiles} concluído!`)
           successCount++
-          
+
           // Arquivo processado com sucesso
 
         } catch (fileError) {
           // Erro no arquivo tratado abaixo
           errorCount++
-          
+
           if (uploadId) {
             upload.failUpload(uploadId, fileError.message)
           }
@@ -562,7 +562,7 @@ const PedidosRetidosContent = () => {
   // Handler para salvar observação
   const handleSaveObservacao = useCallback(async (observacao) => {
     const { statusKey, motorista, base, status } = observacaoModal
-    
+
     try {
       // Chamar API para salvar observação no servidor
       await api.post(`/retidos/motorista/${encodeURIComponent(motorista)}/status`, {
@@ -571,16 +571,16 @@ const PedidosRetidosContent = () => {
         status: status,
         observacao: observacao
       })
-      
+
       // Atualizar estado local para manter botão visível
       setObservacoes(prev => ({
         ...prev,
         [statusKey]: observacao
       }))
-      
+
       // Feedback de sucesso
       showSuccess(`Observação ${observacao.trim() ? 'salva' : 'removida'} com sucesso!`)
-      
+
     } catch (error) {
       // Erro ao salvar observação
       showError('Erro ao salvar observação. Tente novamente.')
@@ -592,22 +592,22 @@ const PedidosRetidosContent = () => {
   useEffect(() => {
     const carregarObservacoes = async () => {
       if (!pedidosParadosData || pedidosParadosData.length === 0) return
-      
+
       setIsLoadingObservacoes(true)
       try {
         // Buscar todas as observações salvas
         const response = await api.get('/retidos/motorista/all-status')
-        
+
         if (response.data?.success && response.data?.statuses) {
           const observacoesMap = {}
-          
+
           response.data.statuses.forEach(statusItem => {
             const statusKey = `${statusItem.responsavel}_${statusItem.base}_status`
             if (statusItem.observacao) {
               observacoesMap[statusKey] = statusItem.observacao
             }
           })
-          
+
           setObservacoes(observacoesMap)
         }
       } catch (error) {
@@ -617,7 +617,7 @@ const PedidosRetidosContent = () => {
         setIsLoadingObservacoes(false)
       }
     }
-    
+
     carregarObservacoes()
   }, [pedidosParadosData])
 
@@ -636,7 +636,7 @@ const PedidosRetidosContent = () => {
     if (!debouncedSearchText.trim()) {
       return pedidosParadosData
     }
-    
+
     const searchLower = debouncedSearchText.toLowerCase()
     return pedidosParadosData.filter(item => {
       // Buscar em todos os valores do item
@@ -672,7 +672,7 @@ const PedidosRetidosContent = () => {
     limparCachePedidos()
     // Ativar loading imediatamente após upload
     setLoadingAfterConsultados(true)
-    
+
     // Usar setTimeout para garantir que a UI renderize o loading ANTES do processamento
     setTimeout(async () => {
       try {
@@ -718,8 +718,9 @@ const PedidosRetidosContent = () => {
       tiposLoading,
       availableAging,
       agingLoading,
-      retidosEndpoint: `${getApiBaseUrl()}/retidos/upload`,
-      consultadosEndpoint: `${getApiBaseUrl()}/retidos/upload-tabela-dados`,
+      // Usar apenas o caminho relativo - o axios já tem baseURL: '/api'
+      retidosEndpoint: '/retidos/upload',
+      consultadosEndpoint: '/retidos/upload-tabela-dados',
       onRetidosSuccess: handleRetidosSuccess,
       onRetidosError: handleRetidosError,
       onConsultadosSuccess: handleConsultadosSuccess,
@@ -736,9 +737,12 @@ const PedidosRetidosContent = () => {
       basesDisponiveis,
       cidadesDisponiveis,
       onDeleteTabela: handleDeleteTabela,
-      deleteTabelaLoading: modals.deleteTabela.loading
+      deleteTabelaLoading: modals.deleteTabela.loading,
+      pedidosLotes,
+      setPedidosLotes,
+      copiarLote
     })
-    
+
     return () => {
       unregisterPedidosRetidosConfig()
     }
@@ -761,6 +765,7 @@ const PedidosRetidosContent = () => {
     pedidosLoading,
     modals.deleteLotes.loading,
     modals.deleteTabela.loading,
+    pedidosLotes,
     registerPedidosRetidosConfig,
     unregisterPedidosRetidosConfig
   ])
@@ -769,48 +774,67 @@ const PedidosRetidosContent = () => {
     <div className="pedidos-retidos">
       <div className='pedidos-retidos-header-container'>
         <div className="pedidos-header-content">
-          {/* Elementos movidos para o modal de configuração */}
-            {pedidosLotes && pedidosLotes.length > 0 && (
-              <div className="lotes-section">
-                <button
-                  className="btn-close-lotes"
-                  onClick={() => setPedidosLotes([])}
-                  title="Fechar lotes"
-                >
-                  ✕
-                </button>
-                <div className="lotes-grid">
-                  {pedidosLotes.map((lote) => (
-                    <div key={lote.numero_lote} className="lote-card">
-                      <button
-                        className="btn-copy-lote"
-                        onClick={() => copiarLote(lote)}
-                        title={`Copiar ${lote.total_pedidos} números de pedidos do lote ${lote.numero_lote}`}
-                      >
-                        <p>Copiar {lote.total_pedidos} pedidos</p>
-                      </button>
-                    </div>
-                  ))}
+          {filtroBases && (
+            <FilterDropdown
+              label="Filtros de Tabela"
+              badgeCount={(filtroBases?.length || 0) + (filtroCidades?.length || 0)}
+            >
+              <MultiSelect
+                selectedValues={filtroBases || []}
+                setSelectedValues={setFiltroBases}
+                options={basesDisponiveis || []}
+                placeholder="Todas as bases"
+                selectAllText="Selecionar Todas"
+                clearAllText="Limpar Todas"
+                allSelectedText="Todas as bases selecionadas"
+                showCount={true}
+                className="theme-blue"
+              />
+              {filtroCidades && (
+                <MultiSelect
+                  selectedValues={filtroCidades || []}
+                  setSelectedValues={setFiltroCidades}
+                  options={cidadesDisponiveis || []}
+                  placeholder="Todas as cidades"
+                  selectAllText="Selecionar Todas"
+                  clearAllText="Limpar Todas"
+                  allSelectedText="Todas as cidades selecionadas"
+                  showCount={true}
+                  className="theme-green"
+                />
+              )}
+              {handleDeleteTabela && (
+                <div className="filter-dropdown-actions">
+                  <button
+                    onClick={handleDeleteTabela}
+                    className="filter-action-btn filter-action-btn--danger"
+                    disabled={modals.deleteTabela.loading}
+                    title="Deletar apenas os dados da tabela de consulta"
+                  >
+                    <MdFolderDelete size={20} />
+                    {modals.deleteTabela.loading ? 'Deletando...' : 'Deletar Dados da Tabela'}
+                  </button>
                 </div>
-              </div>
-            )}
+              )}
+            </FilterDropdown>
+          )}
         </div>
       </div>
 
       <div className="pedidos-retidos-content">
         <div className="pedidos-parados-section">
           {(isUploading || loadingAfterConsultados || (pedidosParadosLoading && initialLoadDone)) ? (
-            <LoadingState 
+            <LoadingState
               message={
                 uploadingRetidos ? "Processando Arquivo Retidos..." :
-                uploadingConsultados ? "Processando Arquivo Consultados..." :
-                loadingAfterConsultados ? "Processando e Carregando Tabela..." :
-                (pedidosParadosLoading && initialLoadDone) ? "Carregando dados..." :
-                "Carregando..."
+                  uploadingConsultados ? "Processando Arquivo Consultados..." :
+                    loadingAfterConsultados ? "Processando e Carregando Tabela..." :
+                      (pedidosParadosLoading && initialLoadDone) ? "Carregando dados..." :
+                        "Carregando..."
               }
               subtitle={
-                uploadingRetidos 
-                  ? "Aguarde enquanto importamos e processamos os dados dos pedidos retidos." 
+                uploadingRetidos
+                  ? "Aguarde enquanto importamos e processamos os dados dos pedidos retidos."
                   : (uploadingConsultados || loadingAfterConsultados)
                     ? "Aguarde enquanto processamos os dados e atualizamos a tabela. Isso pode levar alguns segundos..."
                     : (pedidosParadosLoading && initialLoadDone)
@@ -823,89 +847,80 @@ const PedidosRetidosContent = () => {
             <div ref={tabelaPedidosParadosRef} className='pedidos-parados-table'>
               <div className="table-header">
                 <div className="table-title-section">
-                  <h3 className="table-title">
-                    Atualização de Pedidos Parados {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                  </h3>
-                  <p className="table-subtitle">
-                    📊 Dados agrupados por Mootorista das bases selecionadas!
-                  </p>
-                  <div className="table-info">
-                    <div className="info-item">
-                      <span className="info-label">Total de Pedidos:</span>
-                      <span className="info-value">{totalPedidosFiltrados}</span>
+                  <div style={{ display: "flex", gap: "12px" , justifyContent: "space-between"}}>
+                    <div>
+                      <h3 className="table-title">
+                        Atualização de Pedidos Parados {new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </h3>
+                      <p className="table-subtitle">
+                        📊 Dados agrupados por Mootorista das bases selecionadas!
+                      </p>
                     </div>
-                    <div className="info-item">
-                      <span className="info-label">Motoristas:</span>
-                      <span className="info-value">{dadosFiltrados?.length || 0}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-label">Bases Filtradas:</span>
-                      <span className="info-value">{filtroBases.length > 0 ? filtroBases.length : 'Todas'}</span>
-                    </div>
-                    <div className="info-item">
-                      <span className="info-label">Cidades Filtradas:</span>
-                      <span className="info-value">{filtroCidades.length > 0 ? filtroCidades.length : 'Todas'}</span>
+
+                    <div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "12px" }}>
+                        {/* Botões de Ação */}
+                        <div style={{ display: "flex", gap: "10px", width: "100%", justifyContent: "flex-end" }}>
+                          <button
+                            onClick={() => adminActions.gerarRelatorioContato(filtroBases)}
+                            className="btn-gerar-relatorio"
+                            title="Gerar e baixar relatório Excel com dados de contato"
+                          >
+                            <span>📊</span>
+                            <span>Gerar Relatório Excel</span>
+                          </button>
+                          <input
+                            ref={fileInputUpdateRef}
+                            type="file"
+                            accept=".xlsx,.xls,.csv"
+                            multiple
+                            onChange={handleFileUpdateChange}
+                            style={{ display: 'none' }}
+                          />
+                          <button
+                            onClick={handleOpenFileUpdateDialog}
+                            className="btn-upload-update"
+                            disabled={isUploadingUpdate}
+                            title="Fazer upload de arquivo(s) para atualizar a tabela (aceita múltiplos arquivos)"
+                          >
+                            <IoRefresh size={20} className={isUploadingUpdate ? 'spinning' : ''} />
+                          </button>
+                          <button
+                            onClick={handleDeleteChunks}
+                            className="btn-deletar-chunks"
+                            disabled={modals.deleteChunks.loading}
+                            title="Deletar todos os dados da coleção pedidos_retidos_tabela_chunks"
+                          >
+                            <MdFolderDelete size={20} />
+                          </button>
+                          <ScreenshotButton
+                            targetRef={tabelaPedidosParadosRef}
+                            filename="pedidos-parados"
+                            onSuccess={(message) => showSuccess(message)}
+                            onError={(error) => showError(error)}
+                            title="Capturar screenshot da tabela"
+                            excludeSelectors={[
+                              '.pedidos-screenshot-button',
+                              '.btn-save-snapshot',
+                              '.btn-upload-update',
+                              '.btn-deletar-chunks',
+                              '.btn-gerar-relatorio',
+                              'input[type="file"]'
+                            ]}
+                            size="medium"
+                          />
+                          <button
+                            onClick={handleSaveSnapshot}
+                            className="btn-save-snapshot"
+                            disabled={isSavingSnapshot || !pedidosParadosData || pedidosParadosData.length === 0}
+                            title="Salvar snapshot dos dados atuais para relatórios"
+                          >
+                            <IoSaveOutline size={20} className={isSavingSnapshot ? 'spinning' : ''} />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <SearchInput
-                    value={searchText}
-                    onChange={setSearchText}
-                    placeholder="Pesquisar motorista, base, cidade..."
-                  />
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                  {/* Botões de Ação */}
-                  <div style={{ display: "flex", gap: "10px", width: "100%", justifyContent: "flex-end" }}>
-                    <button
-                      onClick={() => adminActions.gerarRelatorioContato(filtroBases)}
-                      className="btn-gerar-relatorio"
-                      title="Gerar e baixar relatório Excel com dados de contato"
-                    >
-                      <span>📊</span>
-                      <span>Gerar Relatório Excel</span>
-                    </button>
-                    <input
-                      ref={fileInputUpdateRef}
-                      type="file"
-                      accept=".xlsx,.xls,.csv"
-                      multiple
-                      onChange={handleFileUpdateChange}
-                      style={{ display: 'none' }}
-                    />
-                    <button
-                      onClick={handleOpenFileUpdateDialog}
-                      className="btn-upload-update"
-                      disabled={isUploadingUpdate}
-                      title="Fazer upload de arquivo(s) para atualizar a tabela (aceita múltiplos arquivos)"
-                    >
-                      <IoRefresh size={20} className={isUploadingUpdate ? 'spinning' : ''} />
-                    </button>
-                    <button
-                      onClick={handleDeleteChunks}
-                      className="btn-deletar-chunks"
-                      disabled={modals.deleteChunks.loading}
-                      title="Deletar todos os dados da coleção pedidos_retidos_tabela_chunks"
-                    >
-                      <MdFolderDelete size={20} />
-                    </button>
-                    <ScreenshotButton
-                      targetRef={tabelaPedidosParadosRef}
-                      filename="pedidos-parados"
-                      onSuccess={(message) => showSuccess(message)}
-                      onError={(error) => showError(error)}
-                      title="Capturar screenshot da tabela"
-                      // size="small"
-                    />
-                    <button
-                      onClick={handleSaveSnapshot}
-                      className="btn-save-snapshot"
-                      disabled={isSavingSnapshot || !pedidosParadosData || pedidosParadosData.length === 0}
-                      title="Salvar snapshot dos dados atuais para relatórios"
-                    >
-                      <IoSaveOutline size={20} className={isSavingSnapshot ? 'spinning' : ''} />
-                    </button>
-                  </div>
-                  
                   {/* Legenda dos Marcadores de Status */}
                   <div className="status-legend">
                     <span className="status-legend-title">Legenda:</span>
@@ -928,7 +943,31 @@ const PedidosRetidosContent = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="table-info">
+                    <div className="info-item">
+                      <span className="info-label">Total de Pedidos:</span>
+                      <span className="info-value">{totalPedidosFiltrados}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Motoristas:</span>
+                      <span className="info-value">{dadosFiltrados?.length || 0}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Bases Filtradas:</span>
+                      <span className="info-value">{filtroBases.length > 0 ? filtroBases.length : 'Todas'}</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Cidades Filtradas:</span>
+                      <span className="info-value">{filtroCidades.length > 0 ? filtroCidades.length : 'Todas'}</span>
+                    </div>
+                  </div>
                 </div>
+
+                <SearchInput
+                  value={searchText}
+                  onChange={setSearchText}
+                  placeholder="Pesquisar motorista, base, cidade..."
+                />
               </div>
 
               <Table
@@ -951,28 +990,28 @@ const PedidosRetidosContent = () => {
         {/* Overlay para mostrar pedidos do motorista (lazy loaded) */}
         <Suspense fallback={<LoadingState message="Carregando overlay..." size="small" />}>
           <TableOverlay
-          isOpen={overlay.isOverlayOpen && !overlay.isClosingOverlay}
-          onClose={overlay.handleCloseOverlay}
-          title={overlay.overlayTitle}
-          subtitle={overlaySubtitle}
-          data={overlay.overlayData}
-          columns={OVERLAY_PEDIDOS_MOTORISTA_COLUMNS}
-          emptyMessage="Nenhum pedido encontrado para este motorista"
-          isLoading={overlay.isLoadingPedidos}
-          filterColumns={false}
-          overlayType="pedidos-motorista"
-          showWhatsApp={overlay.showWhatsApp}
-          showAddPhone={true}
-          baseName={overlay.baseMotorista}
-          motorista={overlay.motoristaNome}
-          telefoneMotorista={overlay.telefoneMotorista}
-          telefoneCarregado={overlay.telefoneCarregado}
-          telefoneInicial={overlay.telefoneMotorista}
-          onTelefoneAdicionado={motoristaActions.handleTelefoneAdicionado}
-          onCopyPedido={motoristaActions.copiarPedido}
-          onCopyAllPedidos={motoristaActions.copiarTodosPedidos}
-          onCopyFormattedData={motoristaActions.copiarDadosFormatados}
-        />
+            isOpen={overlay.isOverlayOpen && !overlay.isClosingOverlay}
+            onClose={overlay.handleCloseOverlay}
+            title={overlay.overlayTitle}
+            subtitle={overlaySubtitle}
+            data={overlay.overlayData}
+            columns={OVERLAY_PEDIDOS_MOTORISTA_COLUMNS}
+            emptyMessage="Nenhum pedido encontrado para este motorista"
+            isLoading={overlay.isLoadingPedidos}
+            filterColumns={false}
+            overlayType="pedidos-motorista"
+            showWhatsApp={overlay.showWhatsApp}
+            showAddPhone={true}
+            baseName={overlay.baseMotorista}
+            motorista={overlay.motoristaNome}
+            telefoneMotorista={overlay.telefoneMotorista}
+            telefoneCarregado={overlay.telefoneCarregado}
+            telefoneInicial={overlay.telefoneMotorista}
+            onTelefoneAdicionado={motoristaActions.handleTelefoneAdicionado}
+            onCopyPedido={motoristaActions.copiarPedido}
+            onCopyAllPedidos={motoristaActions.copiarTodosPedidos}
+            onCopyFormattedData={motoristaActions.copiarDadosFormatados}
+          />
         </Suspense>
       </div>
 
@@ -980,69 +1019,69 @@ const PedidosRetidosContent = () => {
       <Suspense fallback={null}>
         {/* Modal de confirmação para deletar lotes */}
         <ConfirmModal
-        isOpen={modals.deleteLotes.show}
-        onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_LOTES })}
-        onConfirm={handleConfirmDeleteLotes}
-        title="Excluir Dados do Arquivo Retidos?"
-        message="Tem certeza que deseja excluir todos os dados do primeiro upload (arquivo Retidos)?"
-        warningMessage="⚠️ Esta ação não pode ser desfeita. As seguintes coleções serão deletadas: pedidos_retidos e pedidos_retidos_chunks."
-        confirmText="Sim, Excluir Tudo"
-        cancelText="Cancelar"
-        type="danger"
-        loading={modals.deleteLotes.loading}
-      />
+          isOpen={modals.deleteLotes.show}
+          onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_LOTES })}
+          onConfirm={handleConfirmDeleteLotes}
+          title="Excluir Dados do Arquivo Retidos?"
+          message="Tem certeza que deseja excluir todos os dados do primeiro upload (arquivo Retidos)?"
+          warningMessage="⚠️ Esta ação não pode ser desfeita. As seguintes coleções serão deletadas: pedidos_retidos e pedidos_retidos_chunks."
+          confirmText="Sim, Excluir Tudo"
+          cancelText="Cancelar"
+          type="danger"
+          loading={modals.deleteLotes.loading}
+        />
 
-      {/* Modal de confirmação para deletar todas as coleções */}
-      <ConfirmModal
-        isOpen={modals.deleteCollections.show}
-        onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_COLLECTIONS })}
-        onConfirm={handleConfirmDeleteCollections}
-        title="⚠️ Deletar TODAS as Coleções?"
-        message="Esta ação irá deletar TODOS os dados das seguintes coleções:"
-        warningMessage="🔴 ATENÇÃO: pedidos_retidos, pedidos_retidos_chunks e pedidos_retidos_tabela serão PERMANENTEMENTE deletadas. Esta ação não pode ser desfeita!"
-        confirmText="Sim, Deletar TUDO"
-        cancelText="Cancelar"
-        type="danger"
-        loading={modals.deleteCollections.loading}
-      />
+        {/* Modal de confirmação para deletar todas as coleções */}
+        <ConfirmModal
+          isOpen={modals.deleteCollections.show}
+          onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_COLLECTIONS })}
+          onConfirm={handleConfirmDeleteCollections}
+          title="⚠️ Deletar TODAS as Coleções?"
+          message="Esta ação irá deletar TODOS os dados das seguintes coleções:"
+          warningMessage="🔴 ATENÇÃO: pedidos_retidos, pedidos_retidos_chunks e pedidos_retidos_tabela serão PERMANENTEMENTE deletadas. Esta ação não pode ser desfeita!"
+          confirmText="Sim, Deletar TUDO"
+          cancelText="Cancelar"
+          type="danger"
+          loading={modals.deleteCollections.loading}
+        />
 
-      {/* Modal de confirmação para deletar chunks da tabela */}
-      <ConfirmModal
-        isOpen={modals.deleteChunks.show}
-        onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_CHUNKS })}
-        onConfirm={handleConfirmDeleteChunks}
-        title="Deletar Dados do Arquivo Consultados?"
-        message="Esta ação irá deletar TODOS os dados da coleção pedidos_retidos_tabela_chunks (arquivo Consultados)."
-        warningMessage="⚠️ Esta ação não pode ser desfeita. Você precisará fazer o upload do arquivo Consultados novamente."
-        confirmText="Sim, Deletar Chunks"
-        cancelText="Cancelar"
-        type="warning"
-        loading={modals.deleteChunks.loading}
-      />
+        {/* Modal de confirmação para deletar chunks da tabela */}
+        <ConfirmModal
+          isOpen={modals.deleteChunks.show}
+          onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_CHUNKS })}
+          onConfirm={handleConfirmDeleteChunks}
+          title="Deletar Dados do Arquivo Consultados?"
+          message="Esta ação irá deletar TODOS os dados da coleção pedidos_retidos_tabela_chunks (arquivo Consultados)."
+          warningMessage="⚠️ Esta ação não pode ser desfeita. Você precisará fazer o upload do arquivo Consultados novamente."
+          confirmText="Sim, Deletar Chunks"
+          cancelText="Cancelar"
+          type="warning"
+          loading={modals.deleteChunks.loading}
+        />
 
-      {/* Modal de confirmação para deletar apenas a tabela (Consultados) */}
-      <ConfirmModal
-        isOpen={modals.deleteTabela.show}
-        onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_TABELA })}
-        onConfirm={handleConfirmDeleteTabela}
-        title="Deletar Dados da Tabela de Consulta?"
-        message="Esta ação irá deletar TODOS os dados da coleção pedidos_retidos_tabela (tabela de pedidos consultados)."
-        warningMessage="⚠️ ATENÇÃO: Esta ação não pode ser desfeita. Os dados filtrados por base e cidade serão permanentemente deletados!"
-        confirmText="Sim, Deletar Tabela"
-        cancelText="Cancelar"
-        type="warning"
-        loading={modals.deleteTabela.loading}
-      />
+        {/* Modal de confirmação para deletar apenas a tabela (Consultados) */}
+        <ConfirmModal
+          isOpen={modals.deleteTabela.show}
+          onClose={() => dispatchModal({ type: MODAL_ACTIONS.CLOSE_DELETE_TABELA })}
+          onConfirm={handleConfirmDeleteTabela}
+          title="Deletar Dados da Tabela de Consulta?"
+          message="Esta ação irá deletar TODOS os dados da coleção pedidos_retidos_tabela (tabela de pedidos consultados)."
+          warningMessage="⚠️ ATENÇÃO: Esta ação não pode ser desfeita. Os dados filtrados por base e cidade serão permanentemente deletados!"
+          confirmText="Sim, Deletar Tabela"
+          cancelText="Cancelar"
+          type="warning"
+          loading={modals.deleteTabela.loading}
+        />
 
-      {/* Modal de Observação - Renderizado FORA da tabela */}
-      <ObservacaoModal
-        isOpen={observacaoModal.isOpen}
-        onClose={handleCloseObservacao}
-        onSave={handleSaveObservacao}
-        initialValue={observacaoModal.observacao}
-        motorista={observacaoModal.motorista}
-        status={observacaoModal.status}
-      />
+        {/* Modal de Observação - Renderizado FORA da tabela */}
+        <ObservacaoModal
+          isOpen={observacaoModal.isOpen}
+          onClose={handleCloseObservacao}
+          onSave={handleSaveObservacao}
+          initialValue={observacaoModal.observacao}
+          motorista={observacaoModal.motorista}
+          status={observacaoModal.status}
+        />
       </Suspense>
 
       {/* UploadProgress local para esta página */}

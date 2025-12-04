@@ -178,7 +178,11 @@ const useTableRender = (
 
     // Para outras colunas, também garantir que valores vazios mostrem algo apropriado
     if (value === null || value === undefined || value === '') {
-      return key === 'responsavel' ? 'N/A' : '0'
+      // Colunas de texto mostram 'N/A', colunas numéricas mostram '0'
+      if (key === 'responsavel' || key === 'base') {
+        return 'N/A'
+      }
+      return '0'
     }
 
     return value

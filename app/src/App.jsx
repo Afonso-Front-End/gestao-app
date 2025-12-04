@@ -40,49 +40,49 @@ const COMPONENT_MAP = {
 function App() {
   return (
     <Router>
-      <NotificationProvider>
-        <AuthProvider>
-          <ConfigProvider>
-            <LoadingProvider>
-              <UploadProvider>
-                <div className="app">
-                <ErrorBoundary>
-                  <Routes>
-                    {/* Rotas públicas */}
-                    <Route path={ROUTES.LOGIN} element={<Login />} />
-                    <Route path={ROUTES.REGISTER} element={<Register />} />
-                    
-                    {/* Rotas protegidas */}
-                    <Route path="/" element={
-                      <PrivateRoute>
-                        <Layout />
-                      </PrivateRoute>
-                    }>
-                      <Route index element={<Home />} />
-                      {ALL_ROUTES
-                        .filter(route => route.path && route.path !== ROUTES.HOME) // Home já está como index
-                        .map(route => (
-                          <Route 
-                            key={route.path} 
-                            path={route.path.replace(/^\//, '')} // Remove apenas a primeira barra
-                            element={
-                              <ErrorBoundary>
-                                {React.createElement(COMPONENT_MAP[route.component])}
-                              </ErrorBoundary>
-                            } 
-                          />
-                        ))
-                      }
-                    </Route>
-                  </Routes>
-                </ErrorBoundary>
-                <NotificationContainer />
-              </div>
-            </UploadProvider>
-          </LoadingProvider>
-        </ConfigProvider>
-      </AuthProvider>
-    </NotificationProvider>
+      <ErrorBoundary>
+        <NotificationProvider>
+          <AuthProvider>
+            <ConfigProvider>
+              <LoadingProvider>
+                <UploadProvider>
+                  <div className="app">
+                    <Routes>
+                      {/* Rotas públicas */}
+                      <Route path={ROUTES.LOGIN} element={<Login />} />
+                      <Route path={ROUTES.REGISTER} element={<Register />} />
+                      
+                      {/* Rotas protegidas */}
+                      <Route path="/" element={
+                        <PrivateRoute>
+                          <Layout />
+                        </PrivateRoute>
+                      }>
+                        <Route index element={<Home />} />
+                        {ALL_ROUTES
+                          .filter(route => route.path && route.path !== ROUTES.HOME) // Home já está como index
+                          .map(route => (
+                            <Route 
+                              key={route.path} 
+                              path={route.path.replace(/^\//, '')} // Remove apenas a primeira barra
+                              element={
+                                <ErrorBoundary>
+                                  {React.createElement(COMPONENT_MAP[route.component])}
+                                </ErrorBoundary>
+                              } 
+                            />
+                          ))
+                        }
+                      </Route>
+                    </Routes>
+                    <NotificationContainer />
+                  </div>
+                </UploadProvider>
+              </LoadingProvider>
+            </ConfigProvider>
+          </AuthProvider>
+        </NotificationProvider>
+      </ErrorBoundary>
     </Router>
   )
 }

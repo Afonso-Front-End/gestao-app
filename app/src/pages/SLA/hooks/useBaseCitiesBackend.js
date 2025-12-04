@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRefresh } from '../contexts/RefreshContext'
 import useApiCache from '../../../hooks/useApiCache'
-import { buildApiUrl } from '../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../utils/api-utils'
 import { getApiHeaders } from '../../../utils/api-headers'
 
 /**

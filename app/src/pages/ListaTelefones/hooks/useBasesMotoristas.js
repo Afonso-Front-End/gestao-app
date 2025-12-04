@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNotification } from '../../../contexts/NotificationContext'
 import useDebounce from '../../../hooks/useDebounce'
-import { buildApiUrl } from '../../../utils/tauri-utils'
+import { buildApiUrl } from '../../../utils/api-utils'
 import { getApiHeaders } from '../../../utils/api-headers'
 
 export const useBasesMotoristas = () => {

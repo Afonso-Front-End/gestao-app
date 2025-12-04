@@ -1,11 +1,6 @@
-# Torre de Controle - Aplicação Desktop 🖥️
+# Torre de Controle - Aplicação Web 🌐
 
-Uma aplicação desktop moderna construída com **React + Vite + Tauri**, oferecendo performance nativa e menor consumo de recursos.
-
-## 🎯 Versões Disponíveis
-
-- **🖥️ Desktop (Tauri)** - Aplicação nativa para Windows/macOS/Linux
-- **🌐 Web (Navegador)** - Versão web tradicional
+Uma aplicação web moderna construída com **React + Vite**, oferecendo interface responsiva e performance otimizada.
 
 ## 🚀 Funcionalidades
 
@@ -50,26 +45,6 @@ src/
 
 ## 🚀 Como Executar
 
-### 🖥️ Aplicação Desktop (Tauri) - RECOMENDADO
-
-1. **Pré-requisitos**: Instale Rust e Visual Studio Build Tools
-   - Consulte: `INSTALACAO_TAURI.md` para instruções detalhadas
-
-2. **Instalar dependências:**
-   ```bash
-   npm install
-   ```
-
-3. **Executar aplicação desktop:**
-   ```bash
-   npm run tauri:dev
-   ```
-
-4. **Build para produção:**
-   ```bash
-   npm run tauri:build
-   ```
-
 ### 🌐 Versão Web (Navegador)
 
 1. **Instalar dependências:**
@@ -103,11 +78,15 @@ src/
 
 O arquivo `src/services/api.js` contém a configuração do Axios:
 
-- **Base URL**: Configurável via `REACT_APP_API_URL`
-- **Timeout**: 10 segundos
+- **Base URL**: Configurado via proxy do Vite (`/api`) ou via `api_base_url` no localStorage
+- **Timeout**: 120 segundos (2 minutos para uploads grandes)
 - **Interceptors**: Para requests e responses
 - **Autenticação**: Token automático via localStorage
-- **Logs**: Automáticos em desenvolvimento
+- **API Key/Secret**: Suporte via variáveis de ambiente ou localStorage
+
+### Configuração do Proxy
+
+O Vite está configurado para fazer proxy das requisições `/api` para o backend. A porta padrão é `8001`, mas pode ser configurada via variável de ambiente `VITE_API_PORT`.
 
 ### Exemplo de uso:
 

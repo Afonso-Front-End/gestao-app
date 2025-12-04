@@ -81,9 +81,12 @@ const useOverlay = () => {
 
   /**
    * Abre o overlay
+   * @param {boolean} reset - Se deve resetar os estados antes de abrir (padrão: true)
    */
-  const abrirOverlay = () => {
-    resetOverlay()
+  const abrirOverlay = (reset = true) => {
+    if (reset) {
+      resetOverlay()
+    }
     setTimeout(() => {
       setIsOverlayOpen(true)
     }, 100)
@@ -105,6 +108,7 @@ const useOverlay = () => {
     telefoneCarregado,
 
     // Setters
+    setIsOverlayOpen,
     setOverlayData,
     setOverlayTitle,
     setOverlaySubtitle,
