@@ -5,21 +5,32 @@
 /**
  * Exporta dados do snapshot para Excel (CSV)
  */
-export function exportToExcel(snapshot) {
+export function exportToExcel(snapshot, module = 'pedidos_parados') {
   if (!snapshot?.metrics) {
-    console.error('Nenhum dado para exportar')
     return
   }
 
   const { metrics } = snapshot
-  const timestamp = new Date(snapshot.created_at).toLocaleString('pt-BR').replace(/[/:]/g, '-')
+  const timestamp = new Date(snapshot.created_at || snapshot.snapshot_date).toLocaleString('pt-BR').replace(/[/:]/g, '-')
+  
+  const moduleNames = {
+    'pedidos_parados': 'PEDIDOS RETIDOS',
+    'd1': 'D-1 BIPAGENS',
+    'sla': 'SLA'
+  }
+  
+  const moduleFileNames = {
+    'pedidos_parados': 'pedidos_retidos',
+    'd1': 'd1_bipagens',
+    'sla': 'sla'
+  }
   
   // Criar conteúdo CSV
   let csvContent = '\uFEFF' // BOM para UTF-8
   
   // Cabeçalho do relatório
-  csvContent += `RELATÓRIO DE PEDIDOS PARADOS\n`
-  csvContent += `Data de criação: ${new Date(snapshot.created_at).toLocaleString('pt-BR')}\n\n`
+  csvContent += `RELATÓRIO DE ${moduleNames[module] || 'DADOS'}\n`
+  csvContent += `Data de criação: ${new Date(snapshot.created_at || snapshot.snapshot_date).toLocaleString('pt-BR')}\n\n`
   
   // Métricas Gerais
   csvContent += `MÉTRICAS GERAIS\n`
@@ -58,12 +69,22 @@ export function exportToExcel(snapshot) {
     csvContent += `\n`
   }
   
-  // Distribuição por Aging
+  // Distribuição por Aging (PedidosRetidos)
   if (metrics.por_aging && metrics.por_aging.length > 0) {
     csvContent += `DISTRIBUIÇÃO POR AGING\n`
     csvContent += `Aging,Total\n`
     metrics.por_aging.forEach(item => {
       csvContent += `${item.aging},${item.total}\n`
+    })
+    csvContent += `\n`
+  }
+  
+  // Distribuição por Tempo Parado (D1)
+  if (metrics.por_tempo_parado && metrics.por_tempo_parado.length > 0) {
+    csvContent += `DISTRIBUIÇÃO POR TEMPO PARADO\n`
+    csvContent += `Tempo Parado,Total\n`
+    metrics.por_tempo_parado.forEach(item => {
+      csvContent += `${item.tempo_parado},${item.total}\n`
     })
     csvContent += `\n`
   }
@@ -84,7 +105,7 @@ export function exportToExcel(snapshot) {
   const url = URL.createObjectURL(blob)
   
   link.setAttribute('href', url)
-  link.setAttribute('download', `relatorio_pedidos_parados_${timestamp}.csv`)
+  link.setAttribute('download', `relatorio_${moduleFileNames[module] || 'dados'}_${timestamp}.csv`)
   link.style.visibility = 'hidden'
   
   document.body.appendChild(link)
@@ -95,14 +116,19 @@ export function exportToExcel(snapshot) {
 /**
  * Exporta dados do snapshot para PDF (texto formatado)
  */
-export function exportToPDF(snapshot) {
+export function exportToPDF(snapshot, module = 'pedidos_parados') {
   if (!snapshot?.metrics) {
-    console.error('Nenhum dado para exportar')
     return
   }
 
   const { metrics } = snapshot
-  const timestamp = new Date(snapshot.created_at).toLocaleString('pt-BR')
+  const timestamp = new Date(snapshot.created_at || snapshot.snapshot_date).toLocaleString('pt-BR')
+  
+  const moduleNames = {
+    'pedidos_parados': 'Pedidos Retidos',
+    'd1': 'D-1 Bipagens',
+    'sla': 'SLA'
+  }
   
   // Criar conteúdo HTML para impressão
   const printWindow = window.open('', '_blank')
@@ -183,7 +209,7 @@ export function exportToPDF(snapshot) {
       </style>
     </head>
     <body>
-      <h1>📊 Relatório de Pedidos Parados</h1>
+      <h1>📊 Relatório de ${moduleNames[module] || 'Dados'}</h1>
       <div class="timestamp">Data de criação: ${timestamp}</div>
       
       <h2>Métricas Gerais</h2>
@@ -299,7 +325,7 @@ export function exportToPDF(snapshot) {
     htmlContent += `</tbody></table>`
   }
   
-  // Distribuição por Aging
+  // Distribuição por Aging (PedidosRetidos)
   if (metrics.por_aging && metrics.por_aging.length > 0) {
     htmlContent += `
       <h2>Distribuição por Aging</h2>
@@ -314,6 +340,25 @@ export function exportToPDF(snapshot) {
     `
     metrics.por_aging.forEach(item => {
       htmlContent += `<tr><td>${item.aging}</td><td>${item.total}</td></tr>`
+    })
+    htmlContent += `</tbody></table>`
+  }
+  
+  // Distribuição por Tempo Parado (D1)
+  if (metrics.por_tempo_parado && metrics.por_tempo_parado.length > 0) {
+    htmlContent += `
+      <h2>Distribuição por Tempo Parado</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Tempo Parado</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+    `
+    metrics.por_tempo_parado.forEach(item => {
+      htmlContent += `<tr><td>${item.tempo_parado}</td><td>${item.total}</td></tr>`
     })
     htmlContent += `</tbody></table>`
   }

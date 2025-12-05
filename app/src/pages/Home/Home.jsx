@@ -53,7 +53,6 @@ const Home = () => {
       }
     } catch (error) {
       // Erro silencioso - pode não ter dados ainda
-      console.warn('⚠️ Pedidos parados não disponíveis:', error.message)
       setStats(prev => ({
         ...prev,
         pedidosRetidos: { 
@@ -85,7 +84,6 @@ const Home = () => {
       }))
     } catch (error) {
       // Erro silencioso - não quebra a Home se endpoint não existir
-      console.warn('⚠️ Endpoint de telefones não disponível:', error.message)
       setStats(prev => ({
         ...prev,
         telefones: { 

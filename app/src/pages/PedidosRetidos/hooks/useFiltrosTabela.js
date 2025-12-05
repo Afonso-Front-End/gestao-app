@@ -29,7 +29,6 @@ const useFiltrosTabela = (availableBases, selectedBases, setPedidosParadosData, 
           setBasesDisponiveis(bases)
         }
       } catch (error) {
-        console.error('Erro ao buscar dados originais:', error)
       }
     }
 
@@ -84,7 +83,6 @@ const useFiltrosTabela = (availableBases, selectedBases, setPedidosParadosData, 
         }
       }
     } catch (error) {
-      console.error('Erro ao buscar cidades:', error)
     }
   }, [filtroBases, filtroCidades])
 
@@ -109,7 +107,6 @@ const useFiltrosTabela = (availableBases, selectedBases, setPedidosParadosData, 
       refreshTriggerRef.current += 1
       await atualizarCidades()
     } catch (error) {
-      console.error('Erro ao atualizar filtros da tabela:', error)
       // Em caso de erro, tentar usar availableBases
       if (Array.isArray(availableBases) && availableBases.length > 0) {
         setBasesDisponiveis(availableBases)

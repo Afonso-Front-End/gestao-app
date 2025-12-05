@@ -103,7 +103,6 @@ export const ConfigProvider = ({ children }) => {
 export const useConfig = () => {
   const context = useContext(ConfigContext)
   if (!context) {
-    console.warn('useConfig must be used within ConfigProvider')
     return {
       slaConfig: null,
       registerSlaConfig: () => {},

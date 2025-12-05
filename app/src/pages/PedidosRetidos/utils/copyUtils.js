@@ -21,7 +21,6 @@ export const handleCopyPedido = async (pedido, showSuccess, showError) => {
       showError('Número do pedido não encontrado')
     }
   } catch (error) {
-    console.error('Erro ao copiar pedido:', error)
     showError('Erro ao copiar número do pedido')
   }
 }
@@ -55,7 +54,6 @@ export const handleCopyAllPedidos = async (overlayData, showSuccess, showError, 
     await navigator.clipboard.writeText(textoParaCopiar)
     showSuccess(`📋 ${numerosPedidos.length} números de pedidos copiados!`)
   } catch (error) {
-    console.error('Erro ao copiar todos os pedidos:', error)
     showError('Erro ao copiar números dos pedidos')
   }
 }
@@ -88,7 +86,6 @@ export const handleCopyLote = async (lote, showSuccess, showError, showLoading, 
     showSuccess(`📋 Lote ${lote.numero_lote} copiado! ${numeros.length} números de pedidos copiados para a área de transferência.`)
   } catch (error) {
     showError('Erro ao copiar lote. Tente novamente.')
-    console.error('Erro ao copiar lote:', error)
   } finally {
     // Esconder notificação de loading
     hideLoading(loadingId)
@@ -143,7 +140,6 @@ export const handleCopyFormattedData = async (
     await navigator.clipboard.writeText(mensagem)
     showSuccess(`Dados formatados copiados! ${overlayData.length} pedidos formatados.`)
   } catch (error) {
-    console.error('Erro ao copiar dados formatados:', error)
     showError('Erro ao copiar dados formatados: ' + error.message)
   }
 }

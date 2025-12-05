@@ -113,7 +113,6 @@ export const gerarExcelTabela = async (data, columns, filename = 'tabela', showS
       showSuccess(`✅ Arquivo Excel gerado e baixado com sucesso!\n\nArquivo: ${filename}.xlsx`)
     }
   } catch (error) {
-    console.error('Erro ao gerar Excel:', error)
     if (showError) {
       showError(`Erro ao gerar Excel: ${error.message}`)
     }

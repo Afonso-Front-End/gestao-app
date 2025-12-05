@@ -2,30 +2,63 @@ import { useState, useEffect, useCallback } from 'react'
 import api from '../../../services/api'
 
 /**
- * Hook para gerenciar dados de reports e snapshots
+ * Hook para gerenciar dados de reports e snapshots de todos os módulos
  */
 export default function useReports() {
-  const [latestSnapshot, setLatestSnapshot] = useState(null)
+  const [snapshots, setSnapshots] = useState({
+    pedidos_parados: null,
+    d1: null,
+    sla: null
+  })
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [errors, setErrors] = useState({
+    pedidos_parados: null,
+    d1: null,
+    sla: null
+  })
 
-  // Buscar último snapshot
-  const fetchLatestSnapshot = useCallback(async () => {
+  // Buscar todos os snapshots
+  const fetchAllSnapshots = useCallback(async () => {
     try {
       setIsLoading(true)
-      setError(null)
+      setErrors({ pedidos_parados: null, d1: null, sla: null })
       
-      const response = await api.get('reports/snapshots/latest')
+      const modules = ['pedidos_parados', 'd1', 'sla']
+      const results = {}
+      const errorResults = {}
       
-      if (response.data.success && response.data.data) {
-        setLatestSnapshot(response.data.data)
-      } else {
-        setLatestSnapshot(null)
-      }
+      // Buscar todos os snapshots de todos os módulos em paralelo
+      await Promise.all(
+        modules.map(async (module) => {
+          try {
+            // Para SLA, Pedidos Retidos e D1, buscar todos os snapshots; para outros módulos, buscar apenas o mais recente
+            const useAllSnapshots = module === 'sla' || module === 'pedidos_parados' || module === 'd1'
+            const endpoint = useAllSnapshots
+              ? `reports/snapshots/all?module=${module}`
+              : `reports/snapshots/latest?module=${module}`
+            
+            const response = await api.get(endpoint)
+            if (response.data.success) {
+              // Para SLA, Pedidos Retidos e D1, retornar array de snapshots; para outros, retornar objeto único ou null
+              if (useAllSnapshots) {
+                results[module] = response.data.data || []
+              } else {
+                results[module] = response.data.data || null
+              }
+            } else {
+              results[module] = useAllSnapshots ? [] : null
+            }
+          } catch (err) {
+            errorResults[module] = err.response?.data?.detail || err.message || 'Erro ao carregar dados'
+            const useAllSnapshots = module === 'sla' || module === 'pedidos_parados' || module === 'd1'
+            results[module] = useAllSnapshots ? [] : null
+          }
+        })
+      )
+      
+      setSnapshots(results)
+      setErrors(errorResults)
     } catch (err) {
-      console.error('❌ Erro ao buscar snapshot:', err)
-      setError(err.response?.data?.detail || err.message || 'Erro ao carregar dados')
-      setLatestSnapshot(null)
     } finally {
       setIsLoading(false)
     }
@@ -33,18 +66,18 @@ export default function useReports() {
 
   // Buscar dados na montagem
   useEffect(() => {
-    fetchLatestSnapshot()
-  }, [fetchLatestSnapshot])
+    fetchAllSnapshots()
+  }, [fetchAllSnapshots])
 
   // Função para recarregar dados
   const refresh = useCallback(() => {
-    fetchLatestSnapshot()
-  }, [fetchLatestSnapshot])
+    fetchAllSnapshots()
+  }, [fetchAllSnapshots])
 
   return {
-    latestSnapshot,
+    snapshots,
     isLoading,
-    error,
+    errors,
     refresh
   }
 }

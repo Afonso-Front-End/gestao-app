@@ -1,5 +1,5 @@
 import React from 'react'
-import { IoRefresh, IoTrash, IoHourglass } from 'react-icons/io5'
+import { IoRefresh, IoTrash, IoHourglass, IoSaveOutline } from 'react-icons/io5'
 import ScreenshotButton from '../ScreenshotButton/ScreenshotButton'
 import FileImport from '../FileImport/FileImport'
 import SearchInput from '../../../PedidosRetidos/components/SearchInput/SearchInput'
@@ -23,9 +23,13 @@ const D1BipagensHeader = ({
   carregarMotoristas,
   showSuccess,
   showError,
+  showInfo,
   api,
   setSelectedBasesBipagens,
   onDeleteClick,
+  onGerarRelatorio,
+  onSaveSnapshot,
+  isSavingSnapshot,
   // Props para D1LotesButton
   loadingPedidosBipagens,
   buscarPedidosBipagens,
@@ -94,6 +98,16 @@ const D1BipagensHeader = ({
           <div>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <div style={{ display: "flex", gap: "10px", width: "100%", justifyContent: "flex-end" }}>
+                {onGerarRelatorio && (
+                  <button
+                    onClick={onGerarRelatorio}
+                    className="btn-gerar-relatorio"
+                    title="Gerar e baixar relatório Excel com dados de contato"
+                  >
+                    <span>📊</span>
+                    <span>Gerar Relatório Excel</span>
+                  </button>
+                )}
                 <ScreenshotButton
                   targetRef={d1ContentRef}
                   filename="d1-screenshot"
@@ -133,6 +147,16 @@ const D1BipagensHeader = ({
                     showError(`Erro ao atualizar marca de assinatura: ${error.message || 'Erro desconhecido'}`)
                   }}
                 />
+                {onSaveSnapshot && (
+                  <button
+                    onClick={onSaveSnapshot}
+                    className="btn-save-snapshot"
+                    disabled={isSavingSnapshot || !motoristasData || motoristasData.length === 0}
+                    title="Salvar snapshot dos dados atuais para relatórios"
+                  >
+                    <IoSaveOutline size={20} className={isSavingSnapshot ? 'spinning' : ''} />
+                  </button>
+                )}
               </div>
               <div className="d1-header-filters-lotes">
                 <D1Filters

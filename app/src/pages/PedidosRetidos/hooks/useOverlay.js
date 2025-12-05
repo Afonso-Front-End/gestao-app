@@ -55,7 +55,6 @@ const useOverlay = () => {
   const handleCloseOverlay = () => {
     // Previne múltiplas execuções
     if (isClosingOverlay) {
-      console.warn('⚠️ useOverlay: Overlay já está fechando, ignorando chamada adicional')
       return
     }
 

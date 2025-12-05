@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, lazy, Suspense, useMemo, useCallback } from 'react'
+import { IoSaveOutline } from 'react-icons/io5'
 import useD1Bases from './hooks/useD1Bases'
 import { useD1Cache } from './hooks/useD1Cache'
 import { useD1BasesETempos } from './hooks/useD1BasesETempos'
@@ -286,13 +287,16 @@ const D1Content = () => {
 
   // Handler para abrir modal de observação
   const handleOpenObservacao = useCallback((statusKey, motorista, base, status, currentObservacao = '') => {
+    const observacaoDoEstado = observacoes[statusKey] || ''
+    const observacaoFinal = currentObservacao || observacaoDoEstado || ''
+    
     setObservacaoModal({
       isOpen: true,
       statusKey,
       motorista,
       base,
       status,
-      observacao: currentObservacao || observacoes[statusKey] || ''
+      observacao: observacaoFinal
     })
   }, [observacoes])
 
@@ -301,13 +305,106 @@ const D1Content = () => {
     setObservacaoModal(prev => ({ ...prev, isOpen: false }))
   }, [])
 
+  // Estado para salvar snapshot
+  const [isSavingSnapshot, setIsSavingSnapshot] = useState(false)
+
+  // Handler para salvar snapshot
+  const handleSaveSnapshot = useCallback(async () => {
+    if (isSavingSnapshot) {
+      return
+    }
+
+    setIsSavingSnapshot(true)
+
+    try {
+      showInfo('⏳ Criando snapshot dos dados...')
+
+      const payload = {
+        module: 'd1',
+        period_type: 'manual'
+      }
+
+      const response = await api.post('reports/snapshot', payload)
+
+      if (response.data?.success) {
+        const isDuplicate = response.data?.is_duplicate
+        const metrics = response.data.data?.metrics || response.data.metrics
+
+        if (isDuplicate) {
+          showInfo(
+            `ℹ️ Snapshot recente já existe! ${metrics?.total_pedidos || 0} pedidos, ` +
+            `${metrics?.total_motoristas || 0} motoristas, ` +
+            `Taxa de entrega: ${metrics?.taxa_entrega?.toFixed(1) || 0}%`
+          )
+        } else {
+          showSuccess(
+            `✅ Snapshot salvo! ${metrics?.total_pedidos || 0} pedidos, ` +
+            `${metrics?.total_motoristas || 0} motoristas, ` +
+            `Taxa de entrega: ${metrics?.taxa_entrega?.toFixed(1) || 0}%`
+          )
+        }
+      }
+    } catch (error) {
+      showError('Erro ao salvar snapshot. Tente novamente.')
+    } finally {
+      setIsSavingSnapshot(false)
+    }
+  }, [isSavingSnapshot, showInfo, showSuccess, showError])
+
+  // Handler para gerar relatório Excel
+  const handleGerarRelatorio = useCallback(async () => {
+    try {
+      const basesParam = selectedBasesBipagens.length > 0 ? selectedBasesBipagens.join(',') : ''
+      const temposParam = selectedTemposParados.length > 0 ? selectedTemposParados.join(',') : ''
+      const cidadesParam = selectedCidades.length > 0 ? selectedCidades.join(',') : ''
+      
+      let url = '/d1/bipagens/gerar-relatorio-contato'
+      const params = []
+      if (basesParam) params.push(`base=${encodeURIComponent(basesParam)}`)
+      if (temposParam) params.push(`tempo_parado=${encodeURIComponent(temposParam)}`)
+      if (cidadesParam) params.push(`cidade=${encodeURIComponent(cidadesParam)}`)
+      if (params.length > 0) url += '?' + params.join('&')
+      
+      showInfo('Gerando relatório Excel...')
+      
+      const response = await api.get(url, {
+        responseType: 'blob'
+      })
+      
+      // Obter o nome do arquivo do header ou gerar um
+      const contentDisposition = response.headers['content-disposition']
+      let filename = 'Relatorio_Contato_D1.xlsx'
+      if (contentDisposition) {
+        const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition)
+        if (matches != null && matches[1]) {
+          filename = matches[1].replace(/['"]/g, '')
+        }
+      }
+      
+      // Fazer download do arquivo
+      const blob = response.data
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(downloadUrl)
+      document.body.removeChild(a)
+      
+      showSuccess(`✅ Relatório Excel gerado e baixado com sucesso!\n\nArquivo: ${filename}`)
+    } catch (error) {
+      showError(`Erro ao gerar relatório: ${error.message}`)
+    }
+  }, [selectedBasesBipagens, selectedTemposParados, selectedCidades, showSuccess, showError, showInfo])
+
   // Handler para salvar observação
   const handleSaveObservacao = useCallback(async (observacao) => {
     const { statusKey, motorista, base, status } = observacaoModal
     
     try {
       // Chamar API para salvar observação no servidor
-      await api.post(`/d1/bipagens/motorista/${encodeURIComponent(motorista)}/status`, {
+      const response = await api.post(`/d1/bipagens/motorista/${encodeURIComponent(motorista)}/status`, {
         motorista: motorista,
         base: base,
         status: status,
@@ -315,10 +412,13 @@ const D1Content = () => {
       })
       
       // Atualizar estado local para manter botão visível
-      setObservacoes(prev => ({
-        ...prev,
-        [statusKey]: observacao
-      }))
+      setObservacoes(prev => {
+        const updated = {
+          ...prev,
+          [statusKey]: observacao
+        }
+        return updated
+      })
       
       // Feedback de sucesso
       showSuccess(`Observação ${observacao.trim() ? 'salva' : 'removida'} com sucesso!`)
@@ -330,11 +430,9 @@ const D1Content = () => {
     }
   }, [observacaoModal, showSuccess, showError])
 
-  // Carregar observações salvas quando há dados
+  // Carregar observações salvas (carregar sempre, não apenas quando há dados)
   useEffect(() => {
     const carregarObservacoes = async () => {
-      if (!motoristasData || motoristasData.length === 0) return
-      
       setIsLoadingObservacoes(true)
       try {
         // Buscar todas as observações salvas dos motoristas D1
@@ -344,16 +442,29 @@ const D1Content = () => {
         if (response.data?.success && response.data?.statuses) {
           const observacoesMap = {}
           
-          response.data.statuses.forEach(statusItem => {
-            const statusKey = statusItem.base 
-              ? `${statusItem.responsavel}||${statusItem.base}` 
-              : statusItem.responsavel
-            if (statusItem.observacao) {
-              observacoesMap[statusKey] = statusItem.observacao
+          response.data.statuses.forEach((statusItem) => {
+            // Garantir que temos responsavel (pode vir como motorista ou responsavel)
+            const responsavel = statusItem.responsavel || statusItem.motorista || ''
+            const base = statusItem.base || ''
+            const observacao = statusItem.observacao || ''
+            
+            if (responsavel) {
+              const statusKey = base 
+                ? `${responsavel}||${base}` 
+                : responsavel
+              
+              // Salvar observação se não estiver vazia
+              if (observacao && typeof observacao === 'string' && observacao.trim() !== '') {
+                observacoesMap[statusKey] = observacao.trim()
+              }
             }
           })
           
-          setObservacoes(observacoesMap)
+          // Fazer merge com observações existentes para não perder dados locais
+          setObservacoes(prev => {
+            const merged = { ...prev, ...observacoesMap }
+            return merged
+          })
         }
       } catch (error) {
         // Erro silencioso ao carregar observações
@@ -363,7 +474,7 @@ const D1Content = () => {
     }
     
     carregarObservacoes()
-  }, [motoristasData])
+  }, []) // Carregar apenas uma vez ao montar o componente
 
   const { renderCellContent } = useD1TableRender({
     motoristasStatus,
@@ -457,7 +568,6 @@ const D1Content = () => {
       showSuccess(`📋 Lote ${lote.numero_lote} copiado! ${numeros.length.toLocaleString('pt-BR')} números de pedidos copiados para a área de transferência.`)
     } catch (error) {
       showError('Erro ao copiar lote. Tente novamente.')
-      console.error('Erro ao copiar lote:', error)
     }
   }, [showSuccess, showError])
 
@@ -622,9 +732,13 @@ const D1Content = () => {
               carregarMotoristas={carregarMotoristas}
               showSuccess={showSuccess}
               showError={showError}
+              showInfo={showInfo}
               api={api}
               setSelectedBasesBipagens={setSelectedBasesBipagens}
               onDeleteClick={() => setShowDeleteModal(true)}
+              onGerarRelatorio={handleGerarRelatorio}
+              onSaveSnapshot={handleSaveSnapshot}
+              isSavingSnapshot={isSavingSnapshot}
               loadingPedidosBipagens={loadingPedidosBipagens}
               buscarPedidosBipagens={buscarPedidosBipagens}
               showLotesDropdown={showLotesDropdown}

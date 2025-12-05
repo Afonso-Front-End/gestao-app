@@ -45,9 +45,7 @@ const useRefreshAfterUpload = (refetchFunctions) => {
         if (fn) {
           try {
             await fn()
-            console.log(`✅ ${name} atualizado com sucesso`)
           } catch (error) {
-            console.warn(`⚠️ Erro ao atualizar ${name}:`, error)
             // Continua mesmo se um falhar
           }
         }
@@ -62,9 +60,7 @@ const useRefreshAfterUpload = (refetchFunctions) => {
         if (refetchFiltrosTabela) {
           try {
             await refetchFiltrosTabela()
-            console.log('✅ Filtros da tabela atualizados')
           } catch (error) {
-            console.warn('⚠️ Erro ao atualizar filtros da tabela:', error)
           }
         }
         
@@ -77,16 +73,13 @@ const useRefreshAfterUpload = (refetchFunctions) => {
               bases: selectedBases || [],
               cidades: filtroCidades || []
             })
-            console.log('✅ Pedidos parados atualizados')
           } catch (error) {
-            console.warn('⚠️ Erro ao atualizar pedidos parados:', error)
           }
         }
       }
 
       showSuccess('✅ Upload concluído! Os dados foram atualizados.')
     } catch (error) {
-      console.error('❌ Erro ao atualizar dados após upload:', error)
       // Não mostrar erro para não poluir a interface, apenas logar
     }
   }, [refetchBases, refetchTipos, refetchAging, fetchPedidosParados, selectedBases, filtroCidades, refetchFiltrosTabela, showInfo, showSuccess])

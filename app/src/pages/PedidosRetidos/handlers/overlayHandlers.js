@@ -80,7 +80,6 @@ export const handleMotoristaClick = async ({
       throw new Error(data.message || 'Erro ao buscar pedidos do motorista')
     }
   } catch (error) {
-    console.error('Erro ao buscar pedidos do motorista:', error)
     showError(`Erro ao buscar pedidos: ${error.message}`)
     overlay.setOverlayData([])
   } finally {
@@ -166,7 +165,6 @@ export const handleNaoEntreguesClick = async ({
       throw new Error(data.message || 'Erro ao buscar pedidos não entregues do motorista')
     }
   } catch (error) {
-    console.error('Erro ao buscar pedidos não entregues do motorista:', error)
     showError(`Erro ao buscar pedidos não entregues: ${error.message}`)
     overlay.setOverlayData([])
   } finally {

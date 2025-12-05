@@ -1,5 +1,5 @@
-import React, { useState, useEffect, lazy, Suspense, useRef } from 'react'
-import { IoAnalytics } from 'react-icons/io5'
+import React, { useState, useEffect, lazy, Suspense, useRef, useCallback } from 'react'
+import { IoAnalytics, IoSaveOutline } from 'react-icons/io5'
 import SLAHeader from './components/SLAHeader'
 import SLATableBackend from './components/SLATableBackend/SLATableBackend'
 import ScreenshotButton from './components/ScreenshotButton/ScreenshotButton'
@@ -19,6 +19,7 @@ import './SLA.css'
 import './components/SLATableBackend/SLATableBackend.css'
 
 const ConfirmModal = lazy(() => import('../../components/ConfirmModal/ConfirmModal'))
+const SnapshotConfirmModal = lazy(() => import('./components/SnapshotConfirmModal/SnapshotConfirmModal'))
 
 const SLA = () => {
   return (
@@ -31,7 +32,7 @@ const SLA = () => {
 }
 
 const SLAContent = () => {
-  const { showSuccess, showError } = useNotification()
+  const { showSuccess, showError, showInfo } = useNotification()
   const upload = useUpload()
   const { activeUploads } = upload
   const { triggerRefresh, refreshTrigger } = useRefresh()
@@ -208,6 +209,123 @@ const SLAContent = () => {
     }
   }
 
+  // Estado para salvar snapshot
+  const [isSavingSnapshot, setIsSavingSnapshot] = useState(false)
+  const [showSnapshotConfirmModal, setShowSnapshotConfirmModal] = useState(false)
+
+  // Handler para abrir modal de confirmação
+  const handleOpenSnapshotConfirm = useCallback(() => {
+    setShowSnapshotConfirmModal(true)
+  }, [])
+
+  // Handler para salvar snapshot
+  const handleSaveSnapshot = useCallback(async (customDate = null) => {
+    if (isSavingSnapshot) {
+      return
+    }
+
+    setIsSavingSnapshot(true)
+    setShowSnapshotConfirmModal(false)
+
+    try {
+      showInfo('⏳ Criando snapshot dos dados...')
+
+      // Preparar payload com base e cidades se selecionadas
+      const payload = {
+        module: 'sla',
+        period_type: 'manual'
+      }
+
+      // Se há base selecionada, adicionar ao payload
+      if (selectedProcessedBase) {
+        payload.base = selectedProcessedBase
+        
+        // Se há cidades selecionadas, adicionar ao payload
+        if (selectedCities && selectedCities.length > 0) {
+          payload.cities = selectedCities
+        }
+      }
+
+      // Adicionar data customizada se fornecida
+      if (customDate) {
+        payload.custom_date = customDate
+      }
+
+      const response = await api.post('reports/snapshot', payload)
+
+      if (response.data?.success) {
+        const isDuplicate = response.data?.is_duplicate
+        const metrics = response.data.data?.metrics || response.data.metrics
+
+        if (isDuplicate) {
+          showInfo(
+            `ℹ️ Snapshot recente já existe! ${metrics?.total_pedidos || 0} pedidos, ` +
+            `${metrics?.total_motoristas || 0} motoristas, ` +
+            `Taxa de entrega: ${metrics?.taxa_entrega?.toFixed(1) || 0}%`
+          )
+        } else {
+          showSuccess(
+            `✅ Snapshot salvo! ${metrics?.total_pedidos || 0} pedidos, ` +
+            `${metrics?.total_motoristas || 0} motoristas, ` +
+            `Taxa de entrega: ${metrics?.taxa_entrega?.toFixed(1) || 0}%`
+          )
+        }
+      }
+    } catch (error) {
+      showError('Erro ao salvar snapshot. Tente novamente.')
+    } finally {
+      setIsSavingSnapshot(false)
+    }
+  }, [isSavingSnapshot, selectedProcessedBase, selectedCities, showInfo, showSuccess, showError])
+
+  // Handler para gerar relatório Excel
+  const handleGerarRelatorio = useCallback(async () => {
+    if (!selectedProcessedBase) {
+      showError('Selecione uma base para gerar o relatório')
+      return
+    }
+    
+    try {
+      const cidadesParam = selectedCities.length > 0 ? selectedCities.join(',') : ''
+      
+      let url = `/sla/gerar-relatorio-contato?base=${encodeURIComponent(selectedProcessedBase)}`
+      if (cidadesParam) {
+        url += `&cidade=${encodeURIComponent(cidadesParam)}`
+      }
+      
+      showInfo('Gerando relatório Excel...')
+      
+      const response = await api.get(url, {
+        responseType: 'blob'
+      })
+      
+      // Obter o nome do arquivo do header ou gerar um
+      const contentDisposition = response.headers['content-disposition']
+      let filename = 'Relatorio_Contato_SLA.xlsx'
+      if (contentDisposition) {
+        const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition)
+        if (matches != null && matches[1]) {
+          filename = matches[1].replace(/['"]/g, '')
+        }
+      }
+      
+      // Fazer download do arquivo
+      const blob = response.data
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(downloadUrl)
+      document.body.removeChild(a)
+      
+      showSuccess(`✅ Relatório Excel gerado e baixado com sucesso!\n\nArquivo: ${filename}`)
+    } catch (error) {
+      showError(`Erro ao gerar relatório: ${error.message}`)
+    }
+  }, [selectedProcessedBase, selectedCities, showSuccess, showError, showInfo])
+
   // Registrar configurações da SLA no contexto global (depois de todas as definições)
   useEffect(() => {
     const totalPedidos = slaData?.totais?.totalPedidos || 0
@@ -290,6 +408,16 @@ const SLAContent = () => {
                       <div className="sla-header-top">
                         <h2>Motoristas da Base: {selectedProcessedBase}</h2>
                         <div className="sla-sort-selector">
+                          {handleGerarRelatorio && (
+                            <button
+                              onClick={handleGerarRelatorio}
+                              className="btn-gerar-relatorio"
+                              title="Gerar e baixar relatório Excel com dados de contato"
+                            >
+                              <span>📊</span>
+                              <span>Gerar Relatório Excel</span>
+                            </button>
+                          )}
                           <ScreenshotButton
                             targetRef={tableHeaderRef}
                             filename={`relatorio-sla-${selectedProcessedBase}`}
@@ -298,6 +426,16 @@ const SLAContent = () => {
                             title="Capturar Screenshot da Tabela SLA"
                             size="medium"
                           />
+                          {handleOpenSnapshotConfirm && (
+                            <button
+                              onClick={handleOpenSnapshotConfirm}
+                              className="btn-save-snapshot"
+                              disabled={isSavingSnapshot || !slaData?.motoristas || slaData.motoristas.length === 0}
+                              title="Salvar snapshot dos dados atuais para relatórios"
+                            >
+                              <IoSaveOutline size={20} className={isSavingSnapshot ? 'spinning' : ''} />
+                            </button>
+                          )}
                         </div>
                       </div>
                       {selectedCities.length === 1 && <p className="sla-cidade-info">Cidade selecionada: {selectedCities[0]}</p>}
@@ -381,6 +519,18 @@ const SLAContent = () => {
             showSuccess('Mensagem enviada com sucesso!')
           }}
         />
+
+        {/* Modal de confirmação para salvar snapshot */}
+        <Suspense fallback={null}>
+          <SnapshotConfirmModal
+            isOpen={showSnapshotConfirmModal}
+            onClose={() => setShowSnapshotConfirmModal(false)}
+            onConfirm={handleSaveSnapshot}
+            selectedProcessedBase={selectedProcessedBase}
+            selectedCities={selectedCities}
+            loading={isSavingSnapshot}
+          />
+        </Suspense>
 
         {/* Modal de confirmação para deletar dados SLA */}
         <Suspense fallback={null}>

@@ -3,6 +3,10 @@ import api from '../../../services/api'
 
 /**
  * Hook para gerenciar status dos motoristas na SLA
+ * 
+ * NOTA: Esta página usa a coleção 'motorista_status_sla' no backend
+ * Endpoints: /sla/motorista/{motorista}/status
+ * 
  * @param {Array} motoristasData - Dados de motoristas (opcional, para carregar status iniciais)
  * @param {string} baseName - Nome da base (opcional, para associar status à base)
  * @returns {Object} Estado e funções relacionadas ao status dos motoristas
@@ -99,15 +103,25 @@ const useMotoristaStatusSLA = (motoristasData = [], baseName = '') => {
           const observacoesMap = {}
           
           response.data.statuses.forEach(statusItem => {
-            const statusKey = statusItem.base
-              ? `${statusItem.motorista}||${statusItem.base}`
-              : statusItem.motorista
-            if (statusItem.observacao && statusItem.observacao.trim() !== '') {
-              observacoesMap[statusKey] = statusItem.observacao
+            // Garantir que temos motorista
+            const motorista = statusItem.motorista || statusItem.responsavel || ''
+            const base = statusItem.base || ''
+            const observacao = statusItem.observacao || ''
+            
+            if (motorista) {
+              const statusKey = base
+                ? `${motorista}||${base}`
+                : motorista
+              
+              // Salvar observação se não estiver vazia
+              if (observacao && typeof observacao === 'string' && observacao.trim() !== '') {
+                observacoesMap[statusKey] = observacao.trim()
+              }
             }
           })
           
-          setObservacoes(observacoesMap)
+          // Fazer merge com observações existentes para não perder dados locais
+          setObservacoes(prev => ({ ...prev, ...observacoesMap }))
         }
       } catch (error) {
         // Erro silencioso se não for 404

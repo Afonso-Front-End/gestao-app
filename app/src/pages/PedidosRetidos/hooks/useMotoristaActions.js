@@ -35,7 +35,6 @@ const useMotoristaActions = (overlay) => {
         return null
       }
     } catch (error) {
-      console.error('Erro ao buscar telefone do motorista:', error)
       overlay.setTelefoneCarregado(true)
       return null
     }
@@ -140,7 +139,6 @@ const useMotoristaActions = (overlay) => {
         throw new Error(data.message || 'Erro ao buscar pedidos do motorista')
       }
     } catch (error) {
-      console.error('Erro ao buscar pedidos do motorista:', error)
       showError(`Erro ao buscar pedidos: ${error.message}`)
       overlay.setOverlayData([])
       return []
@@ -173,7 +171,6 @@ const useMotoristaActions = (overlay) => {
         showError('Número do pedido não encontrado')
       }
     } catch (error) {
-      console.error('Erro ao copiar pedido:', error)
       showError('Erro ao copiar número do pedido')
     }
   }, [showSuccess, showError])
@@ -203,7 +200,6 @@ const useMotoristaActions = (overlay) => {
       await navigator.clipboard.writeText(textoParaCopiar)
       showSuccess(`📋 ${numerosPedidos.length} números de pedidos copiados!`)
     } catch (error) {
-      console.error('Erro ao copiar todos os pedidos:', error)
       showError('Erro ao copiar números dos pedidos')
     }
   }, [overlay, showSuccess, showError])
@@ -244,7 +240,6 @@ const useMotoristaActions = (overlay) => {
       await navigator.clipboard.writeText(mensagem)
       showSuccess(`Dados formatados copiados! ${overlay.overlayData.length} pedidos formatados.`)
     } catch (error) {
-      console.error('Erro ao copiar dados formatados:', error)
       showError('Erro ao copiar dados formatados: ' + error.message)
     }
   }, [overlay, showSuccess, showError])

@@ -19,7 +19,6 @@ const useHasPedidosData = () => {
         setHasData(response.data.hasData)
       }
     } catch (error) {
-      console.error('Erro ao verificar dados:', error)
       setHasData(false)
     } finally {
       setLoading(false)

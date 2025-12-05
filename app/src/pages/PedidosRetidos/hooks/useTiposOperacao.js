@@ -27,7 +27,6 @@ const useTiposOperacao = () => {
         showError(`Erro ao carregar tipos de operação: ${errorMessage}`, 'Erro de Carregamento')
       }
       
-      console.error('Erro ao buscar tipos de operação:', err)
     } finally {
       setLoading(false)
     }

@@ -62,7 +62,6 @@ export const handleSearchPedidos = async ({
       showSuccess(`✅ ${numeros.length || 0} pedidos encontrados e divididos em ${lotes.length} lotes!`)
     }
   } catch (error) {
-    console.error('Erro ao buscar pedidos:', error)
     showError('Erro ao buscar pedidos. Tente novamente.')
   } finally {
     // Esconder notificação de loading

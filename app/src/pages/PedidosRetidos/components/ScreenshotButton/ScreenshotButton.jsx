@@ -154,7 +154,6 @@ const ScreenshotButton = ({
                 const elementsToRemove = clonedDoc.querySelectorAll(selector)
                 elementsToRemove.forEach(el => el.remove())
               } catch (e) {
-                console.warn(`Erro ao remover elementos com seletor "${selector}":`, e)
               }
             })
           }
@@ -291,7 +290,6 @@ const ScreenshotButton = ({
                     const elementsToRemove = clonedDoc.querySelectorAll(selector)
                     elementsToRemove.forEach(el => el.remove())
                   } catch (e) {
-                    console.warn(`Erro ao remover elementos com seletor "${selector}":`, e)
                   }
                 })
               }
@@ -466,7 +464,6 @@ const ScreenshotButton = ({
       }
       
     } catch (error) {
-      console.error('Erro ao capturar screenshot:', error)
       if (onError) {
         onError(`Erro ao capturar screenshot: ${error.message}`)
       }

@@ -46,7 +46,6 @@ const useFilteredPedidos = () => {
         showError(`Erro ao buscar pedidos: ${errorMessage}`, 'Erro de Busca')
       }
       
-      console.error('Erro ao buscar pedidos filtrados:', err)
       setPedidos([])
       return { data: [], total_found: 0, total_processed: 0 }
     } finally {

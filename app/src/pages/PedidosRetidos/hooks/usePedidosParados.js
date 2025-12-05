@@ -50,7 +50,6 @@ const usePedidosParados = () => {
       const errorMessage = err.message || 'Erro ao buscar dados de pedidos parados'
       setError(errorMessage)
       
-      console.error('❌ Erro ao buscar pedidos parados:', err)
       setData([])
       setTotalPedidos(0)
       setTotalBases(0)

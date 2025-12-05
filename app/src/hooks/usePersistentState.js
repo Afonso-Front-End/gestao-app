@@ -18,7 +18,6 @@ const usePersistentState = (key, defaultValue) => {
       const parsed = JSON.parse(item)
       return parsed !== null && parsed !== undefined ? parsed : defaultValue
     } catch (error) {
-      console.error(`Erro ao ler localStorage para chave "${key}":`, error)
       return defaultValue
     }
   }
@@ -38,7 +37,6 @@ const usePersistentState = (key, defaultValue) => {
       setValue(actualValue)
       localStorage.setItem(key, JSON.stringify(actualValue))
     } catch (error) {
-      console.error(`Erro ao salvar no localStorage para chave "${key}":`, error)
       setValue(newValue) // Ainda atualiza o estado mesmo se localStorage falhar
     }
   }
@@ -53,7 +51,6 @@ const usePersistentState = (key, defaultValue) => {
             setValue(parsed)
           }
         } catch (error) {
-          console.error(`Erro ao sincronizar localStorage para chave "${key}":`, error)
         }
       }
     }

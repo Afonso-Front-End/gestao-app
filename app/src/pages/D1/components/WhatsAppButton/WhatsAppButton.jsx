@@ -34,12 +34,6 @@ const WhatsAppButton = ({
     // Buscar mensagem personalizada do localStorage
     const customMessageTemplate = localStorage.getItem('d1-custom-message-template')
     
-    console.log('🔍 WhatsAppButton - getMessage - Template original:', {
-      customMessageTemplate,
-      temQuantidade: customMessageTemplate?.includes('${quantidade}'),
-      quantidadeRecebida: quantidade
-    })
-    
     if (!customMessageTemplate) {
       // Se não houver mensagem personalizada, retornar mensagem vazia ou erro
       if (onError) {
@@ -68,50 +62,20 @@ const WhatsAppButton = ({
     // Substituir outras ocorrências de "MOTORISTA" pelo nome real (se não estiver dentro de "TAC MOTORISTA!")
     finalMessage = finalMessage.replace(/\bMOTORISTA\b/g, motoristaName)
     
-    console.log('🔍 WhatsAppButton - getMessage - Após substituir MOTORISTA:', {
-      finalMessage,
-      aindaTemQuantidade: finalMessage.includes('${quantidade}')
-    })
-    
     // Substituir variáveis dinamicamente ${quantidade}
     // Garantir que quantidade seja um número válido
     const quantidadeNum = typeof quantidade === 'number' ? quantidade : (typeof quantidade === 'string' ? parseInt(quantidade, 10) : 0)
     const quantidadeStr = String(isNaN(quantidadeNum) || quantidadeNum < 0 ? 0 : quantidadeNum)
     
-    console.log('🔍 WhatsAppButton - getMessage - Antes de substituir quantidade:', {
-      quantidadeNum,
-      quantidadeStr,
-      mensagemAntes: finalMessage
-    })
-    
     finalMessage = finalMessage.replace(/\$\{quantidade\}/g, quantidadeStr)
-    
-    console.log('🔍 WhatsAppButton - getMessage - Após substituir quantidade:', {
-      finalMessage,
-      aindaTemQuantidade: finalMessage.includes('${quantidade}')
-    })
     
     return finalMessage
   }
 
   // Função para abrir WhatsApp
   const handleWhatsAppClick = async () => {
-    console.log('🔍 WhatsAppButton - Debug:', {
-      quantidade,
-      quantidadeType: typeof quantidade,
-      motorista,
-      phoneNumber,
-      formattedPhone: formatPhoneNumber(phoneNumber)
-    })
-    
     const formattedPhone = formatPhoneNumber(phoneNumber)
     const finalMessage = getMessage()
-    
-    console.log('🔍 WhatsAppButton - Mensagem gerada:', {
-      finalMessage,
-      quantidadeNaMensagem: finalMessage.match(/\$\{quantidade\}/) ? 'AINDA TEM ${quantidade}' : 'SUBSTITUÍDO',
-      quantidadeSubstituida: finalMessage.match(/\d+/)
-    })
     
     if (!formattedPhone) {
       if (onError) {

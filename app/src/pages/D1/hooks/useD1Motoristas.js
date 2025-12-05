@@ -4,6 +4,9 @@ import { useNotification } from '../../../contexts/NotificationContext'
 
 /**
  * Hook para gerenciar motoristas e seus status
+ * 
+ * NOTA: Esta página usa a coleção 'motoristas_status_d1' no backend
+ * Endpoints: /d1/bipagens/motorista/{motorista}/status
  */
 export const useD1Motoristas = (selectedBasesBipagens, selectedTemposParados, selectedCidades = []) => {
   const { showError } = useNotification()

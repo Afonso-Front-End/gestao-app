@@ -120,6 +120,10 @@ export const limparCachePedidos = () => {
 
 /**
  * Carrega status de motoristas do servidor
+ * 
+ * NOTA: Esta página usa a coleção 'motoristas_status_pedidos_retidos' no backend
+ * Endpoints: /retidos/motorista/{motorista}/status
+ * 
  * @param {Array} pedidosParadosData - Array de dados de pedidos parados
  * @returns {Promise<Object>} Mapa de status dos motoristas
  */
@@ -171,6 +175,10 @@ export const carregarStatusServidor = async (pedidosParadosData) => {
 
 /**
  * Salva status do motorista no servidor
+ * 
+ * NOTA: Esta página usa a coleção 'motoristas_status_pedidos_retidos' no backend
+ * Endpoint: /retidos/motorista/{motorista}/status
+ * 
  * @param {string} motorista - Nome do motorista
  * @param {string} base - Nome da base
  * @param {string|null} status - Status a ser salvo (ou null para remover)

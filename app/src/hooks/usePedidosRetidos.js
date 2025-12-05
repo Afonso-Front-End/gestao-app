@@ -16,7 +16,6 @@ const usePedidosRetidos = () => {
     } catch (fetchError) {
       const errorMessage = fetchError?.message || 'Erro ao buscar dados'
       setError(errorMessage)
-      console.error('Erro ao buscar dados:', fetchError)
     } finally {
       setLoading(false)
     }
@@ -32,7 +31,6 @@ const usePedidosRetidos = () => {
     } catch (fetchError) {
       const errorMessage = fetchError?.message || 'Erro ao buscar dados por ID'
       setError(errorMessage)
-      console.error('Erro ao buscar dados por ID:', fetchError)
       return null
     } finally {
       setLoading(false)

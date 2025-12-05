@@ -27,7 +27,6 @@ const useBases = () => {
         showError(`Erro ao carregar bases: ${errorMessage}`, 'Erro de Carregamento')
       }
       
-      console.error('Erro ao buscar bases:', err)
     } finally {
       setLoading(false)
     }

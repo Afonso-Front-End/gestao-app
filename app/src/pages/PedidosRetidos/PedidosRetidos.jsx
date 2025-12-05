@@ -588,11 +588,9 @@ const PedidosRetidosContent = () => {
     }
   }, [observacaoModal, showSuccess, showError])
 
-  // Carregar observações salvas quando há dados
+  // Carregar observações salvas (carregar sempre, não apenas quando há dados)
   useEffect(() => {
     const carregarObservacoes = async () => {
-      if (!pedidosParadosData || pedidosParadosData.length === 0) return
-
       setIsLoadingObservacoes(true)
       try {
         // Buscar todas as observações salvas
@@ -602,24 +600,36 @@ const PedidosRetidosContent = () => {
           const observacoesMap = {}
 
           response.data.statuses.forEach(statusItem => {
-            const statusKey = `${statusItem.responsavel}_${statusItem.base}_status`
-            if (statusItem.observacao) {
-              observacoesMap[statusKey] = statusItem.observacao
+            // Garantir que temos responsavel
+            const responsavel = statusItem.responsavel || statusItem.motorista || ''
+            const base = statusItem.base || ''
+            const observacao = statusItem.observacao || ''
+            
+            if (responsavel) {
+              // Usar a mesma chave que é usada em outros lugares: motorista||base
+              const statusKey = base 
+                ? `${responsavel}||${base}` 
+                : responsavel
+              
+              // Salvar observação se não estiver vazia
+              if (observacao && typeof observacao === 'string' && observacao.trim() !== '') {
+                observacoesMap[statusKey] = observacao.trim()
+              }
             }
           })
 
-          setObservacoes(observacoesMap)
+          // Fazer merge com observações existentes para não perder dados locais
+          setObservacoes(prev => ({ ...prev, ...observacoesMap }))
         }
       } catch (error) {
         // Erro silencioso ao carregar observações
-        // Não mostrar erro ao usuário pois é um carregamento secundário
       } finally {
         setIsLoadingObservacoes(false)
       }
     }
 
     carregarObservacoes()
-  }, [pedidosParadosData])
+  }, []) // Carregar apenas uma vez ao montar o componente
 
   // Hook de renderização da tabela (deve vir depois dos handlers)
   const renderCellContent = useTableRender(

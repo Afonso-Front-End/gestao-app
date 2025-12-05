@@ -27,7 +27,6 @@ const useAging = () => {
         showError(`Erro ao carregar aging: ${errorMessage}`, 'Erro de Carregamento')
       }
       
-      console.error('Erro ao buscar aging:', err)
     } finally {
       setLoading(false)
     }

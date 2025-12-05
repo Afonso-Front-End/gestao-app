@@ -131,7 +131,6 @@ const TableOverlay = ({
   const handleClose = () => {
     // Previne múltiplas execuções
     if (isClosing) {
-      console.warn('⚠️ Overlay já está fechando, ignorando clique adicional')
       return
     }
 
@@ -216,15 +215,6 @@ const TableOverlay = ({
       
       const url = `/api/lista-telefones/motorista/${motoristaEncoded}/telefone?base_name=${baseNameEncoded}&telefone=${telefoneEncoded}`
       
-      // Debug em desenvolvimento
-      if (import.meta.env.DEV) {
-        console.log('🔍 Adicionando telefone:', {
-          motorista: motorista.trim(),
-          baseName: baseName.trim(),
-          telefone: numericValue,
-          url
-        })
-      }
       
       const response = await fetch(url, {
         method: 'POST',
@@ -268,7 +258,6 @@ const TableOverlay = ({
         showError('Erro ao adicionar telefone: ' + (data.detail || 'Erro desconhecido'))
       }
     } catch (error) {
-      console.error('Erro ao adicionar telefone:', error)
       if (error.message.includes('404')) {
         showError('Endpoint não encontrado. Verifique se o backend está rodando.')
       } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {

@@ -96,7 +96,6 @@ const usePedidosLotes = () => {
       showSuccess(`📋 Lote ${lote.numero_lote} copiado! ${numeros.length} números de pedidos copiados para a área de transferência.`)
     } catch (error) {
       showError('Erro ao copiar lote. Tente novamente.')
-      console.error('Erro ao copiar lote:', error)
     } finally {
       hideLoading(loadingId)
     }

@@ -114,7 +114,6 @@ const CopyFormattedButton = ({
         showSuccess(`Dados formatados copiados! ${data.length} pedidos formatados.`)
       }
     } catch (error) {
-      console.error('Erro ao copiar dados formatados:', error)
       if (onError) {
         onError('Erro ao copiar dados formatados: ' + error.message)
       } else {

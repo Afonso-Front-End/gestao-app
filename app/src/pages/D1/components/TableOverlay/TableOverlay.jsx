@@ -686,15 +686,6 @@ const TableOverlay = ({
             </button>
             {showWhatsApp && (() => {
               const quantidadeFinal = data && Array.isArray(data) && data.length > 0 ? data.length : (totalPedidos !== null && totalPedidos !== undefined && totalPedidos > 0 ? totalPedidos : 0)
-              console.log('🔍 TableOverlay - WhatsAppButton props:', {
-                dataLength: data?.length,
-                dataIsArray: Array.isArray(data),
-                totalPedidos,
-                quantidadeFinal,
-                motorista,
-                telefoneMotorista,
-                phoneNumber
-              })
               return (
                 <WhatsAppButton
                   phoneNumber={telefoneMotorista || phoneNumber || ""}

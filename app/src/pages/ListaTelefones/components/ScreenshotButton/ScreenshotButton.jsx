@@ -49,7 +49,6 @@ const ScreenshotButton = ({
       }
       
     } catch (error) {
-      console.error('Erro ao capturar screenshot:', error)
       if (onError) {
         onError(`Erro ao capturar screenshot: ${error.message}`)
       }

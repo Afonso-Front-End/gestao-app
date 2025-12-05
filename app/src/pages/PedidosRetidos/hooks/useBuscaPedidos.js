@@ -44,7 +44,6 @@ const useBuscaPedidos = (filters, fetchFilteredPedidos, processarPedidosFiltrado
         }
       }
     } catch (error) {
-      console.error('Erro ao buscar pedidos:', error)
       showError('Erro ao buscar pedidos. Tente novamente.')
     } finally {
       // Esconder notificação de loading

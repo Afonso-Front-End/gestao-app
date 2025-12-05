@@ -75,11 +75,9 @@ const FileImport = memo(({
             inputElement.value = ''
           }
         } catch (error) {
-          console.warn('Erro ao resetar input:', error)
         }
       } else {
         const errorText = await response.text()
-        console.error('Erro no servidor:', response.status, errorText)
         const error = new Error(`Erro no upload: ${response.status} - ${errorText}`)
         
         // Marcar upload como erro
