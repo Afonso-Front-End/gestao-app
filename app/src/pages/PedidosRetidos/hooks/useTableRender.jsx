@@ -9,6 +9,8 @@ import { IoDocumentTextOutline } from 'react-icons/io5'
  * @param {Function} handleNaoEntreguesClick - Handler para clique em não entregues
  * @param {Function} onOpenObservacao - Handler para abrir modal de observação
  * @param {Object} observacoes - Objeto com observações salvas
+ * @param {Function} showSuccess - Função para mostrar notificação de sucesso
+ * @param {Function} showError - Função para mostrar notificação de erro
  * @returns {Function} Função renderCellContent
  */
 const useTableRender = (
@@ -17,7 +19,9 @@ const useTableRender = (
   handleMotoristaClick,
   handleNaoEntreguesClick,
   onOpenObservacao,
-  observacoes = {}
+  observacoes = {},
+  showSuccess = null,
+  showError = null
 ) => {
   // Constantes de status (atualizadas para corresponder ao servidor)
   const STATUS_OK = 'Retornou'
@@ -176,17 +180,46 @@ const useTableRender = (
       )
     }
 
+    // Renderização especial para a coluna responsavel (nome do motorista)
+    if (key === 'responsavel') {
+      if (value === null || value === undefined || value === '') {
+        return 'N/A'
+      }
+      
+      // Tornar o nome do motorista clicável para copiar
+      const handleCopyMotorista = async () => {
+        if (!showSuccess || !showError) return
+        try {
+          await navigator.clipboard.writeText(value)
+          showSuccess(`✅ Nome do motorista "${value}" copiado!`)
+        } catch (error) {
+          showError('Erro ao copiar nome do motorista')
+        }
+      }
+      
+      return (
+        <span
+          className="pr-motorista-name-copyable"
+          onClick={handleCopyMotorista}
+          title="Clique para copiar o nome do motorista"
+          style={{ cursor: 'pointer', userSelect: 'none' }}
+        >
+          {value}
+        </span>
+      )
+    }
+
     // Para outras colunas, também garantir que valores vazios mostrem algo apropriado
     if (value === null || value === undefined || value === '') {
       // Colunas de texto mostram 'N/A', colunas numéricas mostram '0'
-      if (key === 'responsavel' || key === 'base') {
+      if (key === 'base') {
         return 'N/A'
       }
       return '0'
     }
 
     return value
-  }, [motoristasStatus, atualizarStatus, handleMotoristaClick, handleNaoEntreguesClick, renderStatusMarkers])
+  }, [motoristasStatus, atualizarStatus, handleMotoristaClick, handleNaoEntreguesClick, renderStatusMarkers, showSuccess, showError])
 
   return renderCellContent
 }

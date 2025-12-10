@@ -7,6 +7,8 @@ const Table = memo(React.forwardRef(({
   title = "Tabela",
   emptyMessage = "Nenhum dado encontrado",
   renderCellContent = null, // Função personalizada para renderizar conteúdo das células
+  renderHeader = null, // Função personalizada para renderizar headers
+  getRowClassName = null, // Função para obter className da linha (recebe row, rowIndex)
   width = "100%", // Largura da tabela
   height = "auto" // Altura da tabela
 }, ref) => {
@@ -49,26 +51,35 @@ const Table = memo(React.forwardRef(({
         <table className="pr-table">
           <thead>
             <tr>
-              {tableColumns.map((column, index) => (
-                <th key={index}>
-                  {typeof column === 'string' ? column : column.header || column.key}
-                </th>
-              ))}
+              {tableColumns.map((column, index) => {
+                const headerContent = renderHeader 
+                  ? renderHeader(column, index)
+                  : (typeof column === 'string' ? column : column.header || column.key)
+                
+                return (
+                  <th key={index}>
+                    {headerContent}
+                  </th>
+                )
+              })}
             </tr>
           </thead>
           <tbody>
-            {data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {tableColumns.map((column, colIndex) => {
-                  const key = typeof column === 'string' ? column : column.key
-                  return (
-                    <td key={colIndex}>
-                      {renderCellContentInternal(row, rowIndex, column, colIndex)}
-                    </td>
-                  )
-                })}
-              </tr>
-            ))}
+            {data.map((row, rowIndex) => {
+              const rowClassName = getRowClassName ? getRowClassName(row, rowIndex) : ''
+              return (
+                <tr key={rowIndex} className={rowClassName || undefined}>
+                  {tableColumns.map((column, colIndex) => {
+                    const key = typeof column === 'string' ? column : column.key
+                    return (
+                      <td key={colIndex}>
+                        {renderCellContentInternal(row, rowIndex, column, colIndex)}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

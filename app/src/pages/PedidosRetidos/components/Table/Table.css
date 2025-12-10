@@ -145,6 +145,20 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.pr-motorista-name-copyable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.pr-motorista-name-copyable:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
 /* Total (Cinza Azulado) */
 .pr-table .stat-number.total {
   background: #f1f5f9;

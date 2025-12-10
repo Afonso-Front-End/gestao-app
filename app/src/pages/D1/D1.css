@@ -1107,6 +1107,20 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+.d1-motorista-name-copyable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.d1-motorista-name-copyable:hover {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
 /* Total (Cinza Azulado) */
 .d1-bipagens-table .stat-number.total {
   background: #f1f5f9;

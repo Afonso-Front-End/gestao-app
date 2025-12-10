@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import './ConfirmModal.css'
 import { IoWarningOutline, IoClose } from 'react-icons/io5'
 
@@ -27,11 +27,28 @@ const ConfirmModal = ({
   type = 'danger',
   loading = false
 }) => {
-  if (!isOpen) return null
+  const [isClosing, setIsClosing] = useState(false)
+
+  // Função para fechar com animação
+  const handleClose = useCallback(() => {
+    if (loading) return
+    setIsClosing(true)
+    setTimeout(() => {
+      setIsClosing(false)
+      onClose()
+    }, 250) // Tempo da animação
+  }, [onClose, loading])
+
+  // Resetar estado de fechamento quando abrir
+  useEffect(() => {
+    if (isOpen) {
+      setIsClosing(false)
+    }
+  }, [isOpen])
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget && !loading) {
-      onClose()
+      handleClose()
     }
   }
 
@@ -41,13 +58,15 @@ const ConfirmModal = ({
     }
   }
 
+  if (!isOpen && !isClosing) return null
+
   return (
-    <div className="confirm-modal-overlay" onClick={handleOverlayClick}>
+    <div className={`confirm-modal-overlay ${isClosing ? 'closing' : ''}`} onClick={handleOverlayClick}>
       <div className="confirm-modal-container">
         {/* Botão fechar */}
         <button
           className="confirm-modal-close"
-          onClick={onClose}
+          onClick={handleClose}
           disabled={loading}
           aria-label="Fechar modal"
         >
@@ -76,7 +95,7 @@ const ConfirmModal = ({
         <div className="confirm-modal-actions">
           <button
             className="confirm-modal-btn confirm-modal-btn--cancel"
-            onClick={onClose}
+            onClick={handleClose}
             disabled={loading}
           >
             {cancelText}

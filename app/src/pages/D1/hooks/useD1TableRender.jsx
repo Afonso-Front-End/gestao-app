@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { IoDocumentTextOutline } from 'react-icons/io5'
 import { MOTORISTA_STATUS } from '../constants/D1Constants'
 import api from '../../../services/api'
+import { useNotification } from '../../../contexts/NotificationContext'
 
 /**
  * Hook para renderização de células da tabela de motoristas
@@ -13,6 +14,7 @@ export const useD1TableRender = ({
   observacoes = {},
   onOpenObservacao = null
 }) => {
+  const { showSuccess, showError } = useNotification()
   const renderCellContent = useCallback((value, key, row) => {
     const isTotalRow = row.Responsável === 'TOTAL'
     
@@ -212,12 +214,35 @@ export const useD1TableRender = ({
       )
     }
     
-    if (isTotalRow && key === 'Responsável') {
-      return <strong style={{ fontSize: '15px', color: '#2d3748' }}>{value}</strong>
+    if (key === 'Responsável') {
+      if (isTotalRow) {
+        return <strong style={{ fontSize: '15px', color: '#2d3748' }}>{value}</strong>
+      }
+      
+      // Tornar o nome do motorista clicável para copiar
+      const handleCopyMotorista = async () => {
+        try {
+          await navigator.clipboard.writeText(value)
+          showSuccess(`✅ Nome do motorista "${value}" copiado!`)
+        } catch (error) {
+          showError('Erro ao copiar nome do motorista')
+        }
+      }
+      
+      return (
+        <span
+          className="d1-motorista-name-copyable"
+          onClick={handleCopyMotorista}
+          title="Clique para copiar o nome do motorista"
+          style={{ cursor: 'pointer', userSelect: 'none' }}
+        >
+          {value}
+        </span>
+      )
     }
     
     return value
-  }, [motoristasStatus, setMotoristasStatus, carregarPedidosMotorista, observacoes, onOpenObservacao])
+  }, [motoristasStatus, setMotoristasStatus, carregarPedidosMotorista, observacoes, onOpenObservacao, showSuccess, showError])
 
   return { renderCellContent }
 }

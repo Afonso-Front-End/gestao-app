@@ -45,20 +45,111 @@ const TableOverlay = ({
   const closeTimeoutRef = useRef(null)
   const styleRef = useRef(null)
   const { showSuccess, showError, showInfo } = useNotification()
+  const [extractedSubtitle, setExtractedSubtitle] = useState(null)
+
+  // Extrair subtitle dos parênteses do título quando o título mudar
+  useEffect(() => {
+    if (!title) {
+      setExtractedSubtitle(null)
+      return
+    }
+    
+    const titleStr = typeof title === 'string' ? title : String(title)
+    const parantesesMatch = titleStr.match(/^(.+?)\s*\(([^)]+)\)\s*$/)
+    
+    if (parantesesMatch) {
+      setExtractedSubtitle(parantesesMatch[2])
+    } else {
+      setExtractedSubtitle(null)
+    }
+  }, [title])
+
+  // Resetar extractedSubtitle quando o overlay fechar
+  useEffect(() => {
+    if (!isOpen && !isClosing) {
+      setExtractedSubtitle(null)
+    }
+  }, [isOpen, isClosing])
+
+  // Função para extrair nome do motorista do título e torná-lo clicável
+  const renderTitleWithCopyableMotorista = useCallback((titleText) => {
+    if (!titleText) return titleText
+    
+    let titleStr = typeof titleText === 'string' ? titleText : String(titleText)
+    
+    // Remover conteúdo entre parênteses do título para processamento
+    titleStr = titleStr.replace(/\s*\([^)]*\)\s*$/, '').trim()
+    
+    // Extrair nome do motorista do título (remover prefixos como "Total de Pedidos -", "Pedidos Entregues -", etc)
+    const nomeMatch = titleStr.match(/(?:Total\s+de\s+Pedidos\s*-\s*|Pedidos\s+(?:Entregues|Não\s+Entregues|no\s+Galpão)\s*-\s*|Pedidos\s+(?:de|do)\s+)(.+)/i)
+    let motoristaNome = null
+    let prefixo = ''
+    
+    if (nomeMatch && nomeMatch[1]) {
+      motoristaNome = nomeMatch[1].trim()
+      prefixo = titleStr.substring(0, nomeMatch.index).trim()
+    } else {
+      motoristaNome = titleStr.trim()
+    }
+    
+    if (!motoristaNome) {
+      return titleText
+    }
+    
+    const handleCopyMotorista = async () => {
+      try {
+        await navigator.clipboard.writeText(motoristaNome)
+        showSuccess(`✅ Nome do motorista "${motoristaNome}" copiado!`)
+      } catch (error) {
+        showError('Erro ao copiar nome do motorista')
+      }
+    }
+    
+    // Renderizar: prefixo + nome clicável (SEM parênteses no título)
+    return (
+      <>
+        {prefixo && prefixo !== '' && <>{prefixo} </>}
+        <span
+          className="sla-overlay-motorista-copyable"
+          onClick={handleCopyMotorista}
+          title="Clique para copiar o nome do motorista"
+        >
+          {motoristaNome}
+        </span>
+      </>
+    )
+  }, [showSuccess, showError])
 
   // Gerar ID único para a tabela (memoizado)
+  // Usar IDs fixos baseados no tipo de overlay, não no nome do motorista
   const tableId = useMemo(() => {
-    if (title) {
-      const titleStr = typeof title === 'string' ? title : String(title)
-      return titleStr
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '')
+    if (!title) return 'sla-default-table'
+    
+    const titleStr = typeof title === 'string' ? title : String(title)
+    const titleLower = titleStr.toLowerCase()
+    
+    // Remover conteúdo entre parênteses e nome do motorista para identificar o tipo
+    const cleanTitle = titleStr.replace(/\s*\([^)]*\)\s*$/, '').trim()
+    
+    // Identificar tipo de overlay baseado no prefixo do título
+    if (cleanTitle.toLowerCase().startsWith('total de pedidos')) {
+      return 'sla-total-pedidos'
+    } else if (cleanTitle.toLowerCase().startsWith('pedidos entregues')) {
+      return 'sla-pedidos-entregues'
+    } else if (cleanTitle.toLowerCase().startsWith('pedidos não entregues')) {
+      return 'sla-pedidos-nao-entregues'
+    } else if (cleanTitle.toLowerCase().startsWith('pedidos no galpão')) {
+      return 'sla-pedidos-galpao'
     }
-    return 'default-table'
+    
+    // Fallback: usar título normalizado (mas isso não deve acontecer)
+    return cleanTitle
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
   }, [title])
   
   // Gerar colunas automaticamente se não forem fornecidas (memoizado)
@@ -82,10 +173,11 @@ const TableOverlay = ({
     return baseCols
   }, [columns, tableColumns, onCopyPedido])
   
-  // Hook de configuração da tabela
+  // Hook de configuração da tabela - SÓ usar quando tiver colunas
+  const hasColumns = columnsForConfig.length > 0
   const {
-    columns: configColumns,
-    visibleColumns,
+    columns: configColumns = [],
+    visibleColumns = [],
     updateColumnOrder,
     toggleColumnVisibility,
     updateColumnStyles,
@@ -93,7 +185,17 @@ const TableOverlay = ({
     resetConfig,
     resetColumns,
     resetStyles
-  } = useTableConfig(tableId, columnsForConfig)
+  } = hasColumns ? useTableConfig(tableId, columnsForConfig) : {
+    columns: [],
+    visibleColumns: [],
+    updateColumnOrder: () => {},
+    toggleColumnVisibility: () => {},
+    updateColumnStyles: () => {},
+    updateFixedColumns: () => {},
+    resetConfig: () => {},
+    resetColumns: () => {},
+    resetStyles: () => {}
+  }
   
   // Criar tag <style> dinâmica para injetar estilos com !important
   useEffect(() => {
@@ -147,48 +249,32 @@ const TableOverlay = ({
   
   // Usar colunas configuradas ou padrão (memoizado)
   const finalColumns = useMemo(() => {
+    // Preparar colunas base
+    let baseColumns = columns || []
+    if (baseColumns.length === 0 && tableColumns.length > 0) {
+      baseColumns = tableColumns
+    }
+    
+    // Se não há colunas, retornar vazio
+    if (baseColumns.length === 0) {
+      return []
+    }
+    
     // Se temos colunas configuradas e visíveis, usar essas
-    // visibleColumns já inclui a coluna de copiar se necessário
     if (visibleColumns && visibleColumns.length > 0) {
       return visibleColumns.map(col => {
-        // Se for coluna de copiar, preservar estrutura com key
         const normalizedName = (col.name || '').toLowerCase().trim()
         if (normalizedName === 'copiar' || normalizedName === 'copy') {
-          return { key: 'copy', header: col.name || 'Copiar' }
+          return { key: 'copy', header: 'Copiar' }
         }
         return col.name
       })
     }
     
-    // Fallback para lógica antiga
-    let baseColumns = columns || []
-    
-    // Se não foram passadas colunas, usar as chaves do primeiro item dos dados
-    if (baseColumns.length === 0 && tableColumns.length > 0) {
-      baseColumns = tableColumns
-    }
-    
-    // Se onCopyPedido estiver disponível, adicionar coluna de copiar
+    // Fallback: usar colunas base
     if (onCopyPedido) {
-      const pedidoIndex = baseColumns.findIndex(col => {
-        const key = typeof col === 'string' ? col : (col.key || col.header || '')
-      return key === 'numero_pedido' || 
-             key === 'Nº DO PEDIDO' || 
-             key === 'NUMERO_PEDIDO' ||
-             key === 'Número de pedido JMS' ||
-             key === 'Remessa' ||
-             key === 'Número do Pedido'
-    })
-
-    if (pedidoIndex !== -1) {
-        const newColumns = [...baseColumns]
-      newColumns.splice(pedidoIndex + 1, 0, { key: 'copy', header: 'Copiar' })
-      return newColumns
-    } else {
-        return [{ key: 'copy', header: 'Copiar' }, ...baseColumns]
-      }
+      return [{ key: 'copy', header: 'Copiar' }, ...baseColumns]
     }
-    
     return baseColumns
   }, [visibleColumns, columns, tableColumns, onCopyPedido])
   
@@ -568,11 +654,17 @@ const TableOverlay = ({
         <div className="sla-overlay-header">
           <div className="sla-overlay-title-section">
             <h2>
-              {subtitle && typeof subtitle === 'object' && subtitle.props && subtitle.props.children && subtitle.props.children[0] 
-                ? subtitle.props.children[0] 
-                : title}
+              {renderTitleWithCopyableMotorista(
+                subtitle && typeof subtitle === 'object' && subtitle.props && subtitle.props.children && subtitle.props.children[0] 
+                  ? subtitle.props.children[0] 
+                  : title
+              )}
             </h2>
-            {subtitle && <div className="sla-overlay-subtitle">{subtitle}</div>}
+            {(extractedSubtitle || subtitle) && (
+              <div className="sla-overlay-subtitle">
+                {extractedSubtitle ? `(${extractedSubtitle})` : subtitle}
+              </div>
+            )}
           </div>
           {showAddPhone && (
             <div className="sla-phone-input-container">

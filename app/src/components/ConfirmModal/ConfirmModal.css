@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: 20000;
   padding: 20px;
   animation: confirmModalFadeIn 0.2s ease-out;
 }
@@ -21,6 +21,19 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+.confirm-modal-overlay.closing {
+  animation: confirmModalFadeOut 0.25s ease-in forwards;
+}
+
+@keyframes confirmModalFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
@@ -46,6 +59,21 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+.confirm-modal-overlay.closing .confirm-modal-container {
+  animation: confirmModalSlideOut 0.25s ease-in forwards;
+}
+
+@keyframes confirmModalSlideOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
   }
 }
 

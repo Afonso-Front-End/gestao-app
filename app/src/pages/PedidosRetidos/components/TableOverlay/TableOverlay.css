@@ -121,6 +121,22 @@
   flex: 1;
 }
 
+.pr-overlay-motorista-copyable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.pr-overlay-motorista-copyable:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
 .table-overlay-pr-overlay-actions {
   display: flex;
   gap: 8px;

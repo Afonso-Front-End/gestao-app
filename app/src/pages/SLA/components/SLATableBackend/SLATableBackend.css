@@ -537,6 +537,20 @@
     padding: 8px 0;
 }
 
+.sla-motorista-name-text.sla-motorista-copyable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.sla-motorista-name-text.sla-motorista-copyable:hover {
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+
 .sla-delivered-pill,
 .sla-not-delivered-pill,
 .sla-total-pill,

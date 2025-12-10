@@ -638,7 +638,9 @@ const PedidosRetidosContent = () => {
     handleMotoristaClick,
     handleNaoEntreguesClick,
     handleOpenObservacao,
-    observacoes
+    observacoes,
+    showSuccess,
+    showError
   )
 
   // Filtrar dados por pesquisa de texto (otimizado com useMemo e debounce)

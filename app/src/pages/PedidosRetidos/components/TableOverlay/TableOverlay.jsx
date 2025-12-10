@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { BsCopy } from "react-icons/bs"
 import { FaCheck, FaTimes } from 'react-icons/fa'
 import { FaFileExcel } from 'react-icons/fa'
@@ -42,6 +42,129 @@ const TableOverlay = ({
   const tableRef = useRef(null) // Ref para capturar diretamente a tabela
   const closeTimeoutRef = useRef(null) // Ref para armazenar timeout de fechamento
   const { showSuccess, showError, showInfo } = useNotification()
+  const [extractedSubtitle, setExtractedSubtitle] = useState(null)
+
+  // Extrair subtitle dos parênteses do título quando o título mudar
+  useEffect(() => {
+    if (!title) {
+      setExtractedSubtitle(null)
+      return
+    }
+    
+    const titleStr = typeof title === 'string' ? title : String(title)
+    const parantesesMatch = titleStr.match(/^(.+?)\s*\(([^)]+)\)\s*$/)
+    
+    if (parantesesMatch) {
+      setExtractedSubtitle(parantesesMatch[2])
+    } else {
+      setExtractedSubtitle(null)
+    }
+  }, [title])
+
+  // Resetar extractedSubtitle quando o overlay fechar
+  useEffect(() => {
+    if (!isOpen && !isClosing) {
+      setExtractedSubtitle(null)
+    }
+  }, [isOpen, isClosing])
+
+  // Função para extrair nome do motorista do título e torná-lo clicável
+  const renderTitleWithCopyableMotorista = useCallback((titleText, motoristaProp) => {
+    // Se tiver prop motorista, usar ela diretamente
+    if (motoristaProp && motoristaProp.trim() !== '') {
+      const handleCopyMotorista = async () => {
+        try {
+          await navigator.clipboard.writeText(motoristaProp)
+          showSuccess(`✅ Nome do motorista "${motoristaProp}" copiado!`)
+        } catch (error) {
+          showError('Erro ao copiar nome do motorista')
+        }
+      }
+      
+      if (titleText && titleText.trim() !== '') {
+        // Se tiver título, remover parênteses e processar
+        let titleStr = typeof titleText === 'string' ? titleText : String(titleText)
+        titleStr = titleStr.replace(/\s*\([^)]*\)\s*$/, '').trim()
+        
+        const motoristaIndex = titleStr.indexOf(motoristaProp)
+        if (motoristaIndex !== -1) {
+          const before = titleStr.substring(0, motoristaIndex).trim()
+          const after = titleStr.substring(motoristaIndex + motoristaProp.length).trim()
+          
+          return (
+            <>
+              {before && before !== '' && <>{before} </>}
+              <span
+                className="pr-overlay-motorista-copyable"
+                onClick={handleCopyMotorista}
+                title="Clique para copiar o nome do motorista"
+              >
+                {motoristaProp}
+              </span>
+              {after && after !== '' && <>{' '}{after}</>}
+            </>
+          )
+        }
+      }
+      
+      // Se não encontrou no título, retornar apenas o nome clicável
+      return (
+        <span
+          className="pr-overlay-motorista-copyable"
+          onClick={handleCopyMotorista}
+          title="Clique para copiar o nome do motorista"
+        >
+          {motoristaProp}
+        </span>
+      )
+    }
+    
+    if (!titleText) return titleText
+    
+    let titleStr = typeof titleText === 'string' ? titleText : String(titleText)
+    
+    // Remover conteúdo entre parênteses do título para processamento
+    titleStr = titleStr.replace(/\s*\([^)]*\)\s*$/, '').trim()
+    
+    // Extrair nome do motorista do título
+    const nomeMatch = titleStr.match(/(?:Pedidos\s+(?:de|do|NÃO\s+ENTREGUES)\s+Motorista:\s*|Motorista:\s*)(.+)/i)
+    let motoristaNome = null
+    let prefixo = ''
+    
+    if (nomeMatch && nomeMatch[1]) {
+      motoristaNome = nomeMatch[1].trim()
+      prefixo = titleStr.substring(0, nomeMatch.index).trim()
+    } else {
+      motoristaNome = titleStr.trim()
+    }
+    
+    if (!motoristaNome) {
+      return titleText
+    }
+    
+    const handleCopyMotorista = async () => {
+      try {
+        await navigator.clipboard.writeText(motoristaNome)
+        showSuccess(`✅ Nome do motorista "${motoristaNome}" copiado!`)
+      } catch (error) {
+        showError('Erro ao copiar nome do motorista')
+      }
+    }
+    
+    // Renderizar: prefixo + nome clicável (SEM parênteses no título)
+    return (
+      <>
+        {prefixo && prefixo !== '' && <>{prefixo} </>}
+        <span
+          className="pr-overlay-motorista-copyable"
+          onClick={handleCopyMotorista}
+          title="Clique para copiar o nome do motorista"
+        >
+          {motoristaNome}
+        </span>
+      </>
+    )
+  }, [showSuccess, showError])
 
   // Resetar estado quando overlay abrir novamente
   useEffect(() => {
@@ -437,12 +560,16 @@ const TableOverlay = ({
             <div className="table-overlay-pr-overlay-title-section">
               <h2>
                 {title && title.trim() !== '' 
-                  ? title 
+                  ? renderTitleWithCopyableMotorista(title, motorista)
                   : motorista && motorista.trim() !== ''
-                    ? `Pedidos do Motorista: ${motorista}`
+                    ? renderTitleWithCopyableMotorista(`Pedidos do Motorista: ${motorista}`, motorista)
                     : 'Pedidos'}
               </h2>
-              {subtitle && <div className="table-overlay-pr-overlay-subtitle">{subtitle}</div>}
+              {(extractedSubtitle || subtitle) && (
+                <div className="table-overlay-pr-overlay-subtitle">
+                  {extractedSubtitle ? `(${extractedSubtitle})` : subtitle}
+                </div>
+              )}
             </div>
             {showAddPhone && (
               <div className="table-overlay-pr-phone-input-container">

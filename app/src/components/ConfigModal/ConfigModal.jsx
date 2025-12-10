@@ -15,7 +15,7 @@ import './ConfigModal.css'
 
 const ConfigModal = ({ isOpen, onClose, triggerRef }) => {
   const location = useLocation()
-  const { slaConfig, d1Config, pedidosRetidosConfig } = useConfig()
+  const { slaConfig, d1Config, pedidosRetidosConfig, semMovimentacaoSCConfig } = useConfig()
   const modalRef = useRef(null)
   const [isClosing, setIsClosing] = useState(false)
   const closeTimeoutRef = useRef(null)
@@ -23,6 +23,7 @@ const ConfigModal = ({ isOpen, onClose, triggerRef }) => {
   const isSlaPage = location.pathname === '/sla' || location.pathname.startsWith('/sla/')
   const isD1Page = location.pathname === '/d1' || location.pathname.startsWith('/d1/')
   const isPedidosRetidosPage = location.pathname === '/pedidos-retidos' || location.pathname.startsWith('/pedidos-retidos/')
+  const isSemMovimentacaoSCPage = location.pathname === '/sem-movimentacao-sc' || location.pathname.startsWith('/sem-movimentacao-sc/')
 
   useEffect(() => {
     if (isOpen) {
@@ -419,6 +420,50 @@ const ConfigModal = ({ isOpen, onClose, triggerRef }) => {
                 </div>
               </div>
             )}
+          </>
+        ) : isSemMovimentacaoSCPage && semMovimentacaoSCConfig ? (
+          <>
+            <div className="config-modal-section">
+              <div className="config-modal-section-title">Importação</div>
+              <div className="config-modal-row">
+                <div className="config-modal-item">
+                  <p className="config-modal-import-description">
+                    Importe a tabela de pedidos sem movimentação de Santa Catarina.
+                  </p>
+                  <FileImport
+                    endpoint={semMovimentacaoSCConfig.uploadEndpoint}
+                    title="Importar Arquivo"
+                    acceptedFormats=".xlsx,.xls,.csv"
+                    onSuccess={semMovimentacaoSCConfig.onImportSuccess}
+                    onError={semMovimentacaoSCConfig.onImportError}
+                  />
+                </div>
+                {semMovimentacaoSCConfig.onClearDataClick && (
+                  <div className="config-modal-item">
+                    <div className="config-modal-clear-section">
+                      <p className="config-modal-import-description">
+                        Limpar todos os dados do banco de dados.
+                      </p>
+                      <button
+                        onClick={semMovimentacaoSCConfig.onClearDataClick}
+                        className="config-modal-clear-button"
+                        disabled={semMovimentacaoSCConfig.deletingData}
+                        title="Limpar todos os dados de Sem Movimentação SC"
+                      >
+                        {semMovimentacaoSCConfig.deletingData ? (
+                          <IoHourglass size={24} className="spinning" />
+                        ) : (
+                          <MdFolderDelete size={24} />
+                        )}
+                        <span>
+                          {semMovimentacaoSCConfig.deletingData ? 'Limpando...' : 'Limpar Dados'}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </>
         ) : (
           <div className="config-modal-default">

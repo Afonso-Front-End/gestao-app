@@ -428,6 +428,58 @@
   }
 }
 
+/* Botão de limpar dados */
+.config-modal-clear-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.config-modal-clear-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+  letter-spacing: 0.3px;
+  width: 100%;
+}
+
+.config-modal-clear-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.35);
+}
+
+.config-modal-clear-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+}
+
+.config-modal-clear-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.config-modal-clear-button svg {
+  flex-shrink: 0;
+}
+
+.config-modal-clear-button .spinning {
+  animation: config-spin 1s linear infinite;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .config-modal {

@@ -6,7 +6,8 @@ import {
   IoAnalytics,
   IoCalendar,
   IoStatsChart,
-  IoPieChart
+  IoPieChart,
+  IoLocation
 } from "react-icons/io5";
 
 // Configuração centralizada de rotas
@@ -20,6 +21,7 @@ export const ROUTES = {
   SLA: '/sla',
   ANALISE: '/analise',
   D1: '/d1',
+  SEM_MOVIMENTACAO_SC: '/sem-movimentacao-sc',
   CONFIGURACOES: '/configuracoes'
 }
 
@@ -66,6 +68,13 @@ export const MAIN_MENU_ITEMS = [
     label: 'Análise',
     component: 'Analise',
     gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+  },
+  {
+    path: ROUTES.SEM_MOVIMENTACAO_SC,
+    icon: IoLocation,
+    label: 'Sem movimentação SC',
+    component: 'SemMovimentacaoSC',
+    gradient: 'linear-gradient(135deg, #059669 0%, #10b981 100%)'
   },
   {
     path: ROUTES.LISTA_TELEFONES,

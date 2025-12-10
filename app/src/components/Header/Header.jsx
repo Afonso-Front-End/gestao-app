@@ -15,7 +15,8 @@ const Header = () => {
   const isSlaPage = location.pathname === '/sla' || location.pathname.startsWith('/sla/')
   const isD1Page = location.pathname === '/d1' || location.pathname.startsWith('/d1/')
   const isPedidosRetidosPage = location.pathname === '/pedidos-retidos' || location.pathname.startsWith('/pedidos-retidos/')
-  const hasConfigModal = isSlaPage || isD1Page || isPedidosRetidosPage
+  const isSemMovimentacaoSCPage = location.pathname === '/sem-movimentacao-sc' || location.pathname.startsWith('/sem-movimentacao-sc/')
+  const hasConfigModal = isSlaPage || isD1Page || isPedidosRetidosPage || isSemMovimentacaoSCPage
 
   const handleConfigClick = () => {
     if (hasConfigModal) {

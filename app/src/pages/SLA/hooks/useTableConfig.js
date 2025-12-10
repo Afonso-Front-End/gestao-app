@@ -65,109 +65,27 @@ export const useTableConfig = (tableId, defaultColumns = []) => {
     }
   }, [storageKey])
 
-  // Estado inicial - carregar do localStorage
-  const getInitialColumns = () => {
-    if (defaultColumns.length === 0) {
-      return []
-    }
-    const saved = loadConfigFromLocal()
-    if (saved && saved.columns && saved.columns.length > 0) {
-      // Mesclar colunas salvas com defaultColumns
-      const savedMap = new Map(saved.columns.map(c => [c.id, c]))
-      const merged = defaultColumns
-        .map((col, index) => {
-          const columnName = typeof col === 'string' ? col : (col.header || col.key || `col-${index}`)
-          const id = createColumnId(columnName)
-          const savedCol = savedMap.get(id)
-          
-          if (savedCol) {
-            // Garantir que coluna de copiar sempre tenha order: -1
-            const normalizedName = columnName.toLowerCase().trim()
-            const isCopyColumn = normalizedName === 'copiar' || normalizedName === 'copy'
-            return { 
-              ...savedCol, 
-              name: columnName,
-              order: isCopyColumn ? -1 : savedCol.order
-            }
-          }
-          
-          const normalizedName = columnName.toLowerCase().trim()
-          const isCopyColumn = normalizedName === 'copiar' || normalizedName === 'copy'
-          
-          return {
-            id,
-            name: columnName,
-            originalIndex: index,
-            visible: true,
-            order: isCopyColumn ? -1 : (saved.columns.length + index),
-            isFixed: false,
-            styles: {
-              backgroundColor: '',
-              textColor: '',
-              fontWeight: 'normal',
-              fontStyle: 'normal'
-            }
-          }
-        })
-        .sort((a, b) => a.order - b.order)
-      
-      return merged
-    }
+  // Estado inicial - sempre inicializar com defaultColumns
+  const [columns, setColumns] = useState(() => {
+    if (defaultColumns.length === 0) return []
     return initializeColumns(defaultColumns)
-  }
-
-  const initialColumns = getInitialColumns()
-  const [columns, setColumns] = useState(initialColumns)
-
-  // Flag para evitar salvar durante o carregamento inicial
+  })
+  
   const [isLoading, setIsLoading] = useState(true)
   const hasLoadedRef = useRef(false)
   const lastTableIdRef = useRef(tableId)
-  const initialColumnsRef = useRef(initialColumns)
   
-  // Resetar ref quando tableId mudar
+  // Resetar quando tableId mudar
   useEffect(() => {
     if (lastTableIdRef.current !== tableId) {
       hasLoadedRef.current = false
       lastTableIdRef.current = tableId
-      // Recarregar colunas iniciais para o novo tableId
-      const localConfig = loadConfigFromLocal()
-      let newInitialColumns = []
-      if (localConfig && localConfig.columns && localConfig.columns.length > 0 && defaultColumns.length > 0) {
-        const savedMap = new Map(localConfig.columns.map(c => [c.id, c]))
-        newInitialColumns = defaultColumns
-          .map((col, index) => {
-            const columnName = typeof col === 'string' ? col : (col.header || col.key || `col-${index}`)
-            const id = createColumnId(columnName)
-            const savedCol = savedMap.get(id)
-            
-            if (savedCol) {
-              return { ...savedCol, name: columnName }
-            }
-            
-            return {
-              id,
-              name: columnName,
-              originalIndex: index,
-              visible: true,
-              order: localConfig.columns.length + index,
-              styles: {
-                backgroundColor: '',
-                textColor: '',
-                fontWeight: 'normal',
-                fontStyle: 'normal'
-              }
-            }
-          })
-          .sort((a, b) => a.order - b.order)
-      } else if (defaultColumns.length > 0) {
-        newInitialColumns = initializeColumns(defaultColumns)
+      if (defaultColumns.length > 0) {
+        setColumns(initializeColumns(defaultColumns))
+        setIsLoading(true)
       }
-      initialColumnsRef.current = newInitialColumns
-      setColumns(newInitialColumns)
-      setIsLoading(true)
     }
-  }, [tableId, defaultColumns, loadConfigFromLocal, initializeColumns])
+  }, [tableId, defaultColumns.length, initializeColumns])
 
   // Função auxiliar para mesclar colunas salvas com defaultColumns
   const mergeColumns = useCallback((savedColumns, defaults) => {
@@ -220,48 +138,51 @@ export const useTableConfig = (tableId, defaultColumns = []) => {
     return merged
   }, [createColumnId, initializeColumns])
 
-  // Carregar configuração do localStorage quando componente montar
+  // Carregar configuração do localStorage
   useEffect(() => {
-    // Evitar carregar múltiplas vezes
-    if (hasLoadedRef.current || defaultColumns.length === 0) {
-      if (defaultColumns.length === 0) {
-        setIsLoading(false)
-      }
+    if (defaultColumns.length === 0 || hasLoadedRef.current) {
+      setIsLoading(false)
       return
     }
     
-    const loadConfig = () => {
-      hasLoadedRef.current = true
-      
-      // Capturar colunas iniciais (do localStorage carregado no estado inicial)
-      const initialColumns = initialColumnsRef.current
-      const hasInitialColumns = initialColumns && initialColumns.length > 0
-      
-      // Carregar do localStorage
-      const localConfig = loadConfigFromLocal()
-      if (localConfig && localConfig.columns && localConfig.columns.length > 0) {
-        const mergedColumns = mergeColumns(localConfig.columns, defaultColumns)
-        setColumns(mergedColumns)
-      } else if (!hasInitialColumns) {
-        // Se não tiver em nenhum lugar, usar inicialização padrão
-        setColumns(prev => {
-          if (prev.length > 0) {
-            return prev // Manter o que já temos
-          }
-          return initializeColumns(defaultColumns)
-        })
-      }
-      
+    // Verificar se há colunas reais (não só "Copiar")
+    const hasRealColumns = defaultColumns.some(col => {
+      const name = typeof col === 'string' ? col : (col.header || col.key || '')
+      const normalized = name.toLowerCase().trim()
+      return normalized !== 'copiar' && normalized !== 'copy'
+    })
+    
+    if (!hasRealColumns) {
       setIsLoading(false)
+      return
     }
     
-    loadConfig()
-  }, [defaultColumns, initializeColumns, loadConfigFromLocal, mergeColumns])
+    hasLoadedRef.current = true
+    const localConfig = loadConfigFromLocal()
+    
+    if (localConfig?.columns?.length > 0) {
+      const merged = mergeColumns(localConfig.columns, defaultColumns)
+      setColumns(merged)
+    } else {
+      // Se não tem config salva, inicializar com defaultColumns
+      setColumns(initializeColumns(defaultColumns))
+    }
+    
+    setIsLoading(false)
+  }, [defaultColumns, loadConfigFromLocal, mergeColumns, initializeColumns])
 
   // Salvar quando columns mudar - apenas localStorage
   useEffect(() => {
     // Não salvar durante o carregamento inicial
-    if (isLoading || columns.length === 0) return
+    if (isLoading) return
+    
+    // Não salvar se só tiver coluna de copiar (sem dados reais)
+    const hasRealColumns = columns.some(col => {
+      const name = (col.name || '').toLowerCase().trim()
+      return name !== 'copiar' && name !== 'copy'
+    })
+    
+    if (!hasRealColumns || columns.length === 0) return
     
     const config = { columns }
     saveConfigToLocal(config)

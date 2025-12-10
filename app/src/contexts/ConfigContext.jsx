@@ -6,10 +6,12 @@ export const ConfigProvider = ({ children }) => {
   const [slaConfig, setSlaConfig] = useState(null)
   const [d1Config, setD1Config] = useState(null)
   const [pedidosRetidosConfig, setPedidosRetidosConfig] = useState(null)
+  const [semMovimentacaoSCConfig, setSemMovimentacaoSCConfig] = useState(null)
   
   const slaConfigRef = useRef(null)
   const d1ConfigRef = useRef(null)
   const pedidosRetidosConfigRef = useRef(null)
+  const semMovimentacaoSCConfigRef = useRef(null)
 
   const registerSlaConfig = useCallback((config) => {
     slaConfigRef.current = config
@@ -83,6 +85,30 @@ export const ConfigProvider = ({ children }) => {
     setPedidosRetidosConfig(null)
   }, [])
 
+  const registerSemMovimentacaoSCConfig = useCallback((config) => {
+    semMovimentacaoSCConfigRef.current = config
+    setSemMovimentacaoSCConfig(prev => {
+      if (!prev) {
+        return config
+      }
+      // Comparar valores para evitar atualizações desnecessárias
+      const uploadEndpointChanged = prev.uploadEndpoint !== config.uploadEndpoint
+      const onImportSuccessChanged = prev.onImportSuccess !== config.onImportSuccess
+      const onImportErrorChanged = prev.onImportError !== config.onImportError
+      
+      if (uploadEndpointChanged || onImportSuccessChanged || onImportErrorChanged) {
+        return config
+      }
+      // Retornar prev para evitar re-render desnecessário
+      return prev
+    })
+  }, [])
+
+  const unregisterSemMovimentacaoSCConfig = useCallback(() => {
+    semMovimentacaoSCConfigRef.current = null
+    setSemMovimentacaoSCConfig(null)
+  }, [])
+
   return (
     <ConfigContext.Provider value={{ 
       slaConfig, 
@@ -93,7 +119,10 @@ export const ConfigProvider = ({ children }) => {
       unregisterD1Config,
       pedidosRetidosConfig,
       registerPedidosRetidosConfig,
-      unregisterPedidosRetidosConfig
+      unregisterPedidosRetidosConfig,
+      semMovimentacaoSCConfig,
+      registerSemMovimentacaoSCConfig,
+      unregisterSemMovimentacaoSCConfig
     }}>
       {children}
     </ConfigContext.Provider>
@@ -112,7 +141,10 @@ export const useConfig = () => {
       unregisterD1Config: () => {},
       pedidosRetidosConfig: null,
       registerPedidosRetidosConfig: () => {},
-      unregisterPedidosRetidosConfig: () => {}
+      unregisterPedidosRetidosConfig: () => {},
+      semMovimentacaoSCConfig: null,
+      registerSemMovimentacaoSCConfig: () => {},
+      unregisterSemMovimentacaoSCConfig: () => {}
     }
   }
   return context

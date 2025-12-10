@@ -565,7 +565,20 @@ const SLATableBackend = ({ slaData, baseName, cidade, selectedCities = [], isLoa
                 <tr key={index}>
                   <td className="sla-motorista-name">
                     <div className="sla-motorista-info">
-                      <div className="sla-motorista-name-text">{motorista.motorista}</div>
+                      <div 
+                        className="sla-motorista-name-text sla-motorista-copyable"
+                        onClick={async () => {
+                          try {
+                            await navigator.clipboard.writeText(motorista.motorista)
+                            showSuccess(`✅ Nome do motorista "${motorista.motorista}" copiado!`)
+                          } catch (error) {
+                            showError('Erro ao copiar nome do motorista')
+                          }
+                        }}
+                        title="Clique para copiar o nome do motorista"
+                      >
+                        {motorista.motorista}
+                      </div>
                       <div className="sla-motorista-cities">
                         {renderCitiesInfo(motorista)}
                       </div>
