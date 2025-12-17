@@ -6,10 +6,10 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   z-index: 15000;
-  padding: 20px;
+  padding: 0;
   backdrop-filter: blur(4px);
   animation: fadeIn 0.25s ease-out;
 }
@@ -38,11 +38,12 @@
 
 .sem-movimentacao-sc-qrcode-modal {
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 0;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 95vw;
-  max-height: 95vh;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -80,11 +81,18 @@
   padding: 20px 24px;
   border-bottom: 2px solid #e2e8f0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 16px;
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: #ffffff;
   flex-shrink: 0;
+}
+
+.sem-movimentacao-sc-qrcode-modal-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .sem-movimentacao-sc-qrcode-modal-header h2 {
@@ -106,6 +114,12 @@
   background: rgba(255, 255, 255, 0.2);
   padding: 6px 12px;
   border-radius: 6px;
+}
+
+.sem-movimentacao-sc-qrcode-modal-header-custom {
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .sem-movimentacao-sc-qrcode-modal-close {
@@ -143,6 +157,39 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.sem-movimentacao-sc-qrcode-loading-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+  grid-column: 1 / -1;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.sem-movimentacao-sc-qrcode-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sem-movimentacao-sc-qrcode-loading-more p {
+  margin: 0;
+  font-weight: 500;
+  color: #475569;
 }
 
 .sem-movimentacao-sc-qrcode-empty {

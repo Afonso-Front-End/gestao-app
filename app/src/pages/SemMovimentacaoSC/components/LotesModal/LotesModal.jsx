@@ -12,7 +12,7 @@ const PlanilhaRow = memo(({ row, rowIndex, globalIndex, onCellChange, onPaste })
           value={row.numerosPedidos}
           onChange={(e) => onCellChange(globalIndex, 'numerosPedidos', e.target.value)}
           onPaste={(e) => onPaste(globalIndex, e)}
-          className="sem-movimentacao-sc-planilha-input sem-movimentacao-sc-planilha-input-numbers"
+          className="lotes-planilha-input lotes-planilha-input-numbers"
           placeholder="Cole os números aqui"
         />
       </td>
@@ -21,7 +21,7 @@ const PlanilhaRow = memo(({ row, rowIndex, globalIndex, onCellChange, onPaste })
           type="text"
           value={row.tipoOperacao}
           onChange={(e) => onCellChange(globalIndex, 'tipoOperacao', e.target.value)}
-          className="sem-movimentacao-sc-planilha-input"
+          className="lotes-planilha-input"
         />
       </td>
       <td>
@@ -29,7 +29,7 @@ const PlanilhaRow = memo(({ row, rowIndex, globalIndex, onCellChange, onPaste })
           type="text"
           value={row.primeiroNivelCodificacao}
           onChange={(e) => onCellChange(globalIndex, 'primeiroNivelCodificacao', e.target.value)}
-          className="sem-movimentacao-sc-planilha-input"
+          className="lotes-planilha-input"
         />
       </td>
       <td>
@@ -37,7 +37,7 @@ const PlanilhaRow = memo(({ row, rowIndex, globalIndex, onCellChange, onPaste })
           type="text"
           value={row.nivelIICodificacao}
           onChange={(e) => onCellChange(globalIndex, 'nivelIICodificacao', e.target.value)}
-          className="sem-movimentacao-sc-planilha-input"
+          className="lotes-planilha-input"
         />
       </td>
       <td>
@@ -45,7 +45,7 @@ const PlanilhaRow = memo(({ row, rowIndex, globalIndex, onCellChange, onPaste })
           type="text"
           value={row.causaProblema}
           onChange={(e) => onCellChange(globalIndex, 'causaProblema', e.target.value)}
-          className="sem-movimentacao-sc-planilha-input"
+          className="lotes-planilha-input"
         />
       </td>
     </tr>
@@ -346,39 +346,39 @@ const LotesModal = ({ isOpen, onClose, remessasLotes, remessasUnicas, onCopyLote
   if (!isOpen && !isClosing) return null
 
   return (
-    <div className={`sem-movimentacao-sc-lotes-modal-overlay ${isClosing ? 'closing' : ''}`}>
-      <div className="sem-movimentacao-sc-lotes-modal">
-        <div className="sem-movimentacao-sc-lotes-modal-header">
+    <div className={`lotes-modal-overlay ${isClosing ? 'closing' : ''}`}>
+      <div className="lotes-modal">
+        <div className="lotes-modal-header">
           <h2>Lotes de Remessas ({tamanhoLote} por lote)</h2>
           <button
-            className="sem-movimentacao-sc-lotes-modal-close"
+            className="lotes-modal-close"
             onClick={handleClose}
             title="Fechar"
           >
             ✕
           </button>
         </div>
-        <div className="sem-movimentacao-sc-lotes-modal-content">
-          <p className="sem-movimentacao-sc-lotes-modal-info">
+        <div className="lotes-modal-content">
+          <p className="lotes-modal-info">
             Total: {remessasUnicas.length.toLocaleString('pt-BR')} remessa(s) divididas em {remessasLotes.length} lote(s) de {tamanhoLote}
           </p>
           
           {tamanhoLote === 500 ? (
-            <div className="sem-movimentacao-sc-planilha-container">
+            <div className="lotes-planilha-container">
               {remessasLotes.map((lote) => (
-                <div key={lote.numero_lote} className="sem-movimentacao-sc-lote-planilha">
-                  <h3 className="sem-movimentacao-sc-lote-planilha-title">
+                <div key={lote.numero_lote} className="lote-planilha">
+                  <h3 className="lote-planilha-title">
                     Lote {lote.numero_lote} - {lote.total_remessas.toLocaleString('pt-BR')} remessa(s)
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <button
-                        className="sem-movimentacao-sc-btn-copy-lote-small"
+                        className="lotes-btn-copy-lote-small"
                         onClick={() => onCopyLote(lote)}
                         title="Copiar números de remessas"
                       >
                         📋 Copiar
                       </button>
                       <button
-                        className="sem-movimentacao-sc-btn-download-excel"
+                        className="lotes-btn-download-excel"
                         onClick={() => handleExportExcel(lote)}
                         title="Baixar planilha em Excel"
                       >
@@ -386,8 +386,8 @@ const LotesModal = ({ isOpen, onClose, remessasLotes, remessasUnicas, onCopyLote
                       </button>
                     </div>
                   </h3>
-                  <div className="sem-movimentacao-sc-planilha-wrapper">
-                    <table className="sem-movimentacao-sc-planilha-table">
+                  <div className="lotes-planilha-wrapper">
+                    <table className="lotes-planilha-table">
                       <thead>
                         <tr>
                           <th></th>
@@ -420,11 +420,11 @@ const LotesModal = ({ isOpen, onClose, remessasLotes, remessasUnicas, onCopyLote
               ))}
             </div>
           ) : (
-            <div className="sem-movimentacao-sc-lotes-grid">
+            <div className="lotes-grid">
               {remessasLotes.map((lote) => (
-                <div key={lote.numero_lote} className="sem-movimentacao-sc-lote-card">
+                <div key={lote.numero_lote} className="lote-card">
                   <button
-                    className="sem-movimentacao-sc-btn-copy-lote"
+                    className="lotes-btn-copy-lote"
                     onClick={() => onCopyLote(lote)}
                     title={`Copiar ${lote.total_remessas.toLocaleString('pt-BR')} remessa(s) do lote ${lote.numero_lote}`}
                   >

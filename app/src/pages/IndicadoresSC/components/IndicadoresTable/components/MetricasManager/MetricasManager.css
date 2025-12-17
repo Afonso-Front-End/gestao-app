@@ -1,0 +1,302 @@
+.metricas-manager-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.metricas-manager-overlay.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.metricas-manager-overlay.fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+
+.metricas-manager {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.metricas-manager.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.metricas-manager.slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+.metricas-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.metricas-manager-header h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.metricas-manager-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #ffffff;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 20px;
+}
+
+.metricas-manager-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.metricas-manager-content {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.metricas-manager-actions {
+  margin-bottom: 24px;
+}
+
+.metricas-manager-add-btn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.metricas-manager-add-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.metricas-manager-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #64748b;
+}
+
+.metricas-manager-empty p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.metricas-manager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metrica-manager-item {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.metrica-manager-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.metrica-manager-item-content {
+  flex: 1;
+}
+
+.metrica-manager-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.metrica-manager-item-number {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #ffffff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.metrica-manager-item-info {
+  flex: 1;
+}
+
+.metrica-manager-item-nome {
+  font-weight: 600;
+  font-size: 16px;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.metrica-manager-item-chines {
+  font-size: 13px;
+  color: #64748b;
+  font-style: italic;
+}
+
+.metrica-manager-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.metrica-manager-item-meta-label {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.metrica-manager-item-meta-value {
+  font-size: 14px;
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.metrica-manager-item-tipo {
+  font-size: 12px;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.metrica-manager-item-indicator {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.metrica-manager-item-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.metrica-manager-edit-btn,
+.metrica-manager-delete-btn {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.metrica-manager-edit-btn:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.metrica-manager-delete-btn:hover {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #ef4444;
+  transform: translateY(-2px);
+}
+
+.metrica-manager-edit-btn:active,
+.metrica-manager-delete-btn:active {
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+}
+

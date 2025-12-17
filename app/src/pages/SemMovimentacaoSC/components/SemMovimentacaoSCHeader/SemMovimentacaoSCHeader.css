@@ -1,0 +1,23 @@
+.sem-movimentacao-sc-header {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  padding: 24px 32px;
+  margin-bottom: 0;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.sem-movimentacao-sc-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.5px;
+}
+
+.sem-movimentacao-sc-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-weight: 400;
+}

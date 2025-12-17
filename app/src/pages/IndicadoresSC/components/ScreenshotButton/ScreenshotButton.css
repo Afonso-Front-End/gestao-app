@@ -1,0 +1,22 @@
+.screenshot-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.screenshot-button:hover {
+  background: #0056b3;
+}
+
+.screenshot-button:active {
+  background: #004085;
+}
+

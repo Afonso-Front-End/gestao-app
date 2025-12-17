@@ -19,10 +19,31 @@ const api = axios.create({
 // Interceptor para requests
 api.interceptors.request.use(
   (config) => {
+    const fullURL = `${config.baseURL}${config.url}`
+    console.log('📤 [API] Enviando requisição:', {
+      method: config.method?.toUpperCase(),
+      url: config.url,
+      baseURL: config.baseURL,
+      fullURL: fullURL,
+      hasToken: !!localStorage.getItem('authToken'),
+      headers: {
+        'Authorization': config.headers.Authorization ? 'Bearer ***' : 'não enviado',
+        'X-API-Key': config.headers['X-API-Key'] ? '***' : 'não enviado',
+        'X-API-Secret': config.headers['X-API-Secret'] ? '***' : 'não enviado'
+      }
+    })
+    
     // Adicionar token de autenticação se existir
     const token = localStorage.getItem('authToken')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
+      console.log('🔑 [API] Token de autenticação adicionado:', {
+        tokenLength: token.length,
+        tokenPreview: token.substring(0, 20) + '...',
+        url: config.url
+      })
+    } else {
+      console.warn('⚠️ [API] Token de autenticação não encontrado para:', config.url)
     }
     
     // Adicionar API Key e Secret se configurados (exceto para rotas de auth)
@@ -33,14 +54,22 @@ api.interceptors.request.use(
       if (apiKey && apiSecret) {
         config.headers['X-API-Key'] = apiKey
         config.headers['X-API-Secret'] = apiSecret
+        console.log('🔑 [API] API Key adicionada aos headers:', {
+          url: config.url,
+          hasKey: !!apiKey,
+          hasSecret: !!apiSecret,
+          keyLength: apiKey?.length,
+          secretLength: apiSecret?.length
+        })
+      } else {
+        console.warn('⚠️ [API] API Key ou Secret não encontrados para:', config.url)
       }
     }
-    
-    // Log para debug removido
     
     return config
   },
   (requestError) => {
+    console.error('❌ [API] Erro no interceptor de request:', requestError)
     return Promise.reject(requestError)
   }
 )
@@ -48,16 +77,33 @@ api.interceptors.request.use(
 // Interceptor para responses
 api.interceptors.response.use(
   (response) => {
-    // Log para debug removido
+    console.log('✅ [API] Resposta recebida:', response.status, response.config.url)
     return response
   },
   (responseError) => {
-    // Log para debug removido
+    console.error('❌ [API] Erro na resposta:', {
+      status: responseError.response?.status,
+      statusText: responseError.response?.statusText,
+      url: responseError.config?.url,
+      data: responseError.response?.data,
+      message: responseError.message
+    })
     
     // Tratar erros específicos
     if (responseError.response?.status === 401) {
-      // Token expirado ou inválido (exceto para rotas de auth)
-      if (!responseError.config?.url?.includes('/auth/')) {
+      // Token expirado ou inválido (exceto para rotas de auth e delete de devolução)
+      const url = responseError.config?.url || ''
+      const isAuthRoute = url.includes('/auth/')
+      const isDevolucaoDelete = url.includes('/devolucao/delete')
+      
+      console.log('🔐 [API] Erro 401 detectado:', {
+        url,
+        isAuthRoute,
+        isDevolucaoDelete,
+        willRedirect: !isAuthRoute && !isDevolucaoDelete
+      })
+      
+      if (!isAuthRoute && !isDevolucaoDelete) {
         localStorage.removeItem('authToken')
         sessionStorage.removeItem('authToken')
         // Redirecionar para login se não estiver na página de login/register

@@ -66,21 +66,21 @@ const DetailsModal = ({
   const pieChartData = statistics.agingDistribution.slice(0, 8)
 
   return (
-    <div className="sem-movimentacao-sc-details-modal-overlay" onClick={onClose}>
-      <div className="sem-movimentacao-sc-details-modal" ref={detailsModalRef} onClick={(e) => e.stopPropagation()}>
-        <div className="sem-movimentacao-sc-details-modal-header">
+    <div className="details-modal-overlay" onClick={onClose}>
+      <div className="details-modal" ref={detailsModalRef} onClick={(e) => e.stopPropagation()}>
+        <div className="details-modal-header">
           <h2>📊 Resumo Detalhado</h2>
-          <div className="sem-movimentacao-sc-details-modal-header-actions">
-            <div className="sem-movimentacao-sc-view-mode-selector">
+          <div className="details-modal-header-actions">
+            <div className="details-view-mode-selector">
               <button
-                className={`sem-movimentacao-sc-view-mode-btn ${viewMode === 'detailed' ? 'active' : ''}`}
+                className={`details-view-mode-btn ${viewMode === 'detailed' ? 'active' : ''}`}
                 onClick={() => setViewMode('detailed')}
                 title="Visualização detalhada"
               >
                 📋 Detalhado
               </button>
               <button
-                className={`sem-movimentacao-sc-view-mode-btn ${viewMode === 'chart' ? 'active' : ''}`}
+                className={`details-view-mode-btn ${viewMode === 'chart' ? 'active' : ''}`}
                 onClick={() => setViewMode('chart')}
                 title="Visualização em gráficos"
               >
@@ -88,7 +88,7 @@ const DetailsModal = ({
               </button>
             </div>
             <button
-              className="sem-movimentacao-sc-details-modal-screenshot"
+              className="details-modal-screenshot"
               onClick={handleCaptureScreenshot}
               disabled={isCapturingScreenshot}
               title="Capturar screenshot do modal"
@@ -97,7 +97,7 @@ const DetailsModal = ({
               <span>{isCapturingScreenshot ? 'Capturando...' : 'Screenshot'}</span>
             </button>
             <button
-              className="sem-movimentacao-sc-details-modal-close"
+              className="details-modal-close"
               onClick={onClose}
               title="Fechar"
             >
@@ -105,7 +105,7 @@ const DetailsModal = ({
             </button>
           </div>
         </div>
-        <div className="sem-movimentacao-sc-details-modal-content">
+        <div className="details-modal-content">
           {viewMode === 'detailed' ? (
             <>
               <StatsCards statistics={statistics} />
@@ -132,7 +132,7 @@ const DetailsModal = ({
               )}
 
               {statistics.horarioDistribution.length > 0 && (
-                <div className="sem-movimentacao-sc-details-section">
+                <div className="details-section">
                   <h3>Distribuição por Horário da Última Operação</h3>
                   <div className="sem-movimentacao-sc-horario-legend-grid">
                     {statistics.horarioDistribution.map((item, index) => (

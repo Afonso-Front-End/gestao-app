@@ -45,7 +45,7 @@ const QRCodeItem = memo(({ remessa, index }) => {
 
 QRCodeItem.displayName = 'QRCodeItem'
 
-const QRCodeModal = ({ isOpen, onClose, remessas = [] }) => {
+const QRCodeModal = ({ isOpen, onClose, remessas = [], customHeaderContent = null }) => {
   const [isClosing, setIsClosing] = useState(false)
   
   // Chave para localStorage
@@ -78,6 +78,12 @@ const QRCodeModal = ({ isOpen, onClose, remessas = [] }) => {
   const scrollContainerRef = useRef(null)
   const scrollIntervalRef = useRef(null)
   const scrollDirectionRef = useRef(1) // 1 = para baixo, -1 = para cima
+  
+  // Renderização incremental: começar com 1000, adicionar 500 quando chegar perto do final
+  const INITIAL_RENDER_COUNT = 1000
+  const INCREMENT_COUNT = 500
+  const TRIGGER_THRESHOLD = 500 // Quando restam 500, renderizar mais 500
+  const [renderedCount, setRenderedCount] = useState(INITIAL_RENDER_COUNT)
 
   // Atualizar formato e salvar
   const handleFormatChange = (format) => {
@@ -189,8 +195,71 @@ const QRCodeModal = ({ isOpen, onClose, remessas = [] }) => {
   useEffect(() => {
     if (isOpen) {
       setIsClosing(false)
+      // Resetar contador de renderização quando abrir
+      setRenderedCount(INITIAL_RENDER_COUNT)
     }
   }, [isOpen])
+  
+  // Renderização incremental: detectar quando está próximo do final e renderizar mais
+  useEffect(() => {
+    if (!isOpen || !scrollContainerRef.current || remessas.length === 0) return
+    
+    const container = scrollContainerRef.current
+    const totalRemessas = remessas.length
+    
+    // Se já renderizou tudo, não precisa fazer nada
+    if (renderedCount >= totalRemessas) return
+    
+    let isRendering = false
+    let rafId = null
+    
+    const checkAndRender = () => {
+      if (isRendering || renderedCount >= totalRemessas) return
+      
+      const { scrollTop, scrollHeight, clientHeight } = container
+      const scrollBottom = scrollTop + clientHeight
+      const scrollPercentage = scrollBottom / scrollHeight
+      
+      // Calcular quantos itens ainda não foram renderizados
+      const remainingItems = totalRemessas - renderedCount
+      
+      // Se está nos últimos 30% do scroll dos itens renderizados (ou seja, próximo dos últimos 500)
+      // E ainda há mais itens para renderizar
+      if (scrollPercentage >= 0.7 && remainingItems > 0) {
+        isRendering = true
+        // Renderizar mais 500 (ou o que restar, se for menos)
+        const nextCount = Math.min(renderedCount + INCREMENT_COUNT, totalRemessas)
+        setRenderedCount(nextCount)
+        // Resetar flag após um delay
+        setTimeout(() => {
+          isRendering = false
+        }, 300)
+      }
+    }
+    
+    const handleScroll = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(() => {
+        checkAndRender()
+        rafId = null
+      })
+    }
+    
+    container.addEventListener('scroll', handleScroll, { passive: true })
+    
+    // Verificar também quando renderedCount muda (para continuar renderizando automaticamente)
+    const checkOnRender = setTimeout(() => {
+      checkAndRender()
+    }, 200)
+    
+    return () => {
+      container.removeEventListener('scroll', handleScroll)
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
+      clearTimeout(checkOnRender)
+    }
+  }, [isOpen, remessas.length, renderedCount])
 
   if (!isOpen && !isClosing) return null
 
@@ -198,17 +267,24 @@ const QRCodeModal = ({ isOpen, onClose, remessas = [] }) => {
     <div className={`sem-movimentacao-sc-qrcode-modal-overlay ${isClosing ? 'closing' : ''}`}>
       <div className="sem-movimentacao-sc-qrcode-modal">
         <div className="sem-movimentacao-sc-qrcode-modal-header">
-          <h2>QR Codes das Remessas</h2>
-          <div className="sem-movimentacao-sc-qrcode-modal-header-info">
-            <span>{remessas.length.toLocaleString('pt-BR')} remessa(s)</span>
-            <button
-              className="sem-movimentacao-sc-qrcode-modal-close"
-              onClick={handleClose}
-              title="Fechar"
-            >
-              ✕
-            </button>
+          <div className="sem-movimentacao-sc-qrcode-modal-header-top">
+            <h2>QR Codes das Remessas</h2>
+            <div className="sem-movimentacao-sc-qrcode-modal-header-info">
+              <span>{remessas.length.toLocaleString('pt-BR')} remessa(s)</span>
+              <button
+                className="sem-movimentacao-sc-qrcode-modal-close"
+                onClick={handleClose}
+                title="Fechar"
+              >
+                ✕
+              </button>
+            </div>
           </div>
+          {customHeaderContent && (
+            <div className="sem-movimentacao-sc-qrcode-modal-header-custom">
+              {customHeaderContent}
+            </div>
+          )}
         </div>
         <div className="sem-movimentacao-sc-qrcode-modal-content-wrapper">
           {/* Controles de reprodução - Fora do container de scroll para ficar fixo */}
@@ -313,13 +389,19 @@ const QRCodeModal = ({ isOpen, onClose, remessas = [] }) => {
 
                 {/* Container dos QR codes com formato dinâmico */}
                 <div className={`sem-movimentacao-sc-qrcode-container ${viewFormat === 'list' ? 'list-view' : 'grid-view'}`}>
-                  {remessas.map((remessa, index) => (
+                  {remessas.slice(0, renderedCount).map((remessa, index) => (
                     <QRCodeItem
                       key={remessa}
                       remessa={remessa}
                       index={index}
                     />
                   ))}
+                  {renderedCount < remessas.length && (
+                    <div className="sem-movimentacao-sc-qrcode-loading-more">
+                      <div className="sem-movimentacao-sc-qrcode-loading-spinner"></div>
+                      <p>Carregando mais QR codes... ({renderedCount} de {remessas.length})</p>
+                    </div>
+                  )}
                 </div>
               </>
             )}

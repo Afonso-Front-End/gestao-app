@@ -22,6 +22,8 @@ export const ROUTES = {
   ANALISE: '/analise',
   D1: '/d1',
   SEM_MOVIMENTACAO_SC: '/sem-movimentacao-sc',
+  EXPEDIDO_NAO_CHEGOU: '/expedido-nao-chegou',
+  INDICADORES_SC: '/indicadores-sc',
   CONFIGURACOES: '/configuracoes'
 }
 
@@ -75,6 +77,20 @@ export const MAIN_MENU_ITEMS = [
     label: 'Sem movimentação SC',
     component: 'SemMovimentacaoSC',
     gradient: 'linear-gradient(135deg, #059669 0%, #10b981 100%)'
+  },
+  {
+    path: ROUTES.EXPEDIDO_NAO_CHEGOU,
+    icon: IoLocation,
+    label: 'Expedido e não chegou',
+    component: 'ExpedidoNaoChegou',
+    gradient: 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'
+  },
+  {
+    path: ROUTES.INDICADORES_SC,
+    icon: IoStatsChart,
+    label: 'Indicadores SC',
+    component: 'IndicadoresSC',
+    gradient: 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)'
   },
   {
     path: ROUTES.LISTA_TELEFONES,

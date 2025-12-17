@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react'
 import './ConfirmModalWithPassword.css'
 import { IoWarningOutline, IoClose, IoLockClosed } from 'react-icons/io5'
 
@@ -16,7 +16,7 @@ import { IoWarningOutline, IoClose, IoLockClosed } from 'react-icons/io5'
  * @param {string} type - Tipo do modal: 'danger' | 'warning' | 'info'
  * @param {boolean} loading - Estado de loading
  */
-const ConfirmModalWithPassword = ({
+const ConfirmModalWithPassword = memo(({
   isOpen,
   onClose,
   onConfirm,
@@ -51,19 +51,20 @@ const ConfirmModalWithPassword = ({
     }
   }, [isOpen])
 
-  if (!isOpen) return null
-
-  const handleOverlayClick = (e) => {
+  const handleOverlayClick = useCallback((e) => {
     if (e.target === e.currentTarget && !loading && !verifying) {
       onClose()
     }
-  }
+  }, [loading, verifying, onClose])
 
-  const handleConfirm = async () => {
+  const handleConfirm = useCallback(async () => {
     if (loading || verifying) return
 
+    // Usar o valor atual do input diretamente
+    const currentPassword = passwordInputRef.current?.value || password
+
     // Validar senha
-    if (!password.trim()) {
+    if (!currentPassword || !currentPassword.trim()) {
       setPasswordError('Por favor, digite sua senha')
       if (passwordInputRef.current) {
         passwordInputRef.current.focus()
@@ -71,44 +72,32 @@ const ConfirmModalWithPassword = ({
       return
     }
 
-    // Verificar senha
-    if (onVerifyPassword) {
-      setVerifying(true)
-      setPasswordError('')
-      
-      try {
-        const isValid = await onVerifyPassword(password)
-        
-        if (!isValid) {
-          setPasswordError('Senha incorreta')
-          setPassword('')
-          if (passwordInputRef.current) {
-            passwordInputRef.current.focus()
-          }
-          setVerifying(false)
-          return
-        }
-      } catch (error) {
-        setPasswordError('Erro ao verificar senha. Tente novamente.')
-        setVerifying(false)
-        return
-      }
-    }
-
-    // Se chegou aqui, senha está correta ou não há verificação
-    setVerifying(false)
-    onConfirm(password)
+    // Não fazer verificação prévia - deixar o backend verificar ao deletar
+    // Isso evita chamadas desnecessárias e simplifica o código
+    // A verificação real acontece em handleDeleteDevolucao no backend
+    
+    // Chamar onConfirm diretamente - a senha será verificada no backend
+    onConfirm(currentPassword.trim())
     setPassword('')
-  }
+  }, [loading, verifying, password, onConfirm])
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter' && !loading && !verifying) {
       handleConfirm()
-    }
-    if (e.key === 'Escape' && !loading && !verifying) {
+    } else if (e.key === 'Escape' && !loading && !verifying) {
       onClose()
     }
-  }
+  }, [loading, verifying, onClose, handleConfirm])
+
+  const handlePasswordChange = useCallback((e) => {
+    const newPassword = e.target.value
+    setPassword(newPassword)
+    // Limpar erro quando começar a digitar novamente
+    setPasswordError(prev => prev ? '' : prev)
+  }, [])
+
+  // Retornar null DEPOIS de todos os hooks serem chamados
+  if (!isOpen) return null
 
   return (
     <div className="confirm-modal-overlay" onClick={handleOverlayClick}>
@@ -153,10 +142,7 @@ const ConfirmModalWithPassword = ({
             type="password"
             className={`confirm-modal-password-input ${passwordError ? 'error' : ''}`}
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-              setPasswordError('')
-            }}
+            onChange={handlePasswordChange}
             onKeyDown={handleKeyDown}
             placeholder="Sua senha"
             disabled={loading || verifying}
@@ -194,7 +180,9 @@ const ConfirmModalWithPassword = ({
       </div>
     </div>
   )
-}
+})
+
+ConfirmModalWithPassword.displayName = 'ConfirmModalWithPassword'
 
 export default ConfirmModalWithPassword
 

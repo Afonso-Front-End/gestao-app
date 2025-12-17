@@ -20,8 +20,16 @@ export default defineConfig({
         // Se houver duplicação /api/api, o proxy vai redirecionar corretamente
         configure: (proxy, options) => {
           proxy.on('proxyReq', (proxyReq, req, res) => {
-            // Log para debug (pode remover depois)
-            // console.log('Proxying:', req.url, 'to', options.target + req.url)
+            // Log para debug
+            console.log('🔄 [VITE PROXY] Proxying:', req.method, req.url, 'to', options.target + req.url)
+            console.log('🔄 [VITE PROXY] Headers:', JSON.stringify(req.headers, null, 2))
+          })
+          proxy.on('error', (err, req, res) => {
+            console.error('❌ [VITE PROXY] Erro no proxy:', err.message)
+            console.error('❌ [VITE PROXY] URL:', req.url)
+          })
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            console.log('✅ [VITE PROXY] Resposta recebida:', proxyRes.statusCode, 'para', req.url)
           })
         }
       }

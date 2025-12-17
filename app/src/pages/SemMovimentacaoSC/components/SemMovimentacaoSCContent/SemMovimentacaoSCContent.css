@@ -1,0 +1,8 @@
+.sem-movimentacao-sc-content {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
