@@ -23,6 +23,7 @@ import SLA from './pages/SLA/SLA'
 import Analise from './pages/Analise/Analise'
 import D1 from './pages/D1/D1'
 import SemMovimentacaoSC from './pages/SemMovimentacaoSC/SemMovimentacaoSC'
+import VerificacaoSemMovimentacaoSC from './pages/VerificacaoSemMovimentacaoSC/VerificacaoSemMovimentacaoSC'
 import ExpedidoNaoChegou from './pages/ExpedidoNaoChegou/ExpedidoNaoChegou'
 import IndicadoresSC from './pages/IndicadoresSC/IndicadoresSC'
 import Configuracoes from './pages/Configuracoes/Configuracoes'
@@ -38,6 +39,7 @@ const COMPONENT_MAP = {
   Analise,
   D1,
   SemMovimentacaoSC,
+  VerificacaoSemMovimentacaoSC,
   ExpedidoNaoChegou,
   IndicadoresSC,
   Configuracoes

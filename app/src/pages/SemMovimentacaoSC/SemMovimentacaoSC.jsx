@@ -6,6 +6,7 @@ import { useSemMovimentacaoSCFilters } from './hooks/useSemMovimentacaoSCFilters
 import { useDevolucao } from './hooks/useDevolucao'
 import { usePagination } from './hooks/usePagination'
 import { useRowSelection } from './hooks/useRowSelection'
+import { useRowSelectionMain } from './hooks/useRowSelectionMain'
 import { useRemessasUnicas } from './hooks/useRemessasUnicas'
 import { useStatistics } from './hooks/useStatistics'
 import { useLotes } from './hooks/useLotes'
@@ -34,12 +35,42 @@ const SemMovimentacaoSC = () => {
   const { showSuccess, showError } = useNotification()
   const { registerSemMovimentacaoSCConfig, unregisterSemMovimentacaoSCConfig } = useConfig()
   
-  // Estados dos filtros
-  const [selectedTiposOperacao, setSelectedTiposOperacao] = useState([])
-  const [selectedAgings, setSelectedAgings] = useState([])
+  // Estados dos filtros - carregar do localStorage se existir
+  const loadFiltersFromStorage = () => {
+    try {
+      const saved = localStorage.getItem('sem-movimentacao-sc-filters')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        return {
+          tiposOperacao: parsed.tiposOperacao || [],
+          agings: parsed.agings || []
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao carregar filtros salvos:', error)
+    }
+    return { tiposOperacao: [], agings: [] }
+  }
+
+  const savedFilters = loadFiltersFromStorage()
+  const [selectedTiposOperacao, setSelectedTiposOperacao] = useState(savedFilters.tiposOperacao)
+  const [selectedAgings, setSelectedAgings] = useState(savedFilters.agings)
   const [selectedBaseEntregaFiltro, setSelectedBaseEntregaFiltro] = useState([])
   
   const itemsPerPage = 1000
+
+  // Salvar filtros no localStorage quando mudarem
+  useEffect(() => {
+    try {
+      const filtersToSave = {
+        tiposOperacao: selectedTiposOperacao,
+        agings: selectedAgings
+      }
+      localStorage.setItem('sem-movimentacao-sc-filters', JSON.stringify(filtersToSave))
+    } catch (error) {
+      console.error('Erro ao salvar filtros:', error)
+    }
+  }, [selectedTiposOperacao, selectedAgings])
 
   // Buscar opções dos filtros
   const { tiposOperacao, agings, loading: filtersLoading, refetch: refetchFilters } = useSemMovimentacaoSCFilters()
@@ -76,7 +107,10 @@ const SemMovimentacaoSC = () => {
   // Gerar lotes de 1000 para os dados filtrados (usado no modal de filtros de colunas)
   const remessasLotes1000Filtros = useLotes(dadosFiltradosColunas, 1000)
 
-  // Hook de seleção de linhas
+  // Hook de seleção de linhas para a página principal
+  const rowSelectionMain = useRowSelectionMain(remessasUnicas)
+
+  // Hook de seleção de linhas para o modal de filtros
   const rowSelection = useRowSelection(dadosFiltradosColunas)
 
   // Hook de paginação
@@ -127,7 +161,13 @@ const SemMovimentacaoSC = () => {
     }
   }, [modals.showFiltrosColunasModal, dadosFiltradosColunas.length])
 
-  // Renderizadores de tabela
+  // Renderizadores de tabela para a página principal
+  const { renderCellContent: renderCellContentMain, renderHeader: renderHeaderMain } = useTableRenderers(
+    rowSelectionMain,
+    () => modals.setShowDetailsModal(true)
+  )
+
+  // Renderizadores de tabela para o modal de filtros
   const { renderCellContent, renderHeader } = useTableRenderers(
     rowSelection,
     () => modals.setShowDetailsModal(true)
@@ -250,8 +290,8 @@ const SemMovimentacaoSC = () => {
         tableColumns={tableColumns}
         total={total}
         remessasUnicas={remessasUnicas}
-        renderCellContent={renderCellContent}
-        renderHeader={renderHeader}
+        renderCellContent={renderCellContentMain}
+        renderHeader={renderHeaderMain}
         onCopyRemessas={handleCopyRemessas}
         onOpenLotes1000={() => modals.setShowLotesModal1000(true)}
         onOpenLotes500={() => modals.setShowLotesModal500(true)}

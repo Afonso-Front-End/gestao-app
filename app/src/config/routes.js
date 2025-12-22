@@ -7,7 +7,8 @@ import {
   IoCalendar,
   IoStatsChart,
   IoPieChart,
-  IoLocation
+  IoLocation,
+  IoTime
 } from "react-icons/io5";
 
 // Configuração centralizada de rotas
@@ -22,6 +23,7 @@ export const ROUTES = {
   ANALISE: '/analise',
   D1: '/d1',
   SEM_MOVIMENTACAO_SC: '/sem-movimentacao-sc',
+  VERIFICACAO_SEM_MOVIMENTACAO_SC: '/verificacao-sem-movimentacao-sc',
   EXPEDIDO_NAO_CHEGOU: '/expedido-nao-chegou',
   INDICADORES_SC: '/indicadores-sc',
   CONFIGURACOES: '/configuracoes'
@@ -77,6 +79,13 @@ export const MAIN_MENU_ITEMS = [
     label: 'Sem movimentação SC',
     component: 'SemMovimentacaoSC',
     gradient: 'linear-gradient(135deg, #059669 0%, #10b981 100%)'
+  },
+  {
+    path: ROUTES.VERIFICACAO_SEM_MOVIMENTACAO_SC,
+    icon: IoTime,
+    label: 'Verificação sem movimentação SC Em tempo real',
+    component: 'VerificacaoSemMovimentacaoSC',
+    gradient: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 100%)'
   },
   {
     path: ROUTES.EXPEDIDO_NAO_CHEGOU,

@@ -1,5 +1,6 @@
 // Definições de colunas da tabela principal
 export const tableColumns = [
+  { key: '_checkbox', header: 'Selecionar', isCheckbox: true },
   { key: 'remessa', header: 'Remessa' },
   { key: 'nome_base_mais_recente', header: 'Nome da Base Mais Recente' },
   { key: 'unidade_responsavel', header: 'Unidade Responsável' },
